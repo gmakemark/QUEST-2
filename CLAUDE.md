@@ -1,4 +1,4 @@
-# QUEST TRACK 2 작업실
+# QUEST-2 작업실
 
 ## 내 컴퓨터
 - Windows, PowerShell. Git·Node.js·Python 이 설치돼 있어.
