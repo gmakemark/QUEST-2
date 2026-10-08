@@ -1,0 +1,518 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>콧수염 카메라</title>
+<style>
+  :root {
+    --bg: #f5f5f4;
+    --text: #1c1917;
+    --muted: #57534e;
+    --card: #ffffff;
+    --border: #e7e5e4;
+    --accent: #2563eb;
+    --accent-text: #ffffff;
+    --on: #16a34a;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1c1917;
+      --text: #f5f5f4;
+      --muted: #a8a29e;
+      --card: #292524;
+      --border: #44403c;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, "Segoe UI", "Malgun Gothic", sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 16px;
+    gap: 14px;
+  }
+  h1 { margin: 0; font-size: 1.5rem; }
+  .wrap { width: 100%; max-width: 760px; display: flex; flex-direction: column; gap: 14px; }
+  .howto {
+    margin: 0;
+    padding: 12px 16px 12px 36px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  .howto b { color: var(--text); }
+  .stage {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background: #000;
+    border-radius: 16px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .stage.has-video { aspect-ratio: auto; }
+  canvas { display: block; width: 100%; height: auto; }
+  video { display: none; }
+  #startBtn {
+    position: absolute;
+    font: inherit;
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding: 14px 24px;
+    border: none;
+    border-radius: 999px;
+    background: var(--accent);
+    color: var(--accent-text);
+    cursor: pointer;
+  }
+  #startBtn:disabled { opacity: 0.6; cursor: wait; }
+  #flash {
+    position: absolute; inset: 0;
+    background: #fff;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s;
+  }
+  #status {
+    margin: 0;
+    text-align: center;
+    color: var(--muted);
+    min-height: 1.5em;
+  }
+  .controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .controls .label { color: var(--muted); margin-right: 4px; }
+  .acc {
+    font: inherit;
+    padding: 8px 14px;
+    border-radius: 999px;
+    border: 2px solid var(--border);
+    background: var(--card);
+    color: var(--text);
+    cursor: pointer;
+  }
+  .acc[aria-pressed="true"] { border-color: var(--on); background: color-mix(in srgb, var(--on) 18%, var(--card)); }
+  #captureBtn {
+    margin-left: auto;
+    font: inherit;
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 999px;
+    border: none;
+    background: var(--accent);
+    color: var(--accent-text);
+    cursor: pointer;
+  }
+  #captureBtn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .gallery { display: flex; flex-wrap: wrap; gap: 8px; }
+  .gallery a img {
+    width: 120px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    display: block;
+  }
+  @media (max-width: 480px) {
+    #captureBtn { margin-left: 0; width: 100%; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>콧수염 카메라</h1>
+
+  <ol class="howto">
+    <li><b>카메라 시작</b>을 누르고 카메라 사용을 <b>허용</b>하세요.</li>
+    <li>얼굴이 초록 네모로 잡히면 <b>3, 2, 1</b> 뒤에 콧수염이 생겨요.</li>
+    <li>아래 버튼으로 <b>콧수염과 악세사리</b>를 켜고 끄세요. 여러 개를 같이 써도 돼요.</li>
+    <li><b>📸 캡처</b>를 누르면 사진이 저장돼요.</li>
+  </ol>
+
+  <div class="stage" id="stage">
+    <canvas id="canvas" width="640" height="480"></canvas>
+    <video id="video" playsinline muted></video>
+    <button id="startBtn" type="button" disabled>준비 중…</button>
+    <div id="flash"></div>
+  </div>
+
+  <p id="status">얼굴 인식 모델을 불러오는 중…</p>
+
+  <div class="controls">
+    <span class="label">악세사리</span>
+    <button class="acc" type="button" data-acc="mustache" aria-pressed="true">🥸 콧수염</button>
+    <button class="acc" type="button" data-acc="glasses" aria-pressed="false">🕶️ 선글라스</button>
+    <button class="acc" type="button" data-acc="crown" aria-pressed="false">👑 왕관</button>
+    <button class="acc" type="button" data-acc="nose" aria-pressed="false">🔴 빨간 코</button>
+    <button class="acc" type="button" data-acc="ears" aria-pressed="false">🐰 토끼 귀</button>
+    <button id="captureBtn" type="button" disabled>📸 캡처</button>
+  </div>
+
+  <div class="gallery" id="gallery"></div>
+</div>
+
+<script type="module">
+  import { FaceLandmarker, FilesetResolver } from 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/vision_bundle.mjs';
+
+  const video = document.getElementById('video');
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+  const stage = document.getElementById('stage');
+  const startBtn = document.getElementById('startBtn');
+  const captureBtn = document.getElementById('captureBtn');
+  const statusEl = document.getElementById('status');
+  const flash = document.getElementById('flash');
+  const gallery = document.getElementById('gallery');
+
+  const COUNTDOWN_MS = 3000;
+  const accessories = { mustache: true, glasses: false, crown: false, nose: false, ears: false };
+
+  let landmarker = null;
+  let phase = 'searching';     // searching | countdown | ready
+  let countdownStart = 0;
+  let faces = [];              // 얼굴별 위치 정보 (부드럽게 보정됨)
+  let lastVideoTime = -1;
+
+  function setStatus(text) {
+    if (statusEl.textContent !== text) statusEl.textContent = text;
+  }
+
+  // ---------- 모델 불러오기 ----------
+  async function loadModel() {
+    const fileset = await FilesetResolver.forVisionTasks(
+      'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm'
+    );
+    const options = (delegate) => ({
+      baseOptions: {
+        modelAssetPath: 'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task',
+        delegate,
+      },
+      runningMode: 'VIDEO',
+      numFaces: 4,
+    });
+    try {
+      return await FaceLandmarker.createFromOptions(fileset, options('GPU'));
+    } catch {
+      return await FaceLandmarker.createFromOptions(fileset, options('CPU'));
+    }
+  }
+
+  loadModel().then(lm => {
+    landmarker = lm;
+    startBtn.disabled = false;
+    startBtn.textContent = '📷 카메라 시작';
+    setStatus('카메라 시작 버튼을 눌러 주세요.');
+  }).catch(err => {
+    console.error(err);
+    startBtn.textContent = '불러오기 실패';
+    setStatus('얼굴 인식 모델을 불러오지 못했어요. 인터넷 연결을 확인하고 새로고침해 주세요.');
+  });
+
+  // ---------- 카메라 ----------
+  startBtn.addEventListener('click', async () => {
+    startBtn.disabled = true;
+    setStatus('카메라 사용을 허용해 주세요.');
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 720 } },
+        audio: false,
+      });
+      video.srcObject = stream;
+      await video.play();
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      stage.classList.add('has-video');
+      startBtn.remove();
+      captureBtn.disabled = false;
+      requestAnimationFrame(loop);
+    } catch (err) {
+      console.error(err);
+      startBtn.disabled = false;
+      if (err.name === 'NotAllowedError') {
+        setStatus('카메라 권한이 거부됐어요. 주소창의 카메라 아이콘에서 허용한 뒤 다시 눌러 주세요.');
+      } else if (err.name === 'NotFoundError') {
+        setStatus('카메라를 찾을 수 없어요. 웹캠이 연결돼 있는지 확인해 주세요.');
+      } else {
+        setStatus('카메라를 켤 수 없어요. 다른 프로그램이 카메라를 쓰고 있는지 확인해 주세요.');
+      }
+    }
+  });
+
+  // ---------- 얼굴 위치 계산 ----------
+  const px = (p) => ({ x: p.x * canvas.width, y: p.y * canvas.height });
+  const mid = (a, b) => ({ x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 });
+  const lerp = (a, b, t) => a + (b - a) * t;
+  const lerpP = (a, b, t) => ({ x: lerp(a.x, b.x, t), y: lerp(a.y, b.y, t) });
+
+  function measure(lm) {
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    for (const p of lm) {
+      minX = Math.min(minX, p.x); maxX = Math.max(maxX, p.x);
+      minY = Math.min(minY, p.y); maxY = Math.max(maxY, p.y);
+    }
+    const eyeR = px(lm[33]), eyeL = px(lm[263]);
+    const cheekR = px(lm[234]), cheekL = px(lm[454]);
+    const angle = Math.atan2(eyeL.y - eyeR.y, eyeL.x - eyeR.x);
+    // 이마선에서 '코끝~윗입술' 길이만큼 얼굴 위쪽 방향으로 올린 점 (왕관·토끼 귀 위치)
+    const forehead = px(lm[10]), nose = px(lm[1]), lip = px(lm[0]);
+    const lift = Math.hypot(lip.x - nose.x, lip.y - nose.y);
+    const headTop = { x: forehead.x + Math.sin(angle) * lift, y: forehead.y - Math.cos(angle) * lift };
+    return {
+      box: { x: minX * canvas.width, y: minY * canvas.height,
+             w: (maxX - minX) * canvas.width, h: (maxY - minY) * canvas.height },
+      eyes: mid(eyeR, eyeL),
+      noseTip: px(lm[1]),
+      mustache: mid(px(lm[2]), px(lm[0])),   // 코 밑과 윗입술 사이
+      headTop,
+      angle,
+      size: Math.hypot(cheekL.x - cheekR.x, cheekL.y - cheekR.y),
+    };
+  }
+
+  // 떨림을 줄이기 위해 이전 프레임과 섞음
+  function smooth(prev, next, t = 0.55) {
+    if (!prev) return next;
+    return {
+      box: { x: lerp(prev.box.x, next.box.x, t), y: lerp(prev.box.y, next.box.y, t),
+             w: lerp(prev.box.w, next.box.w, t), h: lerp(prev.box.h, next.box.h, t) },
+      eyes: lerpP(prev.eyes, next.eyes, t),
+      noseTip: lerpP(prev.noseTip, next.noseTip, t),
+      mustache: lerpP(prev.mustache, next.mustache, t),
+      headTop: lerpP(prev.headTop, next.headTop, t),
+      angle: lerp(prev.angle, next.angle, t),
+      size: lerp(prev.size, next.size, t),
+    };
+  }
+
+  // ---------- 그리기 ----------
+  // 얼굴 기준 좌표계: 원점 = 기준점, 단위 1 = 얼굴 너비, 위쪽 = -y
+  function inFace(c, origin, f, draw) {
+    c.save();
+    c.translate(origin.x, origin.y);
+    c.rotate(f.angle);
+    c.scale(f.size, f.size);
+    draw(c);
+    c.restore();
+  }
+
+  function drawMustache(c) {
+    c.fillStyle = '#2b1a10';
+    for (const side of [1, -1]) {
+      c.save();
+      c.scale(side, 1);
+      c.beginPath();
+      c.moveTo(0, -0.03);
+      c.bezierCurveTo(0.06, -0.08, 0.16, -0.06, 0.22, 0.01);
+      c.bezierCurveTo(0.25, 0.04, 0.30, 0.02, 0.31, -0.04);
+      c.bezierCurveTo(0.32, 0.06, 0.22, 0.08, 0.15, 0.05);
+      c.bezierCurveTo(0.09, 0.03, 0.04, 0.04, 0, 0.03);
+      c.closePath();
+      c.fill();
+      c.restore();
+    }
+  }
+
+  function drawGlasses(c) {
+    c.lineWidth = 0.02;
+    c.strokeStyle = '#000';
+    for (const side of [1, -1]) {
+      c.beginPath();
+      c.ellipse(0.19 * side, 0.01, 0.15, 0.1, 0, 0, Math.PI * 2);
+      c.fillStyle = 'rgba(15, 15, 20, 0.92)';
+      c.fill();
+      c.stroke();
+      c.beginPath();
+      c.ellipse(0.19 * side - 0.05, -0.03, 0.04, 0.02, -0.4, 0, Math.PI * 2);
+      c.fillStyle = 'rgba(255, 255, 255, 0.35)';
+      c.fill();
+      c.beginPath();
+      c.moveTo(0.34 * side, -0.01);
+      c.lineTo(0.47 * side, -0.02);
+      c.stroke();
+    }
+    c.lineWidth = 0.025;
+    c.beginPath();
+    c.moveTo(-0.05, -0.01);
+    c.quadraticCurveTo(0, -0.05, 0.05, -0.01);
+    c.stroke();
+  }
+
+  function drawCrown(c) {
+    c.beginPath();
+    c.moveTo(-0.3, -0.02);
+    c.lineTo(-0.3, -0.3);
+    c.lineTo(-0.15, -0.15);
+    c.lineTo(0, -0.36);
+    c.lineTo(0.15, -0.15);
+    c.lineTo(0.3, -0.3);
+    c.lineTo(0.3, -0.02);
+    c.closePath();
+    c.fillStyle = '#f5c518';
+    c.fill();
+    c.lineWidth = 0.015;
+    c.strokeStyle = '#a16207';
+    c.stroke();
+    const dots = [
+      [-0.3, -0.3, 0.03, '#f5c518'], [0, -0.36, 0.03, '#f5c518'], [0.3, -0.3, 0.03, '#f5c518'],
+      [-0.17, -0.07, 0.035, '#2563eb'], [0, -0.07, 0.04, '#dc2626'], [0.17, -0.07, 0.035, '#16a34a'],
+    ];
+    for (const [x, y, r, color] of dots) {
+      c.beginPath();
+      c.arc(x, y, r, 0, Math.PI * 2);
+      c.fillStyle = color;
+      c.fill();
+      c.stroke();
+    }
+  }
+
+  function drawNose(c) {
+    const g = c.createRadialGradient(-0.025, -0.025, 0.01, 0, 0, 0.08);
+    g.addColorStop(0, '#ff8a8a');
+    g.addColorStop(0.5, '#e11d1d');
+    g.addColorStop(1, '#8b0000');
+    c.beginPath();
+    c.arc(0, 0, 0.08, 0, Math.PI * 2);
+    c.fillStyle = g;
+    c.fill();
+  }
+
+  function drawEars(c) {
+    for (const side of [1, -1]) {
+      c.save();
+      c.translate(0.16 * side, -0.38);
+      c.rotate(0.2 * side);
+      c.beginPath();
+      c.ellipse(0, 0, 0.09, 0.28, 0, 0, Math.PI * 2);
+      c.fillStyle = '#ffffff';
+      c.fill();
+      c.lineWidth = 0.012;
+      c.strokeStyle = '#a8a29e';
+      c.stroke();
+      c.beginPath();
+      c.ellipse(0, 0.02, 0.045, 0.2, 0, 0, Math.PI * 2);
+      c.fillStyle = '#f9a8d4';
+      c.fill();
+      c.restore();
+    }
+  }
+
+  function drawFace(c, f, withBox) {
+    // 네모는 카운트다운이 끝나면 숫자와 함께 사라짐
+    if (withBox && phase !== 'ready') {
+      c.lineWidth = Math.max(2, canvas.width / 320);
+      c.strokeStyle = '#22c55e';
+      c.strokeRect(f.box.x, f.box.y, f.box.w, f.box.h);
+    }
+    if (phase !== 'ready') return;
+    if (accessories.ears)     inFace(c, f.headTop, f, drawEars);
+    if (accessories.crown)    inFace(c, f.headTop, f, drawCrown);
+    if (accessories.glasses)  inFace(c, f.eyes, f, drawGlasses);
+    if (accessories.mustache) inFace(c, f.mustache, f, drawMustache);
+    if (accessories.nose)    inFace(c, f.noseTip, f, drawNose);
+  }
+
+  function drawCountdown(c) {
+    const elapsed = performance.now() - countdownStart;
+    const n = 3 - Math.floor(elapsed / 1000);
+    if (n < 1) return;
+    const t = (elapsed % 1000) / 1000;          // 0 → 1 동안 커졌다 사라짐
+    const size = canvas.height * 0.4 * (1.25 - t * 0.35);
+    c.save();
+    c.globalAlpha = 1 - t;
+    c.font = `bold ${size}px system-ui, sans-serif`;
+    c.textAlign = 'center';
+    c.textBaseline = 'middle';
+    c.lineWidth = size * 0.06;
+    c.strokeStyle = 'rgba(0, 0, 0, 0.6)';
+    c.fillStyle = '#ffffff';
+    c.strokeText(String(n), canvas.width / 2, canvas.height / 2);
+    c.fillText(String(n), canvas.width / 2, canvas.height / 2);
+    c.restore();
+  }
+
+  // 화면과 캡처 모두 이 함수로 그림 (캡처에는 네모와 카운트다운을 넣지 않음)
+  function render(c, forScreen) {
+    const W = canvas.width, H = canvas.height;
+    c.save();
+    c.translate(W, 0);
+    c.scale(-1, 1);            // 거울처럼 좌우 반전
+    c.drawImage(video, 0, 0, W, H);
+    for (const f of faces) drawFace(c, f, forScreen);
+    c.restore();
+    if (forScreen && phase === 'countdown') drawCountdown(c);
+  }
+
+  // ---------- 메인 루프 ----------
+  function loop() {
+    if (video.readyState >= 2 && video.currentTime !== lastVideoTime) {
+      lastVideoTime = video.currentTime;
+      const result = landmarker.detectForVideo(video, performance.now());
+      const found = result.faceLandmarks || [];
+      faces = found.map((lm, i) => smooth(faces[i], measure(lm)));
+    }
+
+    if (phase === 'searching' && faces.length > 0) {
+      phase = 'countdown';
+      countdownStart = performance.now();
+    } else if (phase === 'countdown' && performance.now() - countdownStart >= COUNTDOWN_MS) {
+      phase = 'ready';
+    }
+
+    if (faces.length === 0) setStatus('얼굴을 찾는 중… 카메라 정면을 봐 주세요.');
+    else if (phase === 'countdown') setStatus('얼굴을 찾았어요! 곧 콧수염이 생겨요.');
+    else setStatus('콧수염 완성! 악세사리를 골라 보고 캡처해 보세요.');
+
+    render(ctx, true);
+    requestAnimationFrame(loop);
+  }
+
+  // ---------- 악세사리 / 캡처 ----------
+  document.querySelectorAll('.acc').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const key = btn.dataset.acc;
+      accessories[key] = !accessories[key];
+      btn.setAttribute('aria-pressed', String(accessories[key]));
+    });
+  });
+
+  captureBtn.addEventListener('click', () => {
+    const shot = document.createElement('canvas');
+    shot.width = canvas.width;
+    shot.height = canvas.height;
+    render(shot.getContext('2d'), false);
+
+    flash.style.transition = 'none';
+    flash.style.opacity = '0.8';
+    requestAnimationFrame(() => {
+      flash.style.transition = '';
+      flash.style.opacity = '0';
+    });
+
+    shot.toBlob(blob => {
+      const url = URL.createObjectURL(blob);
+      const d = new Date();
+      const pad = (v) => String(v).padStart(2, '0');
+      const name = `mustache-${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}-${pad(d.getHours())}${pad(d.getMinutes())}${pad(d.getSeconds())}.png`;
+
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = name;
+      link.title = '클릭하면 다시 저장';
+      const img = document.createElement('img');
+      img.src = url;
+      img.alt = '캡처한 사진';
+      link.appendChild(img);
+      gallery.prepend(link);
+      link.click();
+    }, 'image/png');
+  });
+</script>
+</body>
+</html>
