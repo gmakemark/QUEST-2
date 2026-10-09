@@ -139,7 +139,7 @@ export default function App() {
             }`}
           >
             {isAdmin ? <LockOpen size={16} /> : <Lock size={16} />}
-            <span className="hidden sm:inline">{isAdmin ? "관리자 모드" : "수강생 모드"}</span>
+            <span className="hidden sm:inline">{isAdmin ? "관리자 모드" : "수업 모드"}</span>
           </button>
         </div>
       </header>

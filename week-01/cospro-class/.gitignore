@@ -5,3 +5,5 @@ dist
 .env.*.local
 # Netlify 로컬 설정 폴더
 .netlify
+# 개발 서버 임시 폴더
+.vite
