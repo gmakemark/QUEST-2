@@ -68,7 +68,7 @@ function InsertBar({ onInsert }) {
   return (
     <div className="group relative -my-2 flex h-6 items-center justify-center">
       <div className="absolute inset-x-0 top-1/2 h-px bg-transparent group-hover:bg-slate-200 dark:group-hover:bg-slate-700" />
-      <div className="relative flex gap-2 opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100">
+      <div className="relative flex gap-2 opacity-30 transition-opacity group-hover:opacity-100 focus-within:opacity-100">
         <button className={btn} onClick={() => onInsert("code")}>
           <Plus size={12} /> 코드
         </button>
