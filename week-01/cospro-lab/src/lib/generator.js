@@ -434,10 +434,10 @@ const TEMPLATES_2 = [
   },
 ];
 
-// 2급은 세 유형 모두, 3급은 빈칸·구현만
+// 2급은 한 틀로 세 유형 모두, 3급은 기출처럼 틀마다 정해진 유형 하나(빈칸 또는 구현)
 const TEMPLATES = [
   ...TEMPLATES_2.map((t) => ({ ...t, types: ["complete", "blank", "bug"] })),
-  ...TEMPLATES_3.map((t) => ({ ...t, types: ["complete", "blank"] })),
+  ...TEMPLATES_3.map((t) => ({ ...t, types: [t.type] })),
 ];
 
 const TYPE_SENTENCE = {
@@ -490,10 +490,11 @@ export function buildProblem(t, type, grade) {
   };
 }
 
-const poolOf = (grade, topics) => TEMPLATES.filter((t) => t.grade === grade && topics.includes(t.topic));
+const poolOf = (grade, topics, types = ["complete", "blank", "bug"]) =>
+  TEMPLATES.filter((t) => t.grade === grade && topics.includes(t.topic) && t.types.some((ty) => types.includes(ty)));
 
-export function countTemplates(grade, topics) {
-  return poolOf(grade, topics).length;
+export function countTemplates(grade, topics, types) {
+  return poolOf(grade, topics, types).length;
 }
 
 // 그 급수에 문제 틀이 있는 범위만
@@ -507,15 +508,14 @@ export function topicsOf(grade) {
  */
 export function generateProblems({ grade = 2, topics, types, count }, rand) {
   const r = makeRandom(rand);
-  const pool = poolOf(grade, topics);
-  if (!pool.length || !types.length) return [];
+  const pool = poolOf(grade, topics, types);
+  if (!pool.length) return [];
   let order = [];
   const result = [];
   for (let i = 0; i < count; i++) {
     if (!order.length) order = r.shuffle(pool);
     const tpl = order.pop();
     const usable = types.filter((t) => tpl.types.includes(t));
-    if (!usable.length) continue;
     const type = usable[i % usable.length];
     const made = tpl.make(r);
     result.push(made.inputs ? buildStdinProblem(made, type, tpl.grade, newId) : buildProblem(made, type, tpl.grade));

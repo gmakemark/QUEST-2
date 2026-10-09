@@ -1,6 +1,6 @@
 import { CheckCircle2, Circle, Plus, XCircle } from "lucide-react";
 
-export default function Sidebar({ problems, allProblems, gradeFilter, onGradeFilter, activeId, verdicts, isAdmin, onAdd, onNavigate }) {
+export default function Sidebar({ problems, gradeLabel, activeId, verdicts, isAdmin, onAdd, onNavigate }) {
   function go(id) {
     document.getElementById(`p-${id}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
     onNavigate?.();
@@ -8,25 +8,7 @@ export default function Sidebar({ problems, allProblems, gradeFilter, onGradeFil
 
   return (
     <nav className="flex h-full flex-col">
-      <div className="px-4 pb-2 pt-4 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">목차</div>
-      {/* 급수 고르기 */}
-      <div className="flex gap-1 px-3 pb-2">
-        {["all", 1, 2, 3].map((g) => {
-          const n = g === "all" ? allProblems.length : allProblems.filter((p) => p.grade === g).length;
-          const on = gradeFilter === g;
-          return (
-            <button
-              key={g}
-              onClick={() => onGradeFilter(g)}
-              className={`flex-1 rounded-md px-1 py-1 text-xs ${
-                on ? "bg-blue-600 font-semibold text-white" : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
-              }`}
-            >
-              {g === "all" ? "전체" : `${g}급`} <span className={on ? "text-blue-100" : "text-slate-400 dark:text-slate-500"}>{n}</span>
-            </button>
-          );
-        })}
-      </div>
+      <div className="px-4 pb-2 pt-4 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{gradeLabel} 목차</div>
       <ul className="flex-1 overflow-y-auto px-2 pb-4">
         {problems.map((p, i) => {
           const v = verdicts[p.id];

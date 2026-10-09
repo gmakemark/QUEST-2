@@ -60,7 +60,7 @@ export function validateProblems(data) {
   if (!Array.isArray(list)) throw new Error("문제 파일 형식이 올바르지 않습니다.");
   return list.map((p) => ({
     id: String(p.id || newId()),
-    grade: [1, 2, 3].includes(Number(p.grade)) ? Number(p.grade) : 2, // 급수 (없으면 2급)
+    grade: [1, 2, 3].includes(Number(p.grade)) ? Number(p.grade) : 3, // 급수 (없으면 3급)
     title: String(p.title || ""),
     description: String(p.description || ""),
     starterCode: String(p.starterCode || ""),

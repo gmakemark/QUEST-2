@@ -32,7 +32,7 @@ export default function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false); // 좁은 화면(휴대폰): 목차를 꺼내 보기
   const [sidebarHidden, setSidebarHidden] = useState(() => readLS("cospro.sidebarHidden", "") === "1"); // 넓은 화면: 목차 접기
   const [pyStatus, setPyStatus] = useState("idle");
-  const [gradeFilter, setGradeFilter] = useState("all"); // "all" | 1 | 2 | 3
+  const gradeFilter = 3; // 지금은 3급만 운영한다 (1·2급 문제 틀 코드는 남겨 둠)
   const [sets, setSets] = useState(loadSets); // 학생 모드: 급수 탭마다 지금 푸는 문제 id 목록
   const [round, setRound] = useState(0); // [다시 풀기] 때 문항 화면을 새로 그리려고
   const theme = useTheme();
@@ -56,10 +56,10 @@ export default function App() {
     );
     document.querySelectorAll("[data-pid]").forEach((el) => observer.observe(el));
     return () => observer.disconnect();
-  }, [problems, isAdmin, gradeFilter, sets]);
+  }, [problems, isAdmin, sets]);
 
   // 목차에서 고른 급수의 문제들
-  const pool = problems && (gradeFilter === "all" ? problems : problems.filter((p) => p.grade === gradeFilter));
+  const pool = problems && problems.filter((p) => p.grade === gradeFilter);
   // 관리자는 전부, 학생은 그중 고른 SET_SIZE 개만 본다.
   const setIds = sets[gradeFilter];
   const setReady = !!pool && isValidSet(setIds, pool);
@@ -115,7 +115,7 @@ export default function App() {
   }
 
   function addProblem() {
-    const grade = gradeFilter === "all" ? 2 : gradeFilter;
+    const grade = gradeFilter;
     const p = { id: newId(), grade, title: "새 문제", description: "### 문제 설명\n\n", starterCode: "def solution():\n    answer = 0\n    return answer\n\n\nprint(solution())\n", answerCode: "", stdin: "" };
     commit([...problems, p]);
     setTimeout(() => document.getElementById(`p-${p.id}`)?.scrollIntoView({ behavior: "smooth" }), 50);
@@ -124,8 +124,6 @@ export default function App() {
   function addGenerated(list) {
     commit([...problems, ...list.map(({ expected, ...p }) => p)]);
     setDialog(null);
-    // 지금 다른 급수만 보고 있으면, 만든 문제가 보이도록 그 급수로 바꾼다
-    if (gradeFilter !== "all" && gradeFilter !== list[0]?.grade) setGradeFilter(list[0].grade);
     setTimeout(() => document.getElementById(`p-${list[0]?.id}`)?.scrollIntoView({ behavior: "smooth" }), 50);
   }
 
@@ -227,9 +225,7 @@ export default function App() {
         {problems && (
           <Sidebar
             problems={visible}
-            allProblems={problems}
-            gradeFilter={gradeFilter}
-            onGradeFilter={setGradeFilter}
+            gradeLabel={`${gradeFilter}급`}
             activeId={activeId}
             verdicts={verdicts}
             isAdmin={isAdmin}
@@ -274,7 +270,7 @@ export default function App() {
           {!isAdmin && pool?.length > 0 && (
             <div className="flex flex-wrap items-center gap-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-3">
               <span className="mr-auto text-sm text-slate-600 dark:text-slate-300">
-                {gradeFilter === "all" ? "전체" : `${gradeFilter}급`} {pool.length}문제 중 <b>{visible.length}문제</b>
+                {gradeFilter}급 {pool.length}문제 중 <b>{visible.length}문제</b>
                 <span className="ml-2 text-slate-500 dark:text-slate-400">
                   · 맞힌 문제 {visible.filter((p) => verdicts[p.id] === "pass").length} / {visible.length}
                 </span>
@@ -292,7 +288,7 @@ export default function App() {
 
           {pool?.length === 0 && (
             <div className="rounded-lg border border-dashed border-slate-300 dark:border-slate-600 p-8 text-center text-sm text-slate-500 dark:text-slate-400">
-              {gradeFilter === "all" ? "아직 문제가 없습니다." : `${gradeFilter}급 문제가 아직 없습니다.`}{isAdmin && " 왼쪽 아래 [문제 추가] 나 위의 [자동 생성] 으로 만들어 보세요."}
+              {gradeFilter}급 문제가 아직 없습니다.{isAdmin && " 왼쪽 아래 [문제 추가] 나 위의 [자동 생성] 으로 만들어 보세요."}
             </div>
           )}
 
@@ -300,7 +296,6 @@ export default function App() {
             <section key={p.id} id={`p-${p.id}`} data-pid={p.id} className="scroll-mt-20 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5 shadow-sm">
               <div className="mb-3 text-sm font-semibold text-blue-600 dark:text-blue-400">
                 문제 {i + 1}
-                <GradeBadge grade={p.grade} />
                 {!isAdmin && p.title && <span className="ml-2 text-slate-800 dark:text-slate-100">{p.title}</span>}
               </div>
               {isAdmin ? (
@@ -336,15 +331,9 @@ export default function App() {
       )}
       {dialog === "settings" && <SettingsDialog onClose={() => setDialog(null)} />}
       {dialog === "generate" && (
-        <GenerateDialog defaultGrade={gradeFilter === "all" ? 2 : gradeFilter} onClose={() => setDialog(null)} onGenerate={addGenerated} />
+        <GenerateDialog grade={gradeFilter} onClose={() => setDialog(null)} onGenerate={addGenerated} />
       )}
     </div>
-  );
-}
-
-export function GradeBadge({ grade }) {
-  return (
-    <span className="ml-2 rounded bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 text-xs font-medium text-slate-600 dark:text-slate-300">{grade}급</span>
   );
 }
 

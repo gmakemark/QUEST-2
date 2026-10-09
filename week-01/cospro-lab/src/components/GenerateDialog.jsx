@@ -3,21 +3,14 @@ import Modal from "./Modal";
 import { countTemplates, generateProblems, topicsOf, typesOf } from "../lib/generator";
 
 // 급수·범위(단원)·유형·개수를 골라 문제를 자동으로 만든다.
-export default function GenerateDialog({ defaultGrade = 2, onClose, onGenerate }) {
-  const [grade, setGrade] = useState(defaultGrade);
-  const [topics, setTopics] = useState(() => topicsOf(defaultGrade).map((t) => t.key));
-  const [types, setTypes] = useState(() => typesOf(defaultGrade).map((t) => t.key));
+export default function GenerateDialog({ grade = 3, onClose, onGenerate }) {
+  const [topics, setTopics] = useState(() => topicsOf(grade).map((t) => t.key));
+  const [types, setTypes] = useState(() => typesOf(grade).map((t) => t.key));
   const [count, setCount] = useState(5);
 
   const toggle = (list, setList, key) => setList(list.includes(key) ? list.filter((k) => k !== key) : [...list, key]);
   const available = topicsOf(grade);
-  const ready = countTemplates(grade, topics) > 0 && types.length > 0 && count >= 1;
-
-  function changeGrade(g) {
-    setGrade(g);
-    setTopics(topicsOf(g).map((t) => t.key));
-    setTypes(typesOf(g).map((t) => t.key));
-  }
+  const ready = countTemplates(grade, topics, types) > 0 && types.length > 0 && count >= 1;
 
   function handleGenerate() {
     const n = Math.max(1, Math.min(30, Number(count) || 1));
@@ -28,19 +21,8 @@ export default function GenerateDialog({ defaultGrade = 2, onClose, onGenerate }
     `cursor-pointer select-none rounded-full border px-3 py-1 text-sm ${on ? "border-blue-600 bg-blue-600 text-white" : "border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800"}`;
 
   return (
-    <Modal title="문제 자동 생성" onClose={onClose}>
+    <Modal title={`${grade}급 문제 자동 생성`} onClose={onClose}>
       <div className="space-y-5">
-        <section>
-          <h3 className="mb-2 text-sm font-semibold">급수</h3>
-          <div className="flex flex-wrap gap-2">
-            {[1, 2, 3].map((g) => (
-              <button key={g} className={chip(grade === g)} onClick={() => changeGrade(g)}>
-                {g}급
-              </button>
-            ))}
-          </div>
-        </section>
-
         <section>
           <h3 className="mb-2 text-sm font-semibold">범위</h3>
           {available.length === 0 && (
@@ -55,7 +37,7 @@ export default function GenerateDialog({ defaultGrade = 2, onClose, onGenerate }
               </button>
             ))}
           </div>
-          <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">고른 범위의 문제 틀 {countTemplates(grade, topics)}개에서 숫자·조건을 바꿔 만듭니다.</p>
+          <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">고른 범위의 문제 틀 {countTemplates(grade, topics, types)}개에서 숫자·조건을 바꿔 만듭니다.</p>
         </section>
 
         <section>
