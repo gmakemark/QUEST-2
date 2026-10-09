@@ -34,7 +34,7 @@ export function useUserCells(stepN) {
   }
 
   function remove(id) {
-    if (!confirm("이 칸을 지울까요?")) return;
+    if (!confirm("이 칸 삭제?")) return;
     removeLS(codeKey(id));
     removeLS(stdinKey(id));
     setCells((old) => {
@@ -64,7 +64,7 @@ export function CellsAfter({ anchor, store }) {
 
 function InsertBar({ onInsert }) {
   const btn =
-    "inline-flex items-center gap-1 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-2.5 py-0.5 text-xs text-slate-600 dark:text-slate-300 hover:border-blue-500 hover:text-blue-600";
+    "inline-flex items-center gap-1 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-2.5 py-0.5 text-xs text-slate-600 dark:text-slate-300 hover:border-accent-500 hover:text-accent-600";
   return (
     <div className="group relative -my-2 flex h-6 items-center justify-center">
       <div className="absolute inset-x-0 top-1/2 h-px bg-transparent group-hover:bg-slate-200 dark:group-hover:bg-slate-700" />
@@ -89,8 +89,8 @@ function UserCell({ cell, store }) {
 
   if (cell.type === "code") {
     return (
-      <div className="space-y-2 rounded-lg border border-dashed border-blue-300 dark:border-blue-700 p-3">
-        <div className="flex items-center gap-1 text-xs font-semibold text-blue-600 dark:text-blue-400">
+      <div className="space-y-2 rounded-lg border border-dashed border-accent-300 dark:border-accent-700 p-3">
+        <div className="flex items-center gap-1 text-xs font-semibold text-accent-600 dark:text-accent-400">
           <Code2 size={14} /> 내 코드
           <span className="ml-auto">{del}</span>
         </div>
@@ -116,12 +116,12 @@ function TextCell({ cell, store, del }) {
   }
 
   return (
-    <div className="rounded-lg border border-dashed border-amber-300 dark:border-amber-700 bg-amber-50/60 dark:bg-amber-950/20 p-3">
-      <div className="mb-1 flex items-center gap-1 text-xs font-semibold text-amber-700 dark:text-amber-300">
+    <div className="rounded-lg border border-dashed border-peach-300 dark:border-peach-700 bg-peach-50/60 dark:bg-peach-950/20 p-3">
+      <div className="mb-1 flex items-center gap-1 text-xs font-semibold text-peach-700 dark:text-peach-300">
         <Type size={14} /> 내 메모
         <span className="ml-auto flex items-center gap-1">
           {!editing && (
-            <button onClick={() => setEditing(true)} className="rounded p-1 text-slate-400 hover:bg-slate-100 hover:text-blue-600 dark:hover:bg-slate-800" title="고치기">
+            <button onClick={() => setEditing(true)} className="rounded p-1 text-slate-400 hover:bg-slate-100 hover:text-accent-600 dark:hover:bg-slate-800" title="고치기">
               <Pencil size={15} />
             </button>
           )}
@@ -137,15 +137,15 @@ function TextCell({ cell, store, del }) {
             onKeyDown={(e) => {
               if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) done();
             }}
-            placeholder="질문이나 메모를 적어 보세요. (마크다운 사용 가능 · Ctrl+Enter 로 완료)"
-            className="h-24 w-full resize-y rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 p-2 text-sm outline-none focus:border-blue-500"
+            placeholder="질문이나 메모 적기 (마크다운 사용 가능 · Ctrl+Enter 로 완료)"
+            className="h-24 w-full resize-y rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 p-2 text-sm outline-none focus:border-accent-500"
           />
-          <button onClick={done} className="rounded-md bg-amber-500 px-3 py-1 text-sm font-medium text-white hover:bg-amber-600">
+          <button onClick={done} className="rounded-md bg-peach-500 px-3 py-1 text-sm font-medium text-white hover:bg-peach-600">
             완료
           </button>
         </div>
       ) : (
-        <div onDoubleClick={() => setEditing(true)} title="두 번 누르면 고칠 수 있어요">
+        <div onDoubleClick={() => setEditing(true)} title="두 번 누르면 고치기">
           <Markdown>{cell.text}</Markdown>
         </div>
       )}

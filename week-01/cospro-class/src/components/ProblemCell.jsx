@@ -65,7 +65,7 @@ export default function ProblemCell({ problem, onVerdict }) {
   const clearedOne = (i) => setClearable((c) => c.map((v, k) => (k === i ? false : v)));
 
   function handleReset() {
-    if (!confirm(isBlank ? "빈칸을 모두 지울까요?" : "처음 코드로 되돌릴까요? 지금 작성한 코드는 사라집니다.")) return;
+    if (!confirm(isBlank ? "빈칸을 모두 지움. 계속?" : "처음 코드로 되돌림. 작성한 코드는 사라짐.")) return;
     removeLS(codeKey(problem.id));
     removeLS(blankKey(problem.id));
     setCode(problem.starterCode);
@@ -104,7 +104,7 @@ export default function ProblemCell({ problem, onVerdict }) {
         <button
           onClick={handleGrade}
           disabled={running}
-          className="inline-flex items-center gap-1.5 rounded-md bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+          className="inline-flex items-center gap-1.5 rounded-md border border-accent-200 bg-accent-100 px-3 py-1.5 text-sm font-medium text-accent-800 hover:bg-accent-200 dark:border-accent-800 dark:bg-accent-900/60 dark:text-accent-100 disabled:opacity-50"
         >
           <CheckCheck size={16} /> 채점하기
         </button>
@@ -112,7 +112,7 @@ export default function ProblemCell({ problem, onVerdict }) {
           onClick={() => setShowAnswer((v) => !v)}
           disabled={!wrongOnce}
           title={wrongOnce ? "모범 답안을 봅니다" : "채점해서 오답이 나온 뒤에 볼 수 있습니다"}
-          className="inline-flex items-center gap-1.5 rounded-md border border-amber-400 px-3 py-1.5 text-sm font-medium text-amber-700 hover:bg-amber-50 disabled:cursor-not-allowed disabled:border-slate-300 disabled:text-slate-400 disabled:hover:bg-transparent dark:border-amber-600 dark:text-amber-300 dark:hover:bg-amber-950/40 dark:disabled:border-slate-600 dark:disabled:text-slate-500"
+          className="inline-flex items-center gap-1.5 rounded-md border border-peach-400 px-3 py-1.5 text-sm font-medium text-peach-700 hover:bg-peach-50 disabled:cursor-not-allowed disabled:border-slate-300 disabled:text-slate-400 disabled:hover:bg-transparent dark:border-peach-600 dark:text-peach-300 dark:hover:bg-peach-950/40 dark:disabled:border-slate-600 dark:disabled:text-slate-500"
         >
           {showAnswer ? <EyeOff size={16} /> : <Eye size={16} />} {showAnswer ? "정답 숨기기" : "정답 보기"}
         </button>
@@ -132,12 +132,12 @@ export default function ProblemCell({ problem, onVerdict }) {
 function ModelAnswer({ problem, isBlank }) {
   const fills = isBlank ? blankAnswers(problem.starterCode, problem.answerCode) : null;
   return (
-    <div className="space-y-2 rounded-md border border-amber-300 dark:border-amber-700 bg-amber-50 dark:bg-amber-950/40 p-3">
-      <div className="text-sm font-semibold text-amber-800 dark:text-amber-200">모범 답안</div>
+    <div className="space-y-2 rounded-md border border-peach-300 dark:border-peach-700 bg-peach-50 dark:bg-peach-950/40 p-3">
+      <div className="text-sm font-semibold text-peach-800 dark:text-peach-200">모범 답안</div>
       {fills && (
         <ul className="flex flex-wrap gap-2 text-sm">
           {fills.map((f, i) => (
-            <li key={i} className="rounded border border-amber-300 dark:border-amber-700 bg-white dark:bg-slate-900 px-2 py-0.5">
+            <li key={i} className="rounded border border-peach-300 dark:border-peach-700 bg-white dark:bg-slate-900 px-2 py-0.5">
               빈칸 {i + 1} : <code className="font-code font-semibold">{f}</code>
             </li>
           ))}

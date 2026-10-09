@@ -12,7 +12,7 @@ export default function SettingsDialog({ serverMode, onClose }) {
   async function changePw(e) {
     e.preventDefault();
     if (!(await checkPassword(oldPw, false))) return setMsg("지금 비밀번호가 틀렸습니다.");
-    if (newPw.length < 4) return setMsg("새 비밀번호는 4글자 이상으로 해 주세요.");
+    if (newPw.length < 4) return setMsg("새 비밀번호는 4글자 이상");
     if (newPw !== newPw2) return setMsg("새 비밀번호 두 개가 다릅니다.");
     await setLocalPassword(newPw);
     setOldPw("");
@@ -21,7 +21,7 @@ export default function SettingsDialog({ serverMode, onClose }) {
     setMsg("비밀번호를 바꿨습니다.");
   }
 
-  const input = "w-full rounded-md border border-slate-300 dark:border-slate-600 px-3 py-2 text-sm outline-none focus:border-blue-500";
+  const input = "w-full rounded-md border border-slate-300 dark:border-slate-600 px-3 py-2 text-sm outline-none focus:border-accent-500";
   return (
     <Modal title="관리자 비밀번호" onClose={onClose}>
       {serverMode ? (
@@ -37,7 +37,7 @@ export default function SettingsDialog({ serverMode, onClose }) {
           <input type="password" autoFocus className={input} placeholder="지금 비밀번호" value={oldPw} onChange={(e) => setOldPw(e.target.value)} />
           <input type="password" className={input} placeholder="새 비밀번호" value={newPw} onChange={(e) => setNewPw(e.target.value)} />
           <input type="password" className={input} placeholder="새 비밀번호 한 번 더" value={newPw2} onChange={(e) => setNewPw2(e.target.value)} />
-          <button className="w-full rounded-md bg-blue-600 py-2 text-sm font-medium text-white hover:bg-blue-700">바꾸기</button>
+          <button className="w-full rounded-md bg-accent-600 py-2 text-sm font-medium text-white hover:bg-accent-700">바꾸기</button>
           {msg && <p className="rounded bg-slate-100 dark:bg-slate-800 px-3 py-2 text-sm">{msg}</p>}
         </form>
       )}

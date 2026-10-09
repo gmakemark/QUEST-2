@@ -61,7 +61,7 @@ export default function BlankCode({ template, answers, onChange, onRun, clearabl
                       aria-label={`빈칸 ${i + 1}`}
                       placeholder={`빈칸 ${i + 1}`}
                       style={{ width: `${Math.max(7, value.length + 2)}ch` }}
-                      className="font-code mx-0.5 rounded border border-blue-400 bg-blue-50 px-1 align-middle text-sm leading-6 text-slate-900 outline-none placeholder:text-blue-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 dark:border-blue-500 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:ring-blue-900"
+                      className="font-code mx-0.5 rounded border border-accent-400 bg-accent-50 px-1 align-middle text-sm leading-6 text-slate-900 outline-none placeholder:text-accent-300 focus:border-accent-600 focus:ring-2 focus:ring-accent-200 dark:border-accent-500 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:ring-accent-900"
                     />
                     {part}
                   </Fragment>

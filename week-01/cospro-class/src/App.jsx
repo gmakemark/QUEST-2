@@ -57,10 +57,15 @@ export default function App() {
 
   // 화면에 보이는 주제를 목차에서 강조
   useEffect(() => {
+    // 바뀐 것만 오는 entries 대신, 지금 보이는 것 전체를 기억해 두고 그중 문서에서 가장 아래(가장 안쪽)의 것을 고른다.
+    // (주제 안의 문제 칸이 보이면 주제보다 문제를 강조)
+    const visible = new Set();
     const observer = new IntersectionObserver(
       (entries) => {
-        const seen = entries.filter((e) => e.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
-        if (seen[0]) setActiveId(seen[0].target.dataset.anchor);
+        entries.forEach((e) => (e.isIntersecting ? visible.add(e.target) : visible.delete(e.target)));
+        const els = [...document.querySelectorAll("[data-anchor]")].filter((el) => visible.has(el));
+        const pick = els.filter((el) => el.getBoundingClientRect().top <= 80).pop() || els[0];
+        if (pick) setActiveId(pick.dataset.anchor);
       },
       { rootMargin: "-64px 0px -60% 0px" }
     );
@@ -87,7 +92,7 @@ export default function App() {
   // 관리자: STEP2·3 공개/비공개 (배포 사이트에서만)
   async function toggleStep(n) {
     const next = !site.steps[n];
-    if (!confirm(next ? `STEP${n} 을 공개할까요?` : `STEP${n} 을 비공개로 바꿀까요? 학생 화면에서 잠깁니다.`)) return;
+    if (!confirm(next ? `STEP${n} 공개?` : `STEP${n} 비공개로 전환? 수강생 화면에서 잠김.`)) return;
     try {
       const steps = await setStepOpen(n, next, getSessionPassword());
       setSite((s) => ({ ...s, steps }));
@@ -114,7 +119,7 @@ export default function App() {
           {sidebarHidden ? <PanelLeftOpen size={20} className="hidden md:block" /> : <PanelLeftClose size={20} className="hidden md:block" />}
         </button>
         <h1 className="truncate font-bold text-slate-800 dark:text-slate-100">
-          <span className="text-blue-600 dark:text-blue-400">COS PRO 3급</span> 파이썬 대비반
+          <span className="text-accent-600 dark:text-accent-400">COS PRO 3급</span> 파이썬 대비반
         </h1>
         <PyStatus status={pyStatus} />
 
@@ -130,7 +135,7 @@ export default function App() {
           <button
             onClick={toggleMode}
             className={`inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium ${
-              isAdmin ? "bg-amber-500 text-white hover:bg-amber-600" : "border border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800"
+              isAdmin ? "bg-peach-400 text-white hover:bg-peach-500" : "border border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800"
             }`}
           >
             {isAdmin ? <LockOpen size={16} /> : <Lock size={16} />}
@@ -160,8 +165,8 @@ export default function App() {
       <main className={`px-4 pb-24 pt-20 transition-[margin] ${sidebarHidden ? "md:ml-0" : "md:ml-72"}`}>
         <div className="mx-auto max-w-4xl space-y-6">
           {isAdmin && (
-            <div className="flex flex-wrap items-center gap-2 rounded-lg border border-amber-300 dark:border-amber-700 bg-amber-50 dark:bg-amber-950/40 p-3">
-              <span className="mr-auto text-sm font-medium text-amber-800 dark:text-amber-200">관리자 모드 · 모든 STEP 을 미리 볼 수 있어요</span>
+            <div className="flex flex-wrap items-center gap-2 rounded-lg border border-peach-300 dark:border-peach-700 bg-peach-50 dark:bg-peach-950/40 p-3">
+              <span className="mr-auto text-sm font-medium text-peach-800 dark:text-peach-200">관리자 모드 · 모든 STEP 미리 보기 가능</span>
               {site.server ? (
                 [2, 3].map((n) => (
                   <button
@@ -169,18 +174,18 @@ export default function App() {
                     onClick={() => toggleStep(n)}
                     title={`눌러서 STEP${n} 공개/비공개를 바꿉니다`}
                     className={`inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-semibold text-white ${
-                      site.steps[n] ? "bg-green-600 hover:bg-green-700" : "bg-slate-500 hover:bg-slate-600"
+                      site.steps[n] ? "bg-mint-500 hover:bg-mint-600" : "bg-slate-400 hover:bg-slate-500"
                     }`}
                   >
                     {site.steps[n] ? <Eye size={16} /> : <EyeOff size={16} />} STEP{n} {site.steps[n] ? "공개 중" : "비공개"}
                   </button>
                 ))
               ) : (
-                <span className="text-xs text-amber-700 dark:text-amber-300" title="npm run dev 로 볼 때는 서버 함수가 없습니다">
+                <span className="text-xs text-peach-700 dark:text-peach-300" title="npm run dev 로 볼 때는 서버 함수가 없습니다">
                   STEP 공개/비공개는 배포 사이트에서만 (지금은 모두 열림)
                 </span>
               )}
-              <button className={toolBtn} onClick={() => openAnswerWindow(step.n)} title="새 창으로 열어 다른 모니터에 두세요. 수업 화면을 따라 움직여요.">
+              <button className={toolBtn} onClick={() => openAnswerWindow(step.n)} title="새 창으로 열어 다른 모니터에 두기. 수업 화면을 따라 움직임.">
                 <Monitor size={16} /> 정답 창 열기
               </button>
               <button className={toolBtn} onClick={() => setDialog("settings")}>
@@ -216,7 +221,7 @@ export default function App() {
 function PyStatus({ status }) {
   const map = {
     idle: ["bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400", "파이썬 준비 전"],
-    loading: ["bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-300", "파이썬 불러오는 중…"],
+    loading: ["bg-peach-100 dark:bg-peach-900/50 text-peach-700 dark:text-peach-300", "파이썬 불러오는 중…"],
     ready: ["bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-300", "파이썬 준비됨"],
     error: ["bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-300", "파이썬 불러오기 실패"],
   };

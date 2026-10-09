@@ -30,7 +30,7 @@ export default function OutputPanel({ running, output, gradeResult }) {
 
 function Verdict({ result }) {
   if (result.problemError) {
-    return <div className="rounded-md bg-amber-50 dark:bg-amber-950/40 px-3 py-2 text-sm text-amber-800 dark:text-amber-200">{result.problemError}</div>;
+    return <div className="rounded-md bg-peach-50 dark:bg-peach-950/40 px-3 py-2 text-sm text-peach-800 dark:text-peach-200">{result.problemError}</div>;
   }
   if (result.pass) {
     return (
@@ -43,7 +43,7 @@ function Verdict({ result }) {
     <div className="space-y-2 rounded-md bg-red-50 dark:bg-red-950/40 px-3 py-2">
       <div className="flex items-center gap-2 font-semibold text-red-700 dark:text-red-300">
         <XCircle size={18} /> 오답입니다.
-        {!result.student.ok && <span className="text-sm font-normal">(코드에서 오류가 났어요)</span>}
+        {!result.student.ok && <span className="text-sm font-normal">(코드 실행 중 오류)</span>}
       </div>
       {result.student.ok && (
         <div className="grid gap-2 text-xs sm:grid-cols-2">

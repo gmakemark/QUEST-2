@@ -12,7 +12,7 @@ export default function LoginDialog({ serverMode, onClose, onSuccess }) {
     e.preventDefault();
     setError("");
     if (creating) {
-      if (pw.length < 4) return setError("비밀번호는 4글자 이상으로 해 주세요.");
+      if (pw.length < 4) return setError("비밀번호는 4글자 이상");
       if (pw !== pw2) return setError("두 비밀번호가 다릅니다.");
       await setLocalPassword(pw);
       onSuccess();
@@ -26,7 +26,7 @@ export default function LoginDialog({ serverMode, onClose, onSuccess }) {
     }
   }
 
-  const input = "w-full rounded-md border border-slate-300 dark:border-slate-600 px-3 py-2 outline-none focus:border-blue-500";
+  const input = "w-full rounded-md border border-slate-300 dark:border-slate-600 px-3 py-2 outline-none focus:border-accent-500";
   return (
     <Modal title={creating ? "관리자 비밀번호 만들기" : "관리자 모드"} onClose={onClose}>
       <form onSubmit={handleSubmit} className="space-y-3">
@@ -40,7 +40,7 @@ export default function LoginDialog({ serverMode, onClose, onSuccess }) {
           <input type="password" className={input} placeholder="비밀번호 한 번 더" value={pw2} onChange={(e) => setPw2(e.target.value)} />
         )}
         {error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
-        <button className="w-full rounded-md bg-blue-600 py-2 font-medium text-white hover:bg-blue-700">
+        <button className="w-full rounded-md bg-accent-600 py-2 font-medium text-white hover:bg-accent-700">
           {creating ? "만들고 들어가기" : "들어가기"}
         </button>
       </form>

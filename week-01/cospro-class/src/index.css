@@ -1,6 +1,48 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
+/* ── 색 (한곳에서 바꾸면 화면 전체가 바뀜) ──
+   accent: 차분한 라벤더 — 강조, 선택된 메뉴, 버튼
+   mint  : 실습 카드
+   peach : 예시 답안, 관리자, 내 메모 */
+@theme {
+  --color-accent-50: #f7f5fd;
+  --color-accent-100: #efebfb;
+  --color-accent-200: #e0d8f6;
+  --color-accent-300: #c9bcee;
+  --color-accent-400: #ad9be2;
+  --color-accent-500: #9179d2;
+  --color-accent-600: #7a62bd;
+  --color-accent-700: #654f9e;
+  --color-accent-800: #4f3e7c;
+  --color-accent-900: #3a2e5a;
+  --color-accent-950: #241c3a;
+
+  --color-mint-50: #f2faf7;
+  --color-mint-100: #e2f4ed;
+  --color-mint-200: #c4e8db;
+  --color-mint-300: #9dd6c1;
+  --color-mint-400: #6fbea2;
+  --color-mint-500: #4fa587;
+  --color-mint-600: #3d8a70;
+  --color-mint-700: #326f5b;
+  --color-mint-800: #29594a;
+  --color-mint-900: #1f433a;
+  --color-mint-950: #12271f;
+
+  --color-peach-50: #fff7f2;
+  --color-peach-100: #ffece1;
+  --color-peach-200: #fdd8c3;
+  --color-peach-300: #f9bc9a;
+  --color-peach-400: #f19a6e;
+  --color-peach-500: #e57d4d;
+  --color-peach-600: #cc653a;
+  --color-peach-700: #a8502f;
+  --color-peach-800: #833f27;
+  --color-peach-900: #5e2e1d;
+  --color-peach-950: #3a1b11;
+}
+
 /* <html class="dark"> 일 때 dark: 클래스가 켜진다 (lib/theme.js 가 붙였다 뗐다 함) */
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -23,7 +65,7 @@ html.dark {
 }
 
 body {
-  @apply bg-slate-100 text-slate-800 dark:bg-slate-950 dark:text-slate-100;
+  @apply bg-[#f6f5f9] text-slate-800 dark:bg-[#17151f] dark:text-slate-100;
   font-family: "Pretendard", "Malgun Gothic", system-ui, sans-serif;
 }
 

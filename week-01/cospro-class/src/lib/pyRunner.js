@@ -48,7 +48,7 @@ export function preload() {
   return readyPromise;
 }
 
-async function runOnce(code, stdin, echo) {
+async function runOnce(code, stdin, echo, interactive) {
   try {
     await preload();
   } catch (err) {
@@ -74,16 +74,17 @@ async function runOnce(code, stdin, echo) {
       clearTimeout(timer);
       resolve(e.data);
     };
-    worker.postMessage({ id, code, stdin, echo });
+    worker.postMessage({ id, code, stdin, echo, interactive });
   });
 }
 
 /**
  * 파이썬 코드를 실행하고 { ok, stdout, error } 를 돌려준다.
  * echo: true 면 input() 의 안내 문구와 입력값을 출력에 함께 남긴다 (수업 실습용).
+ * interactive: true 면 입력이 모자랄 때 오류 대신 { needInput: true } 로 돌아온다.
  */
-export function runPython(code, stdin = "", { echo = false } = {}) {
-  const p = queue.then(() => runOnce(code, stdin, echo));
+export function runPython(code, stdin = "", { echo = false, interactive = false } = {}) {
+  const p = queue.then(() => runOnce(code, stdin, echo, interactive));
   queue = p.catch(() => {});
   return p;
 }

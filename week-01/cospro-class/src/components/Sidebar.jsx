@@ -18,13 +18,13 @@ export default function Sidebar({ steps, current, isOpen, activeId, verdicts, on
             <button
               disabled={!open}
               onClick={() => onSelect(step.n)}
-              title={open ? "" : "아직 공개되지 않았어요"}
+              title={open ? "" : "아직 미공개"}
               className={`flex w-full items-start gap-2 rounded-md px-3 py-2 text-left ${
-                active ? "bg-blue-600 text-white" : open ? "hover:bg-slate-100 dark:hover:bg-slate-800" : "cursor-not-allowed text-slate-400 dark:text-slate-500"
+                active ? "bg-accent-100 text-accent-900 dark:bg-accent-900/60 dark:text-accent-100" : open ? "hover:bg-slate-100 dark:hover:bg-slate-800" : "cursor-not-allowed text-slate-400 dark:text-slate-500"
               }`}
             >
               <span className="text-sm font-bold">STEP{step.n}</span>
-              <span className={`flex-1 text-xs leading-5 ${active ? "text-blue-100" : "text-slate-500 dark:text-slate-400"}`}>{step.title}</span>
+              <span className={`flex-1 text-xs leading-5 ${active ? "text-accent-700 dark:text-accent-200" : "text-slate-500 dark:text-slate-400"}`}>{step.title}</span>
               {!open && <Lock size={14} className="mt-0.5 shrink-0" />}
             </button>
 
@@ -35,7 +35,7 @@ export default function Sidebar({ steps, current, isOpen, activeId, verdicts, on
                     <button
                       onClick={() => go(t.id)}
                       className={`w-full truncate rounded px-2 py-1 text-left text-sm ${
-                        activeId === t.id ? "bg-blue-100 dark:bg-blue-900/50 font-medium text-blue-800 dark:text-blue-200" : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+                        activeId === t.id ? "bg-accent-100 dark:bg-accent-900/50 font-medium text-accent-800 dark:text-accent-200" : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
                       }`}
                     >
                       {i + 1}. {t.title}
@@ -52,7 +52,7 @@ export default function Sidebar({ steps, current, isOpen, activeId, verdicts, on
                                 <button
                                   onClick={() => go(`p-${b.problem.id}`)}
                                   className={`flex w-full items-center gap-1.5 truncate rounded px-2 py-0.5 text-left text-xs ${
-                                    activeId === `p-${b.problem.id}` ? "font-medium text-blue-700 dark:text-blue-300" : "text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
+                                    activeId === `p-${b.problem.id}` ? "font-medium text-accent-700 dark:text-accent-300" : "text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
                                   }`}
                                 >
                                   {v === "pass" ? (
