@@ -286,13 +286,11 @@ export default {
           print(s[1:4])
           print(s[:3], s[3:])
           print(s[::2], s[::-1])
-          print(len(s))
         `),
         code(py`
           nums = [10, 20, 30, 40, 50]
           print(nums[2], nums[-2])
           print(nums[1:3])
-          print(len(nums))
           print(nums[5])   # 없는 위치 → IndexError
         `),
         ex({

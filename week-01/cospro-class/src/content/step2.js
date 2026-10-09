@@ -1,4 +1,7 @@
 // STEP2 · 자료형별 기본 기능과 반복문 활용 (2시간)
+// sum/max/min/abs 같은 내장 함수는 STEP3 에서 배우고, 여기서는 반복문·조건문으로 직접 구해 본다.
+// 기초에 집중하도록 STEP2 는 input() 을 쓰지 않고 데이터를 코드 안에서 준다. (여러 값 입력받기는 STEP3)
+// (3급 빈칸 문제는 바로 이 로직의 한 줄을 비워 두는 경우가 많다)
 import { code, ex, md, py } from "./blocks";
 
 export default {
@@ -8,8 +11,17 @@ export default {
   topics: [
     {
       id: "s2-str",
-      title: "문자열의 기본 기능 (메서드)",
+      title: "문자열의 기본 기능",
       blocks: [
+        md`
+          ### 길이: len()
+          \`len(값)\` 은 문자열의 **글자 수**, 리스트의 **원소 개수**를 알려 주는 내장 함수예요. 공백도 한 글자로 세요.
+        `,
+        code(py`
+          s = "Hello World"
+          print(len(s))
+          print(len("파이썬"), len([10, 20, 30]))
+        `),
         md`
           ### 메서드
           **메서드**는 값 뒤에 점을 찍고 부르는 기능이에요. \`값.기능()\`
@@ -18,34 +30,23 @@ export default {
           | 메서드 | 하는 일 | 예 (\`s = "Hello World"\`) |
           |---|---|---|
           | \`upper()\` / \`lower()\` | 대문자로 / 소문자로 | \`s.upper()\` → \`HELLO WORLD\` |
-          | \`replace(a, b)\` | a 를 b 로 바꿈 | \`s.replace("o", "0")\` |
+          | \`replace(a, b)\` | a 를 b 로 바꿈 | \`s.replace("o", "0")\` → \`Hell0 W0rld\` |
           | \`count(x)\` | x 가 몇 번 나오는지 | \`s.count("l")\` → \`3\` |
-          | \`find(x)\` | x 가 처음 나오는 위치 (없으면 -1) | \`s.find("W")\` → \`6\` |
-          | \`strip()\` | 앞뒤 공백 지우기 | \`"  hi ".strip()\` → \`hi\` |
           | \`split()\` | 공백으로 나눠 리스트로 | \`s.split()\` → \`['Hello', 'World']\` |
-          | \`isupper()\` \`islower()\` \`isdigit()\` \`isalpha()\` | 대문자인지, 소문자인지, 숫자인지, 글자인지 (True/False) | \`"A".isupper()\` → \`True\` |
         `,
         code(py`
           s = "Hello World"
           print(s.upper(), s.lower())
           print(s.replace("o", "0"))
-          print(s.count("l"), s.find("W"), s.find("z"))
+          print(s.count("l"), s.count("o"))
           print(s.split())
-          print(len(s))
           print(s)    # 원래 문자열은 그대로예요
-        `),
-        md`
-          \`isdigit()\`, \`isupper()\` 같은 검사 메서드는 **한 글자씩 검사하는 반복문**과 함께 시험에 자주 나와요.
-        `,
-        code(py`
-          s = "PyThon3"
-          print(s[0].isupper(), s[1].isupper(), s[-1].isdigit())
         `),
         ex({
           title: "글자 개수 세기",
           prompt: md`
             \`s = "banana apple"\` 에서 \`a\` 가 몇 번 나오는지, 공백을 지운 글자 수가 몇인지 출력해 보세요.
-            결과: \`4 11\`
+            결과: \`4 11\`  (공백 지우기는 \`replace(" ", "")\`)
           `,
           starter: py`
             s = "banana apple"
@@ -55,11 +56,25 @@ export default {
             print(s.count("a"), len(s.replace(" ", "")))
           `,
         }),
+        ex({
+          title: "소문자로 바꾸기",
+          prompt: md`
+            \`name = "KaKao Kim"\` 을 모두 소문자로 바꾼 문자열과, 그 안에 \`k\` 가 몇 개 있는지 출력해 보세요.
+          `,
+          starter: py`
+            name = "KaKao Kim"
+          `,
+          answer: py`
+            name = "KaKao Kim"
+            low = name.lower()
+            print(low, low.count("k"))
+          `,
+        }),
       ],
     },
     {
       id: "s2-list",
-      title: "리스트의 기본 기능 (메서드)",
+      title: "리스트의 기본 기능",
       blocks: [
         md`
           ### 리스트 메서드
@@ -72,10 +87,9 @@ export default {
           | \`remove(x)\` | 처음 나오는 x 지우기 |
           | \`pop()\` | 맨 뒤 값을 꺼내며 지우기 |
           | \`sort()\` / \`sort(reverse=True)\` | 작은 순 / 큰 순 정렬 |
-          | \`reverse()\` | 순서 뒤집기 |
           | \`index(x)\` / \`count(x)\` | x 의 위치 / x 의 개수 |
 
-          \`x in 리스트\` 는 x 가 들어 있는지 \`True\`/\`False\` 로 알려 줘요.
+          \`x in 리스트\` 는 x 가 들어 있는지 \`True\`/\`False\` 로 알려 줘요. (문자열에도 쓸 수 있어요: \`"a" in "cat"\`)
         `,
         code(py`
           nums = [5, 2, 8]
@@ -89,7 +103,7 @@ export default {
           print(nums)
           nums.sort(reverse=True)
           print(nums)
-          print(8 in nums, 7 in nums, nums.index(8))
+          print(8 in nums, 7 in nums, nums.index(8), nums.count(5))
         `),
         ex({
           title: "빈 리스트 채우기",
@@ -106,117 +120,6 @@ export default {
                 squares.append(i * i)
             print(squares)
           `,
-        }),
-      ],
-    },
-    {
-      id: "s2-builtin",
-      title: "자료형과 내장 함수",
-      blocks: [
-        md`
-          ### 자주 쓰는 내장 함수
-          파이썬에 처음부터 들어 있는 함수들이에요. 3급 시험에서 특히 많이 써요.
-
-          | 함수 | 하는 일 | 예 |
-          |---|---|---|
-          | \`len(x)\` | 길이(개수) | \`len([3, 1, 2])\` → \`3\` |
-          | \`sum(리스트)\` | 합 | \`sum([3, 1, 2])\` → \`6\` |
-          | \`max()\` / \`min()\` | 가장 큰 / 작은 값 | \`max(3, 9)\` → \`9\` |
-          | \`abs(x)\` | 절댓값 | \`abs(-5)\` → \`5\` |
-          | \`round(x, n)\` | 소수 n 자리로 반올림 | \`round(3.146, 2)\` → \`3.15\` |
-          | \`sorted(리스트)\` | 정렬한 **새** 리스트 | \`sorted([3, 1, 2])\` → \`[1, 2, 3]\` |
-          | \`int()\` \`float()\` \`str()\` \`list()\` | 자료형 바꾸기 | \`list("abc")\` → \`['a', 'b', 'c']\` |
-        `,
-        code(py`
-          scores = [80, 95, 72, 88]
-          print(len(scores), sum(scores), max(scores), min(scores))
-          print(sum(scores) / len(scores))       # 평균
-          print(sorted(scores), scores)           # sorted 는 원래 리스트를 바꾸지 않아요
-          print(abs(-7), round(3.146, 2))
-          print(list("abc"), str(123) + "4")
-        `),
-        ex({
-          title: "평균과 점수 차",
-          prompt: md`
-            \`scores = [70, 85, 90, 65]\` 의 평균과, 가장 높은 점수와 가장 낮은 점수의 차를 출력해 보세요.
-            결과: \`77.5 25\`
-          `,
-          starter: py`
-            scores = [70, 85, 90, 65]
-          `,
-          answer: py`
-            scores = [70, 85, 90, 65]
-            print(sum(scores) / len(scores), max(scores) - min(scores))
-          `,
-        }),
-      ],
-    },
-    {
-      id: "s2-split",
-      title: "여러 값을 입력받기",
-      blocks: [
-        md`
-          ### 한 줄에 여러 값: input().split()
-          시험에서는 \`85 90 77\` 처럼 **한 줄에 공백으로 띄운 여러 값**을 자주 입력받아요.
-          \`input().split()\` 은 공백으로 나눠 **문자열 리스트**를 만들어요.
-        `,
-        code(
-          py`
-            words = input().split()
-            print(words)
-            a, b = input().split()      # 두 개면 바로 나눠 담을 수 있어요
-            print(a, b)
-          `,
-          "사과 배 감\n민지 15"
-        ),
-        md`
-          ### 숫자로 바꾸기: map(int, …)
-          나눈 값은 아직 문자열이라 계산이 안 돼요. \`map(int, 리스트)\` 는 리스트의 **모든 값에 int 를 적용**해요.
-
-          | 코드 | 결과 (입력 \`3 5 7\`) |
-          |---|---|
-          | \`input().split()\` | \`['3', '5', '7']\` (문자열) |
-          | \`list(map(int, input().split()))\` | \`[3, 5, 7]\` (정수 리스트) |
-          | \`a, b, c = map(int, input().split())\` | \`a=3, b=5, c=7\` |
-
-          > 시험 지문의 입력 설명에 "**리스트**"가 나오면 거의 늘 \`list(map(int, input().split()))\` 로 받아요.
-        `,
-        code(
-          py`
-            nums = list(map(int, input().split()))
-            print(nums, sum(nums))
-            a, b = map(int, input().split())
-            print(a * b)
-          `,
-          "3 5 7\n4 6"
-        ),
-        ex({
-          title: "두 수의 합과 차",
-          prompt: md`
-            한 줄에 두 정수가 공백으로 띄어 입력돼요. 두 수의 합과 차(앞 수 - 뒤 수)를 한 줄에 출력해 보세요.
-          `,
-          starter: py`
-            # a, b = ...
-          `,
-          answer: py`
-            a, b = map(int, input().split())
-            print(a + b, a - b)
-          `,
-          stdin: "12 5",
-        }),
-        ex({
-          title: "점수 리스트 입력받기",
-          prompt: md`
-            한 줄에 여러 점수가 입력돼요. 점수 개수와 가장 높은 점수를 출력해 보세요.
-          `,
-          starter: py`
-            scores = input()
-          `,
-          answer: py`
-            scores = list(map(int, input().split()))
-            print(len(scores), max(scores))
-          `,
-          stdin: "88 92 75 100 64",
         }),
       ],
     },
@@ -238,71 +141,229 @@ export default {
               print(i, fruits[i])
         `),
         md`
-          ### 반복하면서 개수 세기·합 구하기
-          **변수를 0 으로 만들어 두고, 반복하면서 조건에 맞을 때 더하는** 패턴이에요. 3급 문제 대부분이 이 모양이에요.
+          ### 반복하면서 개수 세기
+          **변수를 0 으로 만들어 두고, 반복하면서 조건에 맞을 때 1 씩 더하는** 패턴이에요. 3급 문제 대부분이 이 모양이에요.
         `,
         code(py`
-          s = "Hello Python"
+          s = "banana"
           count = 0
           for ch in s:
-              if ch.isupper():
+              if ch == "a":
                   count += 1
-          print("대문자 개수:", count)
+          print("a 의 개수:", count)
         `),
         ex({
           title: "모음 개수",
           prompt: md`
-            문자열을 입력받아 모음(a, e, i, o, u)이 몇 개인지 출력해 보세요. (\`ch in "aeiou"\` 를 써 보세요)
+            \`s = "education"\` 에 모음(a, e, i, o, u)이 몇 개인지 출력해 보세요. (\`ch in "aeiou"\` 를 써 보세요)
           `,
           starter: py`
-            s = input()
+            s = "education"
             count = 0
           `,
           answer: py`
-            s = input()
+            s = "education"
             count = 0
             for ch in s:
                 if ch in "aeiou":
                     count += 1
             print(count)
           `,
-          stdin: "education",
         }),
         ex({
           title: "짝수 번째 원소의 합",
           prompt: md`
-            정수 리스트를 입력받아 **두 번째, 네 번째, …** 원소(인덱스 1, 3, 5 …)의 합을 출력해 보세요.
+            리스트 \`arr\` 의 **두 번째, 네 번째, …** 원소(인덱스 1, 3, 5 …)의 합을 출력해 보세요.
           `,
           starter: py`
-            arr = list(map(int, input().split()))
+            arr = [41, 23, 27, 0, 12, 36, 50]
           `,
           answer: py`
-            arr = list(map(int, input().split()))
+            arr = [41, 23, 27, 0, 12, 36, 50]
             total = 0
             for i in range(1, len(arr), 2):
                 total += arr[i]
             print(total)
           `,
-          stdin: "41 23 27 0 12 36 50",
+        }),
+      ],
+    },
+    {
+      id: "s2-logic",
+      title: "로직으로 직접 구하기 (합계·최댓값·절댓값·배수)",
+      blocks: [
+        md`
+          ### 왜 직접 만들어 볼까요?
+          파이썬에는 \`sum()\`, \`max()\`, \`abs()\` 같은 함수가 있지만(STEP3), 3급 **빈칸 문제**는 이 값을 **반복문과 조건문으로 직접 구하는 코드**의 한 줄을 비워 두는 경우가 많아요.
+          아래 패턴은 눈에 익을 때까지 연습해 두세요. 실습의 \`____\` 는 빈칸이에요. 알맞은 코드로 바꾸고 실행해 보세요.
+
+          ### 합계와 평균
+          합을 담을 변수를 **0** 으로 시작하고, 반복하며 더해요. 평균은 합 ÷ 개수예요.
+        `,
+        code(py`
+          nums = [80, 95, 72, 88]
+          total = 0
+          for x in nums:
+              total += x
+          print(total, total / len(nums))
+        `),
+        md`
+          ### 최댓값과 최솟값
+          **첫 값을 기준(best)으로 두고**, 더 큰 값(최솟값이면 더 작은 값)을 만나면 기준을 바꿔요.
+        `,
+        code(py`
+          nums = [12, 45, 7, 33]
+          best = nums[0]
+          low = nums[0]
+          for x in nums:
+              if x > best:
+                  best = x
+              if x < low:
+                  low = x
+          print(best, low, best - low)
+        `),
+        md`
+          ### 절댓값
+          음수이면 \`-1\` 을 곱해 양수로 바꿔요. (0 과 양수는 그대로)
+        `,
+        code(py`
+          n = -25
+          if n < 0:
+              n = n * -1
+          print(n)
+        `),
+        md`
+          ### 배수와 공배수
+          **n 이 k 의 배수** ⇔ \`n % k == 0\` (나머지가 0)
+          **c 가 a 와 b 의 공배수** ⇔ \`c % a == 0 and c % b == 0\`
+          "a **또는** b 의 배수"면 \`or\` 를 써요.
+        `,
+        code(py`
+          c = 12
+          print(c % 3 == 0, c % 5 == 0)
+          print(c % 3 == 0 and c % 4 == 0)   # 3 과 4 의 공배수인가?
+          for i in range(1, 31):
+              if i % 2 == 0 and i % 3 == 0:
+                  print(i, end=" ")           # 2 와 3 의 공배수
+        `),
+        ex({
+          title: "빈칸 채우기 · 합계와 평균",
+          prompt: md`
+            점수 리스트 \`scores\` 의 합계와 평균을 출력하는 코드예요. 빈칸 \`____\` 을 채워 완성해 보세요.
+          `,
+          starter: py`
+            scores = [70, 85, 90, 65]
+            total = 0
+            for s in scores:
+                total += ____
+            print(total, total / len(scores))
+          `,
+          answer: py`
+            scores = [70, 85, 90, 65]
+            total = 0
+            for s in scores:
+                total += s
+            print(total, total / len(scores))
+          `,
+        }),
+        ex({
+          title: "빈칸 채우기 · 가장 작은 수",
+          prompt: md`
+            리스트 \`nums\` 에서 가장 작은 수를 찾는 코드예요. 빈칸을 채워 완성해 보세요.
+          `,
+          starter: py`
+            nums = [15, 8, 23, 4, 16]
+            low = nums[0]
+            for x in nums:
+                if ____:
+                    low = x
+            print(low)
+          `,
+          answer: py`
+            nums = [15, 8, 23, 4, 16]
+            low = nums[0]
+            for x in nums:
+                if x < low:
+                    low = x
+            print(low)
+          `,
+        }),
+        ex({
+          title: "절댓값이 더 큰 수",
+          prompt: md`
+            정수 a, b 중 절댓값이 더 큰 **원래 수**를 출력해 보세요. a, b 값을 바꿔 가며 확인해 보세요. (\`abs()\` 없이)
+            예: \`-10\`, \`5\` → \`-10\`
+          `,
+          starter: py`
+            a = -10
+            b = 5
+          `,
+          answer: py`
+            a = -10
+            b = 5
+            abs_a = a
+            abs_b = b
+            if a < 0:
+                abs_a = a * -1
+            if b < 0:
+                abs_b = b * -1
+            if abs_a > abs_b:
+                print(a)
+            else:
+                print(b)
+          `,
+        }),
+        ex({
+          title: "빈칸 채우기 · 공배수 판별",
+          prompt: md`
+            c 가 a 와 b 의 공배수이면 \`True\`, 아니면 \`False\` 를 출력하도록 빈칸을 채워 보세요.
+          `,
+          starter: py`
+            a = 4
+            b = 6
+            c = 24
+            if ____:
+                print("True")
+            else:
+                print("False")
+          `,
+          answer: py`
+            a = 4
+            b = 6
+            c = 24
+            if c % a == 0 and c % b == 0:
+                print("True")
+            else:
+                print("False")
+          `,
+        }),
+        ex({
+          title: "a 또는 b 의 배수 개수",
+          prompt: md`
+            1 부터 n 까지의 수 중 a 의 배수**이거나** b 의 배수인 수가 몇 개인지 출력해 보세요.
+          `,
+          starter: py`
+            n = 20
+            a = 3
+            b = 5
+          `,
+          answer: py`
+            n = 20
+            a = 3
+            b = 5
+            count = 0
+            for i in range(1, n + 1):
+                if i % a == 0 or i % b == 0:
+                    count += 1
+            print(count)
+          `,
         }),
       ],
     },
     {
       id: "s2-ifloop",
-      title: "조건문과 반복문 결합",
+      title: "조건문과 반복문 결합 (break · continue)",
       blocks: [
-        md`
-          ### 가장 큰 값 찾기
-          \`max()\` 를 쓰지 않고 직접 찾는 방법이에요. **첫 값을 기준으로 두고, 더 큰 값이 나오면 바꾸는** 패턴이에요.
-        `,
-        code(py`
-          nums = [12, 45, 7, 33]
-          best = nums[0]
-          for n in nums:
-              if n > best:
-                  best = n
-          print(best)
-        `),
         md`
           ### break 와 continue
           \`break\` 는 반복을 **바로 끝내고**, \`continue\` 는 이번 차례만 **건너뛰고** 다음으로 가요.
@@ -322,30 +383,29 @@ export default {
         ex({
           title: "3의 배수만 출력",
           prompt: md`
-            n 을 입력받아 1 부터 n 까지 3 의 배수만 공백으로 띄어 한 줄에 출력해 보세요.
+            1 부터 n 까지 3 의 배수만 공백으로 띄어 한 줄에 출력해 보세요.
           `,
           starter: py`
-            n = int(input())
+            n = 20
           `,
           answer: py`
-            n = int(input())
+            n = 20
             for i in range(1, n + 1):
                 if i % 3 == 0:
                     print(i, end=" ")
           `,
-          stdin: "20",
         }),
         ex({
           title: "처음 나오는 7 의 위치",
           prompt: md`
-            숫자 리스트를 입력받아 7 보다 **앞에** 있는 숫자가 몇 개인지 출력해 보세요. (7 을 만나면 \`break\`)
+            리스트 \`nums\` 에서 7 보다 **앞에** 있는 숫자가 몇 개인지 출력해 보세요. (7 을 만나면 \`break\`)
           `,
           starter: py`
-            nums = list(map(int, input().split()))
+            nums = [14, 45, 50, 3, 7, 11, 5]
             count = 0
           `,
           answer: py`
-            nums = list(map(int, input().split()))
+            nums = [14, 45, 50, 3, 7, 11, 5]
             count = 0
             for n in nums:
                 if n == 7:
@@ -353,7 +413,6 @@ export default {
                 count += 1
             print(count)
           `,
-          stdin: "14 45 50 3 7 11 5",
         }),
       ],
     },
@@ -366,30 +425,26 @@ export default {
           조건이 참이면 **값1**, 거짓이면 **값2** 가 돼요. 둘 중 하나를 고를 때 \`if/else\` 4 줄을 한 줄로 쓸 수 있어요.
           (시험 코드에서 이 모양이 나오면 읽을 수 있으면 돼요)
         `,
-        code(
-          py`
-            n = int(input())
-            print("짝수" if n % 2 == 0 else "홀수")
+        code(py`
+          n = 10
+          print("짝수" if n % 2 == 0 else "홀수")
 
-            a, b = 7, 3
-            bigger = a if a > b else b
-            print(bigger)
-          `,
-          "10"
-        ),
+          a, b = 7, 3
+          bigger = a if a > b else b
+          print(bigger)
+        `),
         ex({
           title: "합격 / 불합격",
           prompt: md`
-            점수를 입력받아 60 점 이상이면 \`합격\`, 아니면 \`불합격\` 을 **조건부 표현식 한 줄로** 출력해 보세요.
+            \`score\` 가 60 점 이상이면 \`합격\`, 아니면 \`불합격\` 을 **조건부 표현식 한 줄로** 출력해 보세요.
           `,
           starter: py`
-            score = int(input())
+            score = 58
           `,
           answer: py`
-            score = int(input())
+            score = 58
             print("합격" if score >= 60 else "불합격")
           `,
-          stdin: "58",
         }),
       ],
     },

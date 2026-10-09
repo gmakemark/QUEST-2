@@ -39,6 +39,190 @@ export default {
       ],
     },
     {
+      id: "s3-input",
+      title: "여러 값을 입력받기",
+      blocks: [
+        md`
+          ### 한 줄에 여러 값: input().split()
+          시험에서는 \`85 90 77\` 처럼 **한 줄에 공백으로 띄운 여러 값**을 자주 입력받아요.
+          \`input().split()\` 은 공백으로 나눠 **문자열 리스트**를 만들어요.
+        `,
+        code(
+          py`
+            words = input().split()
+            print(words)
+            a, b = input().split()      # 두 개면 바로 나눠 담을 수 있어요
+            print(a, b)
+          `,
+          "사과 배 감\n민지 15"
+        ),
+        md`
+          ### 숫자로 바꾸기: map(int, …)
+          나눈 값은 아직 문자열이라 계산이 안 돼요. \`map(int, 리스트)\` 는 리스트의 **모든 값에 int 를 적용**하고, \`list()\` 로 감싸면 리스트가 돼요.
+
+          | 코드 | 결과 (입력 \`3 5 7\`) |
+          |---|---|
+          | \`input().split()\` | \`['3', '5', '7']\` (문자열) |
+          | \`list(map(int, input().split()))\` | \`[3, 5, 7]\` (정수 리스트) |
+          | \`a, b, c = map(int, input().split())\` | \`a=3, b=5, c=7\` |
+
+          > 시험 지문의 입력 설명에 "**리스트**"가 나오면 거의 늘 \`list(map(int, input().split()))\` 로 받아요.
+        `,
+        code(
+          py`
+            nums = list(map(int, input().split()))
+            print(nums, len(nums))
+            a, b = map(int, input().split())
+            print(a * b)
+          `,
+          "3 5 7\n4 6"
+        ),
+        ex({
+          title: "두 수의 합과 차",
+          prompt: md`
+            한 줄에 두 정수가 공백으로 띄어 입력돼요. 두 수의 합과 차(앞 수 - 뒤 수)를 한 줄에 출력해 보세요.
+          `,
+          starter: py`
+            # a, b = ...
+          `,
+          answer: py`
+            a, b = map(int, input().split())
+            print(a + b, a - b)
+          `,
+          stdin: "12 5",
+        }),
+        ex({
+          title: "점수 리스트 입력받기",
+          prompt: md`
+            한 줄에 여러 점수가 입력돼요. 점수 개수와 첫 번째 점수, 마지막 점수를 출력해 보세요.
+          `,
+          starter: py`
+            scores = input()
+          `,
+          answer: py`
+            scores = list(map(int, input().split()))
+            print(len(scores), scores[0], scores[-1])
+          `,
+          stdin: "88 92 75 100 64",
+        }),
+      ],
+    },
+    {
+      id: "s3-builtin",
+      title: "내장 함수와 시험 단골 메서드",
+      blocks: [
+        md`
+          ### STEP2 에서 직접 만든 것을 한 줄로
+          STEP2 에서 반복문으로 구한 합계·최댓값·절댓값은 파이썬에 **내장 함수**로 들어 있어요. 구현 문제에서는 내장 함수를 쓰면 짧고 정확해요.
+          (빈칸 문제는 여전히 STEP2 방식의 코드가 많이 나오니 둘 다 알아 두세요)
+
+          | 내장 함수 | 하는 일 | STEP2 에서 직접 만든 방법 |
+          |---|---|---|
+          | \`sum(리스트)\` | 합계 | \`total += x\` 반복 |
+          | \`max(리스트)\` / \`min(리스트)\` | 가장 큰 / 작은 값 | \`if x > best: best = x\` |
+          | \`abs(x)\` | 절댓값 | \`if x < 0: x = x * -1\` |
+          | \`round(x, n)\` | 소수 n 자리로 반올림 | – |
+          | \`sorted(리스트)\` | 정렬한 **새** 리스트 (원래 리스트는 그대로) | \`리스트.sort()\` 는 원래 리스트를 바꿈 |
+
+          \`max(3, 9)\` 처럼 값을 여러 개 바로 넣어도 돼요.
+        `,
+        code(py`
+          scores = [80, 95, 72, 88]
+          print(sum(scores), max(scores), min(scores))
+          print(sum(scores) / len(scores))        # 평균
+          print(abs(-7), abs(7 - 12), max(3, 9))
+          print(round(3.146, 2))
+          print(sorted(scores), scores)
+        `),
+        md`
+          ### 검사 메서드
+          문자 하나(또는 문자열)가 어떤 글자인지 \`True\`/\`False\` 로 알려 줘요. **한 글자씩 검사하는 반복문**과 함께 시험에 자주 나와요. (기출: "소문자 개수 세기"의 빈칸)
+
+          | 메서드 | True 가 되는 경우 |
+          |---|---|
+          | \`isupper()\` | 대문자 |
+          | \`islower()\` | 소문자 |
+          | \`isdigit()\` | 숫자 |
+          | \`isalpha()\` | 글자(알파벳·한글) |
+        `,
+        code(py`
+          s = "PyThon3"
+          for ch in s:
+              print(ch, ch.isupper(), ch.islower(), ch.isdigit())
+        `),
+        md`
+          ### 수학 패턴 두 가지
+          **팩토리얼** n! = 1 × 2 × … × n — 곱할 변수는 **1** 로 시작해요. (0 으로 시작하면 늘 0)
+          **자릿수의 합** — \`n % 10\` 은 맨 끝 자리, \`n // 10\` 은 끝 자리를 떼어 낸 수예요.
+        `,
+        code(py`
+          n = 5
+          result = 1
+          for i in range(1, n + 1):
+              result *= i
+          print(result)
+
+          n = 1234
+          total = 0
+          while n > 0:
+              total += n % 10
+              n //= 10
+          print(total)
+        `),
+        ex({
+          title: "대문자 개수",
+          prompt: md`
+            문자열을 입력받아 대문자가 몇 개인지 출력해 보세요.
+          `,
+          starter: py`
+            s = input()
+          `,
+          answer: py`
+            s = input()
+            count = 0
+            for ch in s:
+                if ch.isupper():
+                    count += 1
+            print(count)
+          `,
+          stdin: "LOGic Python",
+        }),
+        ex({
+          title: "반별 최장신",
+          prompt: md`
+            두 줄에 두 반 학생들의 키가 공백으로 띄어 입력돼요. 각 반에서 가장 큰 키를 공백으로 띄어 출력해 보세요.
+          `,
+          starter: py`
+            green = list(map(int, input().split()))
+            yellow = list(map(int, input().split()))
+          `,
+          answer: py`
+            green = list(map(int, input().split()))
+            yellow = list(map(int, input().split()))
+            print(max(green), max(yellow))
+          `,
+          stdin: "140 155 148\n150 162 158",
+        }),
+        ex({
+          title: "팩토리얼",
+          prompt: md`
+            n 을 입력받아 n! 을 출력해 보세요. (n = 6 → \`720\`)
+          `,
+          starter: py`
+            n = int(input())
+          `,
+          answer: py`
+            n = int(input())
+            result = 1
+            for i in range(1, n + 1):
+                result *= i
+            print(result)
+          `,
+          stdin: "6",
+        }),
+      ],
+    },
+    {
       id: "s3-format",
       title: "소수점 자리수 표현하기",
       blocks: [
