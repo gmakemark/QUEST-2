@@ -141,6 +141,45 @@ export default {
               print(i, fruits[i])
         `),
         md`
+          ### 반복한 결과를 한 줄에 출력하기
+          \`print()\` 는 끝에 줄을 바꾸기 때문에, 반복문 안에서 그냥 쓰면 한 줄에 하나씩 나와요. **한 줄에 이어서** 출력하려면 STEP1 에서 배운 \`end\` 를 써요.
+
+          | 하고 싶은 것 | 코드 | 결과 |
+          |---|---|---|
+          | 반복하며 공백으로 이어서 | \`print(x, end=" ")\` | \`1 2 3\` |
+          | 리스트를 한 번에 공백으로 | \`print(*nums)\` | \`1 2 3\` |
+          | 리스트를 한 번에 다른 글자로 | \`print(*nums, sep=",")\` | \`1,2,3\` |
+
+          \`print(nums)\` 는 \`[1, 2, 3]\` 처럼 대괄호까지 나와요. 시험에서는 보통 \`1 2 3\` 모양을 원해요.
+          반복이 끝난 뒤 \`print()\` 를 한 번 쓰면 줄이 바뀌어서, 다음 출력이 새 줄에서 시작해요.
+        `,
+        code(py`
+          nums = [1, 2, 3]
+          for n in nums:
+              print(n * 10, end=" ")
+          print()
+          print(nums)
+          print(*nums)
+          print(*nums, sep=",")
+        `),
+        ex({
+          title: "k 부터 3 씩 n 개",
+          prompt: md`
+            \`k = 7\`, \`n = 5\` 일 때 k 에서 시작해 3 씩 더한 수 n 개를 공백으로 띄어 **한 줄에** 출력해 보세요.
+            결과: \`7 10 13 16 19\`
+          `,
+          starter: py`
+            k = 7
+            n = 5
+          `,
+          answer: py`
+            k = 7
+            n = 5
+            for i in range(n):
+                print(k + 3 * i, end=" ")
+          `,
+        }),
+        md`
           ### 반복하면서 개수 세기
           **변수를 0 으로 만들어 두고, 반복하면서 조건에 맞을 때 1 씩 더하는** 패턴이에요. 3급 문제 대부분이 이 모양이에요.
         `,
@@ -190,7 +229,7 @@ export default {
     },
     {
       id: "s2-logic",
-      title: "로직으로 직접 구하기 (합계·최댓값·절댓값·배수)",
+      title: "로직으로 직접 구하기 (합계·최댓값·절댓값·배수·문자 판별)",
       blocks: [
         md`
           ### 왜 직접 만들어 볼까요?
@@ -356,6 +395,64 @@ export default {
                 if i % a == 0 or i % b == 0:
                     count += 1
             print(count)
+          `,
+        }),
+        md`
+          ### 대문자·소문자·숫자 판별 (비교 연산자)
+          글자도 \`<\`, \`>\` 로 크기를 비교할 수 있어요. 컴퓨터 안에서 글자마다 번호가 있고, \`'0'\`~\`'9'\`, \`'A'\`~\`'Z'\`, \`'a'\`~\`'z'\` 가 각각 차례대로 붙어 있기 때문이에요.
+          파이썬은 비교를 이어서 쓸 수 있어서, "**A 이상이고 Z 이하**"를 \`'A' <= ch <= 'Z'\` 처럼 한 번에 써요.
+
+          | 조건 | 뜻 |
+          |---|---|
+          | \`'A' <= ch <= 'Z'\` | ch 가 대문자 |
+          | \`'a' <= ch <= 'z'\` | ch 가 소문자 |
+          | \`'0' <= ch <= '9'\` | ch 가 숫자 |
+        `,
+        code(py`
+          for ch in "aZ5?":
+              print(ch, 'A' <= ch <= 'Z', 'a' <= ch <= 'z', '0' <= ch <= '9')
+        `),
+        ex({
+          title: "빈칸 채우기 · 대문자 개수",
+          prompt: md`
+            문자열 \`s\` 에 들어 있는 대문자의 개수를 출력하는 코드예요. 빈칸을 **비교 연산자로** 채워 보세요.
+          `,
+          starter: py`
+            s = "Hello Python World"
+            count = 0
+            for ch in s:
+                if ____:
+                    count += 1
+            print(count)
+          `,
+          answer: py`
+            s = "Hello Python World"
+            count = 0
+            for ch in s:
+                if 'A' <= ch <= 'Z':
+                    count += 1
+            print(count)
+          `,
+        }),
+        ex({
+          title: "소문자와 숫자 세기",
+          prompt: md`
+            \`password = "Class2026!go"\` 에서 소문자의 개수와 숫자의 개수를 한 줄에 출력해 보세요.
+            결과: \`6 4\`
+          `,
+          starter: py`
+            password = "Class2026!go"
+          `,
+          answer: py`
+            password = "Class2026!go"
+            lower = 0
+            digit = 0
+            for ch in password:
+                if 'a' <= ch <= 'z':
+                    lower += 1
+                elif '0' <= ch <= '9':
+                    digit += 1
+            print(lower, digit)
           `,
         }),
       ],

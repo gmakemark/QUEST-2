@@ -136,7 +136,7 @@ export default {
         `),
         md`
           ### 검사 메서드
-          문자 하나(또는 문자열)가 어떤 글자인지 \`True\`/\`False\` 로 알려 줘요. **한 글자씩 검사하는 반복문**과 함께 시험에 자주 나와요. (기출: "소문자 개수 세기"의 빈칸)
+          STEP2 에서 비교 연산자(예: 대문자 판별)로 했던 일을 메서드로 할 수 있어요. 문자 하나(또는 문자열)가 어떤 글자인지 \`True\`/\`False\` 로 알려 줘요. **한 글자씩 검사하는 반복문**과 함께 시험에 자주 나와요. (기출: "소문자 개수 세기"의 빈칸)
 
           | 메서드 | True 가 되는 경우 |
           |---|---|
@@ -269,50 +269,6 @@ export default {
             print("%.2f" % average)
           `,
           stdin: "85 89 91",
-        }),
-      ],
-    },
-    {
-      id: "s3-print",
-      title: "여러 값 한 줄에 출력하기",
-      blocks: [
-        md`
-          ### 정리
-          | 하고 싶은 것 | 코드 | 결과 |
-          |---|---|---|
-          | 공백으로 띄어 출력 | \`print(a, b)\` | \`3 7\` |
-          | 다른 글자로 띄어 출력 | \`print(a, b, sep=",")\` | \`3,7\` |
-          | 반복하며 한 줄로 | \`print(x, end=" ")\` | \`1 2 3\` |
-          | 리스트를 한 줄로 | \`print(*nums)\` | \`1 2 3\` |
-          | 리스트를 글자로 이어서 | \`" ".join(map(str, nums))\` | \`1 2 3\` |
-
-          \`print(nums)\` 는 \`[1, 2, 3]\` 처럼 대괄호까지 나오니 주의해요.
-        `,
-        code(py`
-          nums = [1, 2, 3]
-          print(nums)
-          print(*nums)
-          print(*nums, sep=",")
-          print(" ".join(map(str, nums)))
-          for n in nums:
-              print(n * 10, end=" ")
-        `),
-        ex({
-          title: "k 부터 d 씩 n 개",
-          prompt: md`
-            두 줄에 k 와 n 이 입력돼요. k 에서 시작해 3 씩 더한 수 n 개를 공백으로 띄어 한 줄에 출력해 보세요. (\`7\`, \`5\` → \`7 10 13 16 19\`)
-          `,
-          starter: py`
-            k = int(input())
-            n = int(input())
-          `,
-          answer: py`
-            k = int(input())
-            n = int(input())
-            for i in range(n):
-                print(k + 3 * i, end=" ")
-          `,
-          stdin: "7\n5",
         }),
       ],
     },

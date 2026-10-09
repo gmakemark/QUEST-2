@@ -129,6 +129,16 @@ export default {
           age = 20
           print("나이: " + age)
         `),
+        md`
+          ### f-문자열: 글자 사이에 변수 넣기
+          따옴표 앞에 \`f\` 를 붙이고, 넣고 싶은 변수나 계산식을 **중괄호 \`{ }\`** 안에 써요. 자료형을 바꾸지 않아도 돼서 편해요.
+        `,
+        code(py`
+          name = "민지"
+          age = 20
+          print(f"{name}님은 {age}살, 내년에는 {age + 1}살")
+          print(f"나이: {age}")
+        `),
         ex({
           title: "합계 구하기",
           prompt: md`
@@ -143,6 +153,7 @@ export default {
             price = 1200
             count = 3
             print("합계:", price * count)
+            # f-문자열로: print(f"합계: {price * count}")
           `,
         }),
       ],

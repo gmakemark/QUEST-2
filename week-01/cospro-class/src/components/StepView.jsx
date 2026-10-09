@@ -1,12 +1,47 @@
+import { Fragment } from "react";
 import { Lock } from "lucide-react";
 import Markdown from "./Markdown";
 import CodeRunner from "./CodeRunner";
 import ProblemCell from "./ProblemCell";
+import { CellsAfter, useUserCells } from "./UserCells";
 
 // STEP 하나: 머리말(목표) → 주제마다 설명·예제·실습·문제
+// 블록마다 아래에 [+ 코드] [+ 텍스트] 줄이 있어서 수강생이 자기 칸을 끼워 넣을 수 있다.
 export default function StepView({ step, onVerdict }) {
-  let exerciseNo = 0;
-  let problemNo = 0;
+  const store = useUserCells(step.n);
+  const numbers = numberBlocks(step);
+
+  function renderBlock(b, key) {
+    if (b.type === "md") return <Markdown>{b.text}</Markdown>;
+    if (b.type === "code") return <CodeRunner id={key} code={b.code} stdin={b.stdin} />;
+    if (b.type === "exercise") {
+      return (
+        <div className="space-y-3 rounded-lg border-2 border-emerald-500/60 bg-emerald-50/50 dark:bg-emerald-950/20 p-4">
+          <div className="text-sm font-bold text-emerald-700 dark:text-emerald-300">
+            실습 {numbers[key]} · {b.title}
+          </div>
+          <Markdown>{b.prompt}</Markdown>
+          <CodeRunner id={key} code={b.starter} stdin={b.stdin} answer={b.answer} />
+        </div>
+      );
+    }
+    if (b.type === "problem") {
+      return (
+        <div
+          id={`p-${b.problem.id}`}
+          data-anchor={`p-${b.problem.id}`}
+          className="scroll-mt-20 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5 shadow-sm"
+        >
+          <div className="mb-3 text-sm font-semibold text-blue-600 dark:text-blue-400">
+            [문제 {String(numbers[key]).padStart(2, "0")}] <span className="text-slate-800 dark:text-slate-100">{b.problem.title}</span>
+          </div>
+          <ProblemCell problem={b.problem} onVerdict={onVerdict} />
+        </div>
+      );
+    }
+    return null;
+  }
+
   return (
     <div className="space-y-8">
       <header className="rounded-lg bg-blue-600 p-5 text-white">
@@ -26,43 +61,34 @@ export default function StepView({ step, onVerdict }) {
           </h2>
 
           {topic.blocks.map((b, bi) => {
-            const key = `${topic.id}-${bi}`;
-            if (b.type === "md") return <Markdown key={key}>{b.text}</Markdown>;
-            if (b.type === "code") return <CodeRunner key={key} id={key} code={b.code} stdin={b.stdin} />;
-            if (b.type === "exercise") {
-              exerciseNo += 1;
-              return (
-                <div key={key} className="space-y-3 rounded-lg border-2 border-emerald-500/60 bg-emerald-50/50 dark:bg-emerald-950/20 p-4">
-                  <div className="text-sm font-bold text-emerald-700 dark:text-emerald-300">
-                    실습 {exerciseNo} · {b.title}
-                  </div>
-                  <Markdown>{b.prompt}</Markdown>
-                  <CodeRunner id={key} code={b.starter} stdin={b.stdin} answer={b.answer} />
-                </div>
-              );
-            }
-            if (b.type === "problem") {
-              problemNo += 1;
-              return (
-                <div
-                  key={key}
-                  id={`p-${b.problem.id}`}
-                  data-anchor={`p-${b.problem.id}`}
-                  className="scroll-mt-20 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5 shadow-sm"
-                >
-                  <div className="mb-3 text-sm font-semibold text-blue-600 dark:text-blue-400">
-                    [문제 {String(problemNo).padStart(2, "0")}] <span className="text-slate-800 dark:text-slate-100">{b.problem.title}</span>
-                  </div>
-                  <ProblemCell problem={b.problem} onVerdict={onVerdict} />
-                </div>
-              );
-            }
-            return null;
+            const key = blockKey(topic, bi);
+            return (
+              <Fragment key={key}>
+                {renderBlock(b, key)}
+                <CellsAfter anchor={key} store={store} />
+              </Fragment>
+            );
           })}
         </section>
       ))}
     </div>
   );
+}
+
+export const blockKey = (topic, i) => `${topic.id}-${i}`;
+
+// 실습은 STEP 안에서 1, 2, 3 …, 문제도 따로 1, 2, 3 … (정답 창도 같은 번호를 쓴다)
+export function numberBlocks(step) {
+  const numbers = {};
+  let exercise = 0;
+  let problem = 0;
+  step.topics.forEach((topic) =>
+    topic.blocks.forEach((b, i) => {
+      if (b.type === "exercise") numbers[blockKey(topic, i)] = ++exercise;
+      if (b.type === "problem") numbers[blockKey(topic, i)] = ++problem;
+    })
+  );
+  return numbers;
 }
 
 export function LockedStep({ n }) {

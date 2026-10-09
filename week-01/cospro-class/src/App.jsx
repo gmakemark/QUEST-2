@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Eye, EyeOff, KeyRound, Lock, LockOpen, Menu, Moon, PanelLeftClose, PanelLeftOpen, Sun } from "lucide-react";
+import { Eye, EyeOff, KeyRound, Lock, LockOpen, Menu, Monitor, Moon, PanelLeftClose, PanelLeftOpen, Sun } from "lucide-react";
 import Sidebar from "./components/Sidebar";
 import StepView, { LockedStep } from "./components/StepView";
 import LoginDialog from "./components/LoginDialog";
@@ -9,6 +9,7 @@ import { toggleTheme, useTheme } from "./lib/theme";
 import { fetchSiteStatus, setStepOpen } from "./lib/siteStatus";
 import { getSessionPassword } from "./lib/auth";
 import { readLS, writeLS } from "./lib/storage";
+import { openAnswerWindow, postPosition, setAdminSession } from "./lib/sync";
 import step1 from "./content/step1";
 import step2 from "./content/step2";
 import step3 from "./content/step3";
@@ -67,6 +68,11 @@ export default function App() {
     return () => observer.disconnect();
   }, [stepN, locked]);
 
+  // 관리자일 때: 정답 창이 따라올 수 있도록 지금 보는 STEP·주제를 알린다
+  useEffect(() => {
+    if (isAdmin) postPosition(stepN, activeId);
+  }, [isAdmin, stepN, activeId]);
+
   function toggleSidebar() {
     if (window.matchMedia("(min-width: 768px)").matches) {
       setSidebarHidden((v) => {
@@ -91,8 +97,10 @@ export default function App() {
   }
 
   function toggleMode() {
-    if (isAdmin) setIsAdmin(false);
-    else setDialog("login");
+    if (isAdmin) {
+      setIsAdmin(false);
+      setAdminSession(false);
+    } else setDialog("login");
   }
 
   const toolBtn = "inline-flex items-center gap-1.5 rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 py-1.5 text-sm hover:bg-slate-50 dark:hover:bg-slate-800";
@@ -172,6 +180,9 @@ export default function App() {
                   STEP 공개/비공개는 배포 사이트에서만 (지금은 모두 열림)
                 </span>
               )}
+              <button className={toolBtn} onClick={() => openAnswerWindow(step.n)} title="새 창으로 열어 다른 모니터에 두세요. 수업 화면을 따라 움직여요.">
+                <Monitor size={16} /> 정답 창 열기
+              </button>
               <button className={toolBtn} onClick={() => setDialog("settings")}>
                 <KeyRound size={16} /> 비밀번호
               </button>
@@ -192,6 +203,7 @@ export default function App() {
           onClose={() => setDialog(null)}
           onSuccess={() => {
             setIsAdmin(true);
+            setAdminSession(true);
             setDialog(null);
           }}
         />
