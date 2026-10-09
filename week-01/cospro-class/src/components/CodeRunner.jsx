@@ -2,22 +2,21 @@ import { useEffect, useRef, useState } from "react";
 import { CirclePlay, Eye, EyeOff, Loader2, RotateCcw } from "lucide-react";
 import CodeEditor from "./CodeEditor";
 import { runPython } from "../lib/pyRunner";
-import { codeKey, readLS, removeLS, writeLS } from "../lib/storage";
+import { readCode, writeCode } from "../lib/storage";
 
 // 수업용 코드 칸: 코드를 고쳐서 [실행] → 파이썬 에디터처럼 출력 또는 오류 메시지. (채점 없음)
 //  - input() 을 만나면 실행 결과 창에 입력칸이 나타난다. 값을 넣고 Enter → 그 값까지 넣어 처음부터 다시 실행.
 //    (브라우저 실행기는 중간에 멈춰 기다릴 수 없어서, 지금까지 입력한 값을 모두 넣고 다시 돌리는 방식)
 //  - answer 가 있으면 [예시 답안] 버튼이 있다.
 export default function CodeRunner({ id, code: initialCode, answer, label }) {
-  const [code, setCode] = useState(() => readLS(codeKey(id), initialCode));
+  const [code, setCode] = useState(() => readCode(id, initialCode));
   const [running, setRunning] = useState(false);
   const [output, setOutput] = useState(null);
   const [inputs, setInputs] = useState([]);
   const [showAnswer, setShowAnswer] = useState(false);
 
   useEffect(() => {
-    if (code === initialCode) removeLS(codeKey(id));
-    else writeLS(codeKey(id), code);
+    writeCode(id, initialCode, code);
   }, [id, code, initialCode]);
 
   async function run(given = []) {

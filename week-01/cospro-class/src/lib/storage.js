@@ -32,3 +32,18 @@ export const codeKey = (id) => `class.code.${id}`;
 export const stdinKey = (id) => `class.stdin.${id}`;
 // 빈칸 문제는 빈칸에 쓴 답 목록(JSON)을 저장한다.
 export const blankKey = (id) => `class.blanks.${id}`;
+
+// 코드 칸 저장: 고친 코드와 함께 "원래 코드"도 저장해 둔다.
+// 수업 내용이 바뀌어 원래 코드가 달라지면, 예전에 저장한 코드는 버리고 새 내용을 보여 준다.
+export function readCode(id, base) {
+  try {
+    const saved = JSON.parse(readLS(codeKey(id), "null"));
+    if (saved && saved.base === base && typeof saved.code === "string") return saved.code;
+  } catch {}
+  return base;
+}
+
+export function writeCode(id, base, code) {
+  if (code === base) removeLS(codeKey(id));
+  else writeLS(codeKey(id), JSON.stringify({ base, code }));
+}

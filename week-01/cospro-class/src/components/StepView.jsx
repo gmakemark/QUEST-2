@@ -5,49 +5,54 @@ import CodeRunner from "./CodeRunner";
 import ProblemCell from "./ProblemCell";
 import { CellsAfter, useUserCells } from "./UserCells";
 
-// STEP 하나: 머리말(목표) → (사용법) → 주제마다 설명·연습·실습·문제
+// STEP 하나: 머리말(목표) → 주제(1. 2. 3. …)마다 흰 박스들
+// 흰 박스 하나 = 밑줄 있는 소제목(### …) 하나. 박스 안에 소제목 · 설명 · 연습 · 실습이 차례로 들어가고,
+// 연습·실습은 따로 테두리 없이 흐린 번호로만 구분한다. 시험 형식 문제(STEP3)는 문제마다 따로 카드.
 // 블록마다 아래에 [+ 코드] [+ 텍스트] 줄이 있어서 수강생이 자기 칸을 끼워 넣을 수 있다.
 export default function StepView({ step, onVerdict }) {
   const store = useUserCells(step.n);
   const numbers = numberBlocks(step);
 
-  function renderBlock(b, key) {
-    if (b.type === "md") return <Markdown>{b.text}</Markdown>;
+  function renderItem(item) {
+    const { block: b, key, text } = item;
+    if (b.type === "md") return <Markdown>{text}</Markdown>;
     if (b.type === "code") return <CodeRunner id={key} code={b.code} />;
-    // 연습과 실습은 같은 카드: 흐린 테두리로 한 문제의 범위를 묶고, 문제(글·주석)와 코드만 눈에 띄게
     if (b.type === "task") {
       return (
-        <Card label={`연습 ${numbers[key]}`}>
+        <div className="space-y-2">
+          <Label>연습 {numbers[key]}</Label>
           <CodeRunner id={key} code={b.starter} answer={b.answer} />
-        </Card>
+        </div>
       );
     }
     if (b.type === "exercise") {
       return (
-        <Card label={`실습 ${numbers[key]}`}>
+        <div className="space-y-2">
+          <Label>실습 {numbers[key]}</Label>
           <div className="font-semibold text-slate-800 dark:text-slate-100">{b.title}</div>
           <div className="font-semibold [&_.prose]:text-slate-800 dark:[&_.prose]:text-slate-100">
             <Markdown>{b.prompt}</Markdown>
           </div>
           <CodeRunner id={key} code={b.starter} answer={b.answer} />
-        </Card>
-      );
-    }
-    if (b.type === "problem") {
-      return (
-        <div
-          id={`p-${b.problem.id}`}
-          data-anchor={`p-${b.problem.id}`}
-          className="scroll-mt-20 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5 shadow-sm"
-        >
-          <div className="mb-3 text-sm font-semibold text-accent-600 dark:text-accent-300">
-            [문제 {String(numbers[key]).padStart(2, "0")}] <span className="text-slate-800 dark:text-slate-100">{b.problem.title}</span>
-          </div>
-          <ProblemCell problem={b.problem} onVerdict={onVerdict} />
         </div>
       );
     }
     return null;
+  }
+
+  function renderProblem(b, key) {
+    return (
+      <div
+        id={`p-${b.problem.id}`}
+        data-anchor={`p-${b.problem.id}`}
+        className="scroll-mt-20 rounded-xl border border-slate-200/80 dark:border-slate-700/70 bg-white dark:bg-slate-900 p-5"
+      >
+        <div className="mb-3 text-sm text-slate-400 dark:text-slate-500">
+          [문제 {String(numbers[key]).padStart(2, "0")}] <span className="font-semibold text-slate-800 dark:text-slate-100">{b.problem.title}</span>
+        </div>
+        <ProblemCell problem={b.problem} onVerdict={onVerdict} />
+      </div>
+    );
   }
 
   return (
@@ -62,43 +67,68 @@ export default function StepView({ step, onVerdict }) {
         </ul>
       </header>
 
-      {/* 한 번 읽고 나면 눈에 띄지 않도록 회색 글씨로만 */}
-      {step.intro && (
-        <div className="text-sm leading-[1.15rem] text-slate-400 dark:text-slate-500">
-          {step.intro.map((line) => (
-            <p key={line}>{line}</p>
-          ))}
-        </div>
-      )}
-
       {step.topics.map((topic, ti) => (
         <section key={topic.id} id={topic.id} data-anchor={topic.id} className="scroll-mt-20 space-y-4">
           <h2 className="border-b-2 border-accent-300 dark:border-accent-700 pb-1 text-lg font-bold text-slate-800 dark:text-slate-100">
             {ti + 1}. {topic.title}
           </h2>
 
-          {topic.blocks.map((b, bi) => {
-            const key = blockKey(topic, bi);
-            return (
-              <Fragment key={key}>
-                {renderBlock(b, key)}
-                <CellsAfter anchor={key} store={store} />
+          {groupBySubtitle(topic).map((group, gi) =>
+            group.problem ? (
+              <Fragment key={group.key}>
+                {renderProblem(group.problem, group.key)}
+                <CellsAfter anchor={group.key} store={store} />
               </Fragment>
-            );
-          })}
+            ) : (
+              <div key={gi} className="space-y-5 rounded-xl border border-slate-200/80 dark:border-slate-700/70 bg-white dark:bg-slate-900 p-5">
+                {group.items.map((item) => (
+                  <Fragment key={item.id}>
+                    {renderItem(item)}
+                    {/* 설명이 여러 소제목으로 나뉘면, 끼워 넣기 줄은 그 설명의 마지막 조각 뒤에만 */}
+                    {item.last && <CellsAfter anchor={item.key} store={store} />}
+                  </Fragment>
+                ))}
+              </div>
+            )
+          )}
         </section>
       ))}
     </div>
   );
 }
 
-function Card({ label, children }) {
-  return (
-    <div className="space-y-3 rounded-xl border border-slate-200/80 dark:border-slate-700/70 bg-white dark:bg-slate-900 p-4">
-      <div className="text-xs text-slate-400 dark:text-slate-500">{label}</div>
-      {children}
-    </div>
-  );
+function Label({ children }) {
+  return <div className="text-xs text-slate-400 dark:text-slate-500">{children}</div>;
+}
+
+// 주제의 블록들을 "### 소제목" 단위로 묶는다.
+// 설명(md) 하나에 소제목이 여럿 있으면 소제목마다 잘라서 새 묶음을 시작한다.
+function groupBySubtitle(topic) {
+  const groups = [];
+  let current = null;
+  const open = () => {
+    current = { items: [] };
+    groups.push(current);
+  };
+  topic.blocks.forEach((b, bi) => {
+    const key = blockKey(topic, bi);
+    if (b.type === "problem") {
+      groups.push({ problem: b, key });
+      current = null;
+      return;
+    }
+    if (b.type === "md") {
+      const parts = b.text.split(/\n(?=### )/);
+      parts.forEach((text, pi) => {
+        if (!current || text.startsWith("### ")) open();
+        current.items.push({ block: b, key, text, id: `${key}-${pi}`, last: pi === parts.length - 1 });
+      });
+      return;
+    }
+    if (!current) open();
+    current.items.push({ block: b, key, id: key, last: true });
+  });
+  return groups;
 }
 
 export const blockKey = (topic, i) => `${topic.id}-${i}`;

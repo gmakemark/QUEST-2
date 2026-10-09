@@ -6,7 +6,7 @@ import Markdown from "./Markdown";
 import OutputPanel from "./OutputPanel";
 import { runPython } from "../lib/pyRunner";
 import { grade, splitCases } from "../lib/grader";
-import { blankKey, codeKey, readLS, removeLS, writeLS } from "../lib/storage";
+import { blankKey, codeKey, readCode, readLS, removeLS, writeCode, writeLS } from "../lib/storage";
 
 const readAnswers = (id, n) => {
   try {
@@ -21,7 +21,7 @@ const readAnswers = (id, n) => {
 // 시작 코드에 ⬜ 가 있으면 빈칸 문제: 코드는 고정하고 빈칸 입력칸만 채운다.
 export default function ProblemCell({ problem, onVerdict }) {
   const isBlank = problem.starterCode.includes(BLANK);
-  const [code, setCode] = useState(() => readLS(codeKey(problem.id), problem.starterCode));
+  const [code, setCode] = useState(() => readCode(problem.id, problem.starterCode));
   const [answers, setAnswers] = useState(() => readAnswers(problem.id, countBlanks(problem.starterCode)));
   const runCode = isBlank ? fillBlanks(problem.starterCode, answers) : code;
   const [running, setRunning] = useState(false);
@@ -33,7 +33,7 @@ export default function ProblemCell({ problem, onVerdict }) {
 
   useEffect(() => {
     if (isBlank) writeLS(blankKey(problem.id), JSON.stringify(answers));
-    else writeLS(codeKey(problem.id), code);
+    else writeCode(problem.id, problem.starterCode, code);
   }, [problem.id, isBlank, code, answers]);
 
   async function handleRun() {

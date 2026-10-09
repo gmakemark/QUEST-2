@@ -21,10 +21,26 @@ export function dedent(text) {
   return lines.map((l) => l.slice(cut)).join("\n");
 }
 
+// 마크다운은 줄 하나만 바꾸면 띄어쓰기로 이어 붙인다. 설명을 줄 바꿔 쓴 곳은 화면에서도 줄이 바뀌도록
+// 줄 끝에 공백 두 칸(강제 줄바꿈)을 붙인다. 표·목록·제목·인용·코드 블록은 건드리지 않는다.
+const startsBlock = (line) => /^\s*([-*+] |\d+\. |\||#|>|```)/.test(line);
+function keepLineBreaks(text) {
+  const lines = text.split("\n");
+  let fence = false;
+  for (let i = 0; i < lines.length - 1; i++) {
+    if (lines[i].trim().startsWith("```")) fence = !fence;
+    const a = lines[i];
+    const b = lines[i + 1];
+    if (fence || !a.trim() || !b.trim() || a.trim().startsWith("|") || a.trim().startsWith("```") || startsBlock(b)) continue;
+    lines[i] = a + "  ";
+  }
+  return lines.join("\n");
+}
+
 // md 는 raw 문자열이라 마크다운의 인라인 코드 백틱은 \` 로 적는다. (여기서 \` → ` 로 바꿈)
 export const md = (strings, ...values) => ({
   type: "md",
-  text: dedent(String.raw(strings, ...values)).replaceAll("\\`", "`"),
+  text: keepLineBreaks(dedent(String.raw(strings, ...values)).replaceAll("\\`", "`")),
 });
 
 const comment = (q) =>
