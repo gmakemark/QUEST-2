@@ -1,12 +1,12 @@
 import { useState } from "react";
 import Modal from "./Modal";
-import { TYPES, countTemplates, generateProblems, topicsOf } from "../lib/generator";
+import { countTemplates, generateProblems, topicsOf, typesOf } from "../lib/generator";
 
 // 급수·범위(단원)·유형·개수를 골라 문제를 자동으로 만든다.
 export default function GenerateDialog({ defaultGrade = 2, onClose, onGenerate }) {
   const [grade, setGrade] = useState(defaultGrade);
   const [topics, setTopics] = useState(() => topicsOf(defaultGrade).map((t) => t.key));
-  const [types, setTypes] = useState(TYPES.map((t) => t.key));
+  const [types, setTypes] = useState(() => typesOf(defaultGrade).map((t) => t.key));
   const [count, setCount] = useState(5);
 
   const toggle = (list, setList, key) => setList(list.includes(key) ? list.filter((k) => k !== key) : [...list, key]);
@@ -16,6 +16,7 @@ export default function GenerateDialog({ defaultGrade = 2, onClose, onGenerate }
   function changeGrade(g) {
     setGrade(g);
     setTopics(topicsOf(g).map((t) => t.key));
+    setTypes(typesOf(g).map((t) => t.key));
   }
 
   function handleGenerate() {
@@ -60,7 +61,7 @@ export default function GenerateDialog({ defaultGrade = 2, onClose, onGenerate }
         <section>
           <h3 className="mb-2 text-sm font-semibold">문제 유형</h3>
           <div className="flex flex-wrap gap-2">
-            {TYPES.map((t) => (
+            {typesOf(grade).map((t) => (
               <button key={t.key} className={chip(types.includes(t.key))} onClick={() => toggle(types, setTypes, t.key)}>
                 {t.label}
               </button>

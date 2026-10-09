@@ -10,6 +10,7 @@
 // ─────────────────────────────────────────────────────────────
 
 import { newId } from "./storage.js";
+import { TEMPLATES_3, buildStdinProblem } from "./generator3.js";
 
 export const TOPICS = [
   { key: "if", label: "조건문" },
@@ -20,10 +21,18 @@ export const TOPICS = [
 ];
 
 export const TYPES = [
-  { key: "complete", label: "함수 완성" },
-  { key: "blank", label: "빈칸 채우기" },
+  { key: "complete", label: "함수 완성", label3: "구현" },
+  { key: "blank", label: "빈칸 채우기", label3: "빈칸" },
   { key: "bug", label: "한 줄 고치기" },
 ];
+
+// 그 급수에서 만들 수 있는 유형 (3급은 시험 형식대로 빈칸 · 구현만)
+export function typesOf(grade) {
+  return TYPES.filter((t) => t.key === "complete" || TEMPLATES.some((tpl) => tpl.grade === grade && tpl.types.includes(t.key))).map((t) => ({
+    key: t.key,
+    label: grade === 3 && t.label3 ? t.label3 : t.label,
+  }));
+}
 
 // ── 무작위 도우미 ──
 const makeRandom = (rand = Math.random) => {
@@ -53,8 +62,8 @@ export function pyLit(v) {
 
 const WORDS = ["apple", "banana", "computer", "python", "education", "orange", "keyboard", "umbrella", "science", "library", "monitor", "algorithm"];
 
-// ── 템플릿 ──
-const TEMPLATES = [
+// ── 2급 템플릿 ──
+const TEMPLATES_2 = [
   {
     grade: 2,
     topic: "if",
@@ -361,6 +370,12 @@ const TEMPLATES = [
   },
 ];
 
+// 2급은 세 유형 모두, 3급은 빈칸·구현만
+const TEMPLATES = [
+  ...TEMPLATES_2.map((t) => ({ ...t, types: ["complete", "blank", "bug"] })),
+  ...TEMPLATES_3.map((t) => ({ ...t, types: ["complete", "blank"] })),
+];
+
 const TYPE_SENTENCE = {
   complete: "`solution` 함수를 완성해 주세요.",
   blank: "빈칸(`____`)을 채워 `solution` 함수를 완성해 주세요.",
@@ -435,7 +450,11 @@ export function generateProblems({ grade = 2, topics, types, count }, rand) {
   for (let i = 0; i < count; i++) {
     if (!order.length) order = r.shuffle(pool);
     const tpl = order.pop();
-    result.push(buildProblem(tpl.make(r), types[i % types.length], tpl.grade));
+    const usable = types.filter((t) => tpl.types.includes(t));
+    if (!usable.length) continue;
+    const type = usable[i % usable.length];
+    const made = tpl.make(r);
+    result.push(made.inputs ? buildStdinProblem(made, type, tpl.grade, newId) : buildProblem(made, type, tpl.grade));
   }
   return result;
 }

@@ -4,7 +4,7 @@ import CodeEditor from "./CodeEditor";
 import Markdown from "./Markdown";
 import OutputPanel from "./OutputPanel";
 import { runPython } from "../lib/pyRunner";
-import { grade } from "../lib/grader";
+import { grade, splitCases } from "../lib/grader";
 import { codeKey, readLS, removeLS, writeLS } from "../lib/storage";
 
 // 학생 모드의 문항 하나: 지문 → 코드 → 버튼 → 결과
@@ -22,7 +22,7 @@ export default function ProblemCell({ problem, onVerdict }) {
     if (running) return;
     setRunning(true);
     setGradeResult(null);
-    setOutput(await runPython(code, problem.stdin));
+    setOutput(await runPython(code, splitCases(problem.stdin)[0])); // 실행은 첫 번째 입력으로만
     setRunning(false);
   }
 

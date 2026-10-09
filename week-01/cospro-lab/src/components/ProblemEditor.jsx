@@ -5,7 +5,7 @@ import Markdown from "./Markdown";
 import OutputPanel from "./OutputPanel";
 import TableDialog from "./TableDialog";
 import MarkdownPasteDialog from "./MarkdownPasteDialog";
-import { runPython } from "../lib/pyRunner";
+import { runAllCases } from "../lib/grader";
 import { clipboardImage, imageFileToDataURL, imageMarkdown } from "../lib/image";
 
 // 관리자 모드의 문항 하나: 제목 / 지문(마크다운) / 시작 코드 / 정답 코드 / 표준입력
@@ -65,7 +65,7 @@ export default function ProblemEditor({ problem, isFirst, isLast, onSave, onDele
 
   async function testAnswer() {
     setRunning(true);
-    setOutput(await runPython(draft.answerCode, draft.stdin));
+    setOutput(await runAllCases(draft.answerCode, draft.stdin));
     setRunning(false);
   }
 
@@ -158,7 +158,7 @@ export default function ProblemEditor({ problem, isFirst, isLast, onSave, onDele
       </div>
 
       <div>
-        <span className={label}>표준 입력 (input() 을 쓰는 문제만 · 한 줄에 하나씩)</span>
+        <span className={label}>표준 입력 (input() 을 쓰는 문제만 · 한 줄에 하나씩 · 입력 세트를 여러 개 넣으려면 사이에 --- 한 줄 · 모두 맞아야 정답)</span>
         <textarea
           className="font-code h-16 w-full resize-y rounded-md border border-slate-300 dark:border-slate-600 p-2 text-sm outline-none focus:border-blue-500"
           value={draft.stdin}
