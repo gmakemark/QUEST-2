@@ -37,6 +37,9 @@ export default function CodeEditor({ value, onChange, onRun, readOnly = false, m
           padding: { top: 8, bottom: 8 },
           // 에디터 위에서 마우스 휠을 굴려도 페이지가 스크롤되게
           scrollbar: { alwaysConsumeMouseWheel: false },
+          // 새 입력 방식(EditContext) 대신 예전 textarea 를 쓴다.
+          // Vimium 같은 확장 프로그램이 EditContext 를 입력칸으로 알아보지 못해 글자를 단축키로 가로채기 때문.
+          editContext: false,
         }}
       />
     </div>
