@@ -12,9 +12,17 @@ export function fillBlanks(template, answers) {
 
 export const countBlanks = (template) => template.split(BLANK).length - 1;
 
+// 모범 답안 코드에서 빈칸마다 들어갈 답을 뽑아낸다. (맞춰지지 않으면 null)
+export function blankAnswers(template, answerCode) {
+  const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const m = answerCode.match(new RegExp("^" + template.split(BLANK).map(esc).join("(.*?)") + "$", "s"));
+  return m ? m.slice(1) : null;
+}
+
 // 시험 화면처럼 코드는 고정해 두고, ⬜ 자리마다 한 줄짜리 입력칸을 둔다.
 // 줄 앞의 공백(들여쓰기)은 그대로 보이고, 학생은 입력칸에만 쓸 수 있다.
-export default function BlankCode({ template, answers, onChange, onRun }) {
+// clearable[i] 가 true 인 칸(오답 뒤)은 클릭하면 묻지 않고 바로 비운다. 칸마다 한 번만.
+export default function BlankCode({ template, answers, onChange, onRun, clearable = [], onCleared }) {
   let index = 0; // 코드 전체에서 몇 번째 빈칸인지
   const lines = template.replace(/\n+$/, "").split("\n");
 
@@ -40,6 +48,11 @@ export default function BlankCode({ template, answers, onChange, onRun }) {
                     <input
                       value={value}
                       onChange={(e) => setAnswer(i, e.target.value)}
+                      onFocus={() => {
+                        if (!clearable[i]) return;
+                        setAnswer(i, "");
+                        onCleared?.(i);
+                      }}
                       onKeyDown={(e) => {
                         if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) onRun?.();
                       }}
