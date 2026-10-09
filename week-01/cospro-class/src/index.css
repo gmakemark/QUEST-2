@@ -1,0 +1,32 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+/* <html class="dark"> 일 때 dark: 클래스가 켜진다 (lib/theme.js 가 붙였다 뗐다 함) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* 색을 따로 정하지 않은 테두리(border, border-b …)의 기본색 */
+@layer base {
+  *, ::before, ::after {
+    border-color: var(--color-slate-200);
+  }
+  .dark *, .dark ::before, .dark ::after {
+    border-color: var(--color-slate-700);
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+html.dark {
+  color-scheme: dark; /* 스크롤바, 입력칸 등 브라우저 기본 부품도 어둡게 */
+}
+
+body {
+  @apply bg-slate-100 text-slate-800 dark:bg-slate-950 dark:text-slate-100;
+  font-family: "Pretendard", "Malgun Gothic", system-ui, sans-serif;
+}
+
+.font-code {
+  font-family: Consolas, "D2Coding", "Courier New", monospace;
+}
