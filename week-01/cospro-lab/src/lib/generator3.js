@@ -1351,7 +1351,7 @@ const esc = (v) => String(v).replace(/[\\`*_~|#<>[\]]/g, "\\$&");
 const bullet = (line) => (line.startsWith("  - ") ? line : `- ${line}`);
 
 // 3급 시험 형식으로 문제 하나를 조립한다.
-export function buildStdinProblem(t, type, grade, newId) {
+export function buildStdinProblem(t, type, grade, newId, source = "new") {
   let starter = IMPL_STARTER;
   if (type === "blank") {
     starter = t.body;
@@ -1391,6 +1391,7 @@ export function buildStdinProblem(t, type, grade, newId) {
     id: newId(),
     grade,
     title: `[${type === "blank" ? "빈칸" : "구현"}] ${t.title}`,
+    source, // exam: 기출 바탕 틀에서 나온 문제, new: 새 유형 틀에서 나온 문제
     description,
     starterCode: starter,
     answerCode: t.body + "\n",

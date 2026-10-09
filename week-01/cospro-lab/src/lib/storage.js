@@ -66,6 +66,7 @@ export function validateProblems(data) {
     starterCode: String(p.starterCode || ""),
     answerCode: String(p.answerCode || ""),
     stdin: String(p.stdin || ""),
+    source: p.source === "exam" ? "exam" : "new", // exam: 기출 바탕 문제, new: 그 밖의 문제
   }));
 }
 
@@ -75,3 +76,5 @@ export function newId() {
 
 // 학생이 작성 중인 코드는 문항별로 저장해서 새로고침해도 남게 한다.
 export const codeKey = (id) => `cospro.code.${id}`;
+// 빈칸 문제는 빈칸에 쓴 답 목록(JSON)을 저장한다.
+export const blankKey = (id) => `cospro.blanks.${id}`;

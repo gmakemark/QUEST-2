@@ -518,7 +518,7 @@ export function generateProblems({ grade = 2, topics, types, count }, rand) {
     const usable = types.filter((t) => tpl.types.includes(t));
     const type = usable[i % usable.length];
     const made = tpl.make(r);
-    result.push(made.inputs ? buildStdinProblem(made, type, tpl.grade, newId) : buildProblem(made, type, tpl.grade));
+    result.push(made.inputs ? buildStdinProblem(made, type, tpl.grade, newId, tpl.origin === "new" ? "new" : "exam") : buildProblem(made, type, tpl.grade));
   }
   return result;
 }

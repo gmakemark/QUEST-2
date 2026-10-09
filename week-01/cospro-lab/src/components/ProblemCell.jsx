@@ -1,28 +1,43 @@
 import { useEffect, useState } from "react";
 import { CheckCheck, Loader2, Play, RotateCcw } from "lucide-react";
 import CodeEditor from "./CodeEditor";
+import BlankCode, { BLANK, countBlanks, fillBlanks } from "./BlankCode";
 import Markdown from "./Markdown";
 import OutputPanel from "./OutputPanel";
 import { runPython } from "../lib/pyRunner";
 import { grade, splitCases } from "../lib/grader";
-import { codeKey, readLS, removeLS, writeLS } from "../lib/storage";
+import { blankKey, codeKey, readLS, removeLS, writeLS } from "../lib/storage";
+
+const readAnswers = (id, n) => {
+  try {
+    const a = JSON.parse(readLS(blankKey(id), "[]"));
+    return Array.isArray(a) ? Array.from({ length: n }, (_, i) => String(a[i] ?? "")) : Array(n).fill("");
+  } catch {
+    return Array(n).fill("");
+  }
+};
 
 // 학생 모드의 문항 하나: 지문 → 코드 → 버튼 → 결과
+// 시작 코드에 ⬜ 가 있으면 빈칸 문제: 코드는 고정하고 빈칸 입력칸만 채운다.
 export default function ProblemCell({ problem, onVerdict }) {
+  const isBlank = problem.starterCode.includes(BLANK);
   const [code, setCode] = useState(() => readLS(codeKey(problem.id), problem.starterCode));
+  const [answers, setAnswers] = useState(() => readAnswers(problem.id, countBlanks(problem.starterCode)));
+  const runCode = isBlank ? fillBlanks(problem.starterCode, answers) : code;
   const [running, setRunning] = useState(false);
   const [output, setOutput] = useState(null);
   const [gradeResult, setGradeResult] = useState(null);
 
   useEffect(() => {
-    writeLS(codeKey(problem.id), code);
-  }, [problem.id, code]);
+    if (isBlank) writeLS(blankKey(problem.id), JSON.stringify(answers));
+    else writeLS(codeKey(problem.id), code);
+  }, [problem.id, isBlank, code, answers]);
 
   async function handleRun() {
     if (running) return;
     setRunning(true);
     setGradeResult(null);
-    setOutput(await runPython(code, splitCases(problem.stdin)[0])); // 실행은 첫 번째 입력으로만
+    setOutput(await runPython(runCode, splitCases(problem.stdin)[0])); // 실행은 첫 번째 입력으로만
     setRunning(false);
   }
 
@@ -30,7 +45,7 @@ export default function ProblemCell({ problem, onVerdict }) {
   async function handleGrade() {
     if (running) return;
     setRunning(true);
-    const result = await grade(problem, code);
+    const result = await grade(problem, runCode);
     setOutput(result.student);
     setGradeResult(result);
     setRunning(false);
@@ -38,9 +53,11 @@ export default function ProblemCell({ problem, onVerdict }) {
   }
 
   function handleReset() {
-    if (!confirm("처음 코드로 되돌릴까요? 지금 작성한 코드는 사라집니다.")) return;
+    if (!confirm(isBlank ? "빈칸을 모두 지울까요?" : "처음 코드로 되돌릴까요? 지금 작성한 코드는 사라집니다.")) return;
     removeLS(codeKey(problem.id));
+    removeLS(blankKey(problem.id));
     setCode(problem.starterCode);
+    setAnswers(Array(countBlanks(problem.starterCode)).fill(""));
     setOutput(null);
     setGradeResult(null);
   }
@@ -49,7 +66,11 @@ export default function ProblemCell({ problem, onVerdict }) {
     <div className="space-y-4">
       <Markdown>{problem.description}</Markdown>
 
-      <CodeEditor value={code} onChange={setCode} onRun={handleRun} />
+      {isBlank ? (
+        <BlankCode template={problem.starterCode} answers={answers} onChange={setAnswers} onRun={handleRun} />
+      ) : (
+        <CodeEditor value={code} onChange={setCode} onRun={handleRun} />
+      )}
 
       <div className="flex flex-wrap items-center gap-2">
         <button
@@ -68,7 +89,7 @@ export default function ProblemCell({ problem, onVerdict }) {
           <CheckCheck size={16} /> 채점하기
         </button>
         <button onClick={handleReset} className="ml-auto inline-flex items-center gap-1 rounded-md px-2 py-1.5 text-xs text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800">
-          <RotateCcw size={14} /> 처음 코드로
+          <RotateCcw size={14} /> {isBlank ? "빈칸 지우기" : "처음 코드로"}
         </button>
       </div>
 

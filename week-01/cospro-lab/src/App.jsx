@@ -13,6 +13,7 @@ import {
   clearSavedProblems,
   fetchDefaultProblems,
   loadProblems,
+  blankKey,
   codeKey,
   newId,
   saveProblems,
@@ -76,7 +77,10 @@ export default function App() {
 
   // 세트를 바꾸고, 그 문제들의 지난 풀이와 채점 표시를 지운다.
   function chooseSet(ids) {
-    ids.forEach((id) => removeLS(codeKey(id)));
+    ids.forEach((id) => {
+      removeLS(codeKey(id));
+      removeLS(blankKey(id));
+    });
     setVerdicts({});
     setRound((n) => n + 1);
     setSets((old) => {
