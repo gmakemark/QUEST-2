@@ -22,7 +22,7 @@ const isBlank = (p) => p.title.startsWith("[빈칸]");
  * pool 에서 size 개를 골라 id 목록으로 돌려준다.
  *  - 직전 세트(prevIds)와 겹치지 않는 문제를 먼저 쓴다 (남은 문제가 모자라면 전체에서)
  *  - 3급 시험처럼 [빈칸] 절반 + 나머지([구현]) 절반으로 맞춘다
- *  - 보여 주는 순서는 원래 목록 순서 (빈칸 → 구현)
+ *  - 순서는 언제나 [빈칸] 먼저(1~5번), [구현] 나중(6~10번). 같은 유형 안에서는 원래 목록 순서
  */
 export function pickSet(pool, prevIds = [], size = SET_SIZE) {
   const fresh = pool.filter((p) => !prevIds.includes(p.id));
@@ -37,7 +37,8 @@ export function pickSet(pool, prevIds = [], size = SET_SIZE) {
     if (picked.size >= size) break;
     picked.add(p);
   }
-  return pool.filter((p) => picked.has(p)).map((p) => p.id);
+  const chosen = pool.filter((p) => picked.has(p));
+  return [...chosen.filter(isBlank), ...chosen.filter((p) => !isBlank(p))].map((p) => p.id);
 }
 
 export function isValidSet(ids, pool, size = SET_SIZE) {
