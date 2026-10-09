@@ -1,454 +1,454 @@
 {
   "problems": [
     {
-      "id": "g3-01",
-      "grade": 3,
-      "title": "[빈칸] 6의 배수 판별",
-      "description": "### 문제 설명\n\n자연수 n 을 입력받아, n 이 6의 배수이면 `YES`, 아니면 `NO` 를 출력하려고 합니다.\n\n**빈칸(⬜)을 채워** 전체 코드를 완성해 주세요.\n\n### 입출력 예\n\n| n | result |\n|:---:|:---:|\n| `36` | `YES` |\n\n> 입력은 표의 왼쪽 칸부터 한 줄에 하나씩 주어집니다. 채점할 때는 다른 입력으로도 확인합니다.",
-      "starterCode": "# ⬜ 는 빈칸을 의미합니다.\nn = int(input())\n\nif ⬜:\n    print(\"YES\")\nelse:\n    print(\"NO\")\n",
-      "answerCode": "n = int(input())\n\nif n % 6 == 0:\n    print(\"YES\")\nelse:\n    print(\"NO\")\n",
-      "stdin": "36\n---\n95\n---\n9\n---\n49"
-    },
-    {
-      "id": "g3-02",
-      "grade": 3,
-      "title": "[빈칸] 'm' 와 'M' 개수 세기",
-      "description": "### 문제 설명\n\n영문 문자열 name 을 입력받아, 알파벳 `m` 와 `M` 가 **모두 합쳐 몇 번** 나오는지 출력하려고 합니다. (문자열 메서드 `count`)\n\n**빈칸(⬜)을 채워** 전체 코드를 완성해 주세요.\n\n### 입출력 예\n\n| name | result |\n|:---:|:---:|\n| `meMruauur` | `2` |\n\n> 입력은 표의 왼쪽 칸부터 한 줄에 하나씩 주어집니다. 채점할 때는 다른 입력으로도 확인합니다.",
-      "starterCode": "# ⬜ 는 빈칸을 의미합니다.\nname = input()\n\nresult = ⬜ + ⬜\nprint(result)\n",
-      "answerCode": "name = input()\n\nresult = name.count('M') + name.count('m')\nprint(result)\n",
-      "stdin": "meMruauur\n---\niuMuemMr\n---\nuiMiyaoa"
-    },
-    {
-      "id": "g3-03",
-      "grade": 3,
-      "title": "[빈칸] 더 긴 단어의 길이",
-      "description": "### 문제 설명\n\n영어 단어 두 개를 입력받아, 두 단어 중 **더 긴 단어의 글자 수**를 출력하려고 합니다. (내장함수 `len`, `max`)\n\n**빈칸(⬜)을 채워** 전체 코드를 완성해 주세요.\n\n### 입출력 예\n\n| s1 | s2 | result |\n|:---:|:---:|:---:|\n| `peach` | `grape` | `5` |\n\n> 입력은 표의 왼쪽 칸부터 한 줄에 하나씩 주어집니다. 채점할 때는 다른 입력으로도 확인합니다.",
-      "starterCode": "# ⬜ 는 빈칸을 의미합니다.\ns1 = input()\ns2 = input()\n\nprint(max(⬜, ⬜))\n",
-      "answerCode": "s1 = input()\ns2 = input()\n\nprint(max(len(s1), len(s2)))\n",
-      "stdin": "peach\ngrape\n---\nkiwi\napple\n---\ngreen\ngrape"
-    },
-    {
-      "id": "g3-04",
-      "grade": 3,
-      "title": "[빈칸] 가장 큰 수",
-      "description": "### 문제 설명\n\n여러 개의 숫자를 공백으로 구분해 입력받아, 그중 **가장 큰 수**를 출력하려고 합니다. (max, min 함수를 쓰지 않고 반복문으로 풀어 보세요)\n\n**빈칸(⬜)을 채워** 전체 코드를 완성해 주세요.\n\n### 입출력 예\n\n| nums | result |\n|:---:|:---:|\n| `94 71 87 62 17 45 98` | `98` |\n\n> 입력은 표의 왼쪽 칸부터 한 줄에 하나씩 주어집니다. 채점할 때는 다른 입력으로도 확인합니다.",
-      "starterCode": "# ⬜ 는 빈칸을 의미합니다.\nnums = list(map(int, input().split()))\n\nbest = nums[0]\nfor x in nums:\n    if ⬜:\n        best = x\n\nprint(best)\n",
-      "answerCode": "nums = list(map(int, input().split()))\n\nbest = nums[0]\nfor x in nums:\n    if x > best:\n        best = x\n\nprint(best)\n",
-      "stdin": "94 71 87 62 17 45 98\n---\n4 7 24 19 4\n---\n46 23 57 10 82 89 47 14"
-    },
-    {
-      "id": "g3-05",
-      "grade": 3,
-      "title": "[빈칸] 5 이전 값의 개수",
-      "description": "### 문제 설명\n\n여러 개의 숫자를 공백으로 구분해 입력받아, **5 보다 앞에 있는** 숫자의 개수를 출력하려고 합니다. (5 은 한 번만 나옵니다)\n\n**빈칸(⬜)을 채워** 전체 코드를 완성해 주세요.\n\n### 입출력 예\n\n| nums | result |\n|:---:|:---:|\n| `82 12 13 11 88 72 27 5 89` | `7` |\n\n> 입력은 표의 왼쪽 칸부터 한 줄에 하나씩 주어집니다. 채점할 때는 다른 입력으로도 확인합니다.",
-      "starterCode": "# ⬜ 는 빈칸을 의미합니다.\nnums = list(map(int, input().split()))\n\ncount = 0\nfor x in nums:\n    if x == 5:\n        ⬜\n    count += 1\n\nprint(count)\n",
-      "answerCode": "nums = list(map(int, input().split()))\n\ncount = 0\nfor x in nums:\n    if x == 5:\n        break\n    count += 1\n\nprint(count)\n",
-      "stdin": "82 12 13 11 88 72 27 5 89\n---\n22 66 87 41 80 42 5 43 20\n---\n5 30 81 31 39 59 20 83"
-    },
-    {
-      "id": "g3-06",
-      "grade": 3,
-      "title": "[빈칸] 짝수 개수 × 홀수 개수",
-      "description": "### 문제 설명\n\n여러 개의 정수를 공백으로 구분해 입력받아, **짝수의 개수와 홀수의 개수를 곱한 값**을 출력하려고 합니다.\n\n**빈칸(⬜)을 채워** 전체 코드를 완성해 주세요.\n\n### 입출력 예\n\n| arr | result |\n|:---:|:---:|\n| `1 2 3 4 5` | `6` |\n\n> 입력은 표의 왼쪽 칸부터 한 줄에 하나씩 주어집니다. 채점할 때는 다른 입력으로도 확인합니다.",
-      "starterCode": "# ⬜ 는 빈칸을 의미합니다.\narr = list(map(int, input().split()))\n\nodd_count = 0\neven_count = 0\n\nfor num in arr:\n    if num % 2 != 0:\n        ⬜\n    else:\n        even_count += 1\n\nprint(odd_count * even_count)\n",
-      "answerCode": "arr = list(map(int, input().split()))\n\nodd_count = 0\neven_count = 0\n\nfor num in arr:\n    if num % 2 != 0:\n        odd_count += 1\n    else:\n        even_count += 1\n\nprint(odd_count * even_count)\n",
-      "stdin": "1 2 3 4 5\n---\n5 1 11 24 7 28\n---\n5 2 11 19 23 15"
-    },
-    {
-      "id": "g3-07",
-      "grade": 3,
-      "title": "[빈칸] 절댓값이 더 큰 수",
-      "description": "### 문제 설명\n\n두 정수 a 와 b 를 입력받아 절댓값을 비교합니다. **절댓값이 더 큰 원래 수**를 출력하고, 절댓값이 같으면 `same` 을 출력하려고 합니다. (내장함수 `abs`)\n\n**빈칸(⬜)을 채워** 전체 코드를 완성해 주세요.\n\n### 입출력 예\n\n| a | b | result |\n|:---:|:---:|:---:|\n| `-19` | `3` | `-19` |\n\n> 입력은 표의 왼쪽 칸부터 한 줄에 하나씩 주어집니다. 채점할 때는 다른 입력으로도 확인합니다.",
-      "starterCode": "# ⬜ 는 빈칸을 의미합니다.\na = int(input())\nb = int(input())\n\nabs_a = abs(a)\nabs_b = abs(b)\n\nif abs_a > abs_b:\n    print(⬜)\nelif abs_a < abs_b:\n    print(⬜)\nelse:\n    print(\"same\")\n",
-      "answerCode": "a = int(input())\nb = int(input())\n\nabs_a = abs(a)\nabs_b = abs(b)\n\nif abs_a > abs_b:\n    print(a)\nelif abs_a < abs_b:\n    print(b)\nelse:\n    print(\"same\")\n",
-      "stdin": "-19\n3\n---\n-14\n9\n---\n-3\n3\n---\n-12\n-15"
-    },
-    {
-      "id": "g3-08",
+      "id": "q3-01",
       "grade": 3,
       "title": "[빈칸] 영어사전 순 비교",
-      "description": "### 문제 설명\n\n알파벳 소문자로 된 서로 다른 문자열 두 개를 입력받아, 영어사전 순으로 **뒤에 오는** 문자열을 출력하려고 합니다.\n\n**빈칸(⬜)을 채워** 전체 코드를 완성해 주세요.\n\n### 입출력 예\n\n| s1 | s2 | result |\n|:---:|:---:|:---:|\n| `green` | `banana` | `green` |\n\n> 입력은 표의 왼쪽 칸부터 한 줄에 하나씩 주어집니다. 채점할 때는 다른 입력으로도 확인합니다.",
-      "starterCode": "# ⬜ 는 빈칸을 의미합니다.\ns1 = input()\ns2 = input()\n\nif ⬜:\n    print(s1)\nelse:\n    print(s2)\n",
-      "answerCode": "s1 = input()\ns2 = input()\n\nif s1 > s2:\n    print(s1)\nelse:\n    print(s2)\n",
-      "stdin": "green\nbanana\n---\nmango\nyellow\n---\nkiwi\ngreen\n---\nsilver\nmango"
+      "description": "### 문제 설명\n\n두 문자열 중 영어사전 순으로 앞에 오는 문자열을 구하려 합니다. 서로 다른 문자열 두 개가 주어졌을 때, 영어사전 순으로 앞에 오는 문자열을 출력합니다.\n\n코드가 올바르게 동작할 수 있도록 **빈칸을 채워 전체 코드를 완성해 주세요.**\n\n### 입력 설명\n\n- s1, s2 : 알파벳 소문자로 이루어진 서로 다른 문자열\n\n### 출력 설명\n\n영어사전 순으로 앞에 오는 문자열을 출력해 주세요.\n\n### 예제\n\n| s1 | s2 | result |\n|---|---|---|\n| school | coffee | coffee |\n| purple | grape | grape |\n\n\\# 예제 1: \"school\" 와 \"coffee\" 중 영어사전 순으로 앞에 오는 문자열은 \"coffee\" 이므로 coffee 을 출력합니다.  \n\\# 예제 2: \"purple\" 와 \"grape\" 중 영어사전 순으로 앞에 오는 문자열은 \"grape\" 이므로 grape 을 출력합니다.",
+      "starterCode": "s1 = input()\ns2 = input()\n\nif ⬜:\n    print(s1)\nelse:\n    print(s2)\n",
+      "answerCode": "s1 = input()\ns2 = input()\n\nif s1 < s2:\n    print(s1)\nelse:\n    print(s2)\n",
+      "stdin": "school\ncoffee\n---\npurple\ngrape\n---\ncoffee\nwinter\n---\nlemon\nmango"
     },
     {
-      "id": "g3-09",
+      "id": "q3-02",
       "grade": 3,
-      "title": "[빈칸] 알파벳 소문자 개수",
-      "description": "### 문제 설명\n\n문자열 하나를 입력받아, 문자열에 들어 있는 **알파벳 소문자의 개수**를 출력하려고 합니다.\n\n**빈칸(⬜)을 채워** 전체 코드를 완성해 주세요.\n\n### 입출력 예\n\n| s | result |\n|:---:|:---:|\n| `00Ixay01` | `3` |\n\n> 입력은 표의 왼쪽 칸부터 한 줄에 하나씩 주어집니다. 채점할 때는 다른 입력으로도 확인합니다.",
-      "starterCode": "# ⬜ 는 빈칸을 의미합니다.\ncount = 0\ns = input()\n\nfor i in range(0, len(s)):\n    if ⬜:\n        count += 1\n\nprint(count)\n",
-      "answerCode": "count = 0\ns = input()\n\nfor i in range(0, len(s)):\n    if s[i].islower():\n        count += 1\n\nprint(count)\n",
-      "stdin": "00Ixay01\n---\na1x03C\n---\nyL2OL1"
+      "title": "[빈칸] 공배수 판별하기",
+      "description": "### 문제 설명\n\n정수 a, b, c 가 주어졌을 때, c 가 a 와 b 의 공배수이면 True, 공배수가 아니면 False 를 출력하려 합니다.\n\n코드가 올바르게 동작할 수 있도록 **빈칸을 채워 전체 코드를 완성해 주세요.**\n\n### 입력 설명\n\n- a, b, c : 1 이상 999 이하의 자연수\n\n### 출력 설명\n\nc 가 a 와 b 의 공배수이면 True, 아니면 False 를 출력해 주세요.\n\n### 예제\n\n| a | b | c | result |\n|---|---|---|---|\n| 8 | 3 | 72 | True |\n| 7 | 2 | 99 | False |\n\n\\# 예제 1: 8 과 3 의 공배수는 24 의 배수이고, 72 는 24 의 배수이므로 True 를 출력합니다.  \n\\# 예제 2: 7 과 2 의 공배수는 14 의 배수이고, 99 는 14 의 배수가 아니므로 False 를 출력합니다.",
+      "starterCode": "a = int(input())\nb = int(input())\nc = int(input())\n\nif ⬜:\n    print(\"True\")\nelse:\n    print(\"False\")\n",
+      "answerCode": "a = int(input())\nb = int(input())\nc = int(input())\n\nif c % a == 0 and c % b == 0:\n    print(\"True\")\nelse:\n    print(\"False\")\n",
+      "stdin": "8\n3\n72\n---\n7\n2\n99\n---\n2\n8\n32\n---\n5\n3\n92"
     },
     {
-      "id": "g3-10",
+      "id": "q3-03",
+      "grade": 3,
+      "title": "[빈칸] 뒤에서부터 한 글자씩 늘려 출력",
+      "description": "### 문제 설명\n\n문자열 하나가 주어졌을 때, 뒤에서부터 한 글자씩 늘어나는 부분 문자열을 공백으로 구분하여 순서대로 출력하려 합니다.\n\n코드가 올바르게 동작할 수 있도록 **빈칸을 채워 전체 코드를 완성해 주세요.**\n\n### 입력 설명\n\n- s : 알파벳 대소문자로 이루어진 문자열\n  - 문자열 길이는 1 이상 20 이하\n\n### 출력 설명\n\n한 글자씩 늘어나는 부분 문자열을 공백으로 구분하여 한 줄에 출력해 주세요.\n\n### 예제\n\n| s | result |\n|---|---|\n| Data | a ta ata Data |\n| Smart | t rt art mart Smart |\n\n\\# 예제 1: \"Data\" 의 한 글자씩 늘어나는 부분 문자열 a, ta, ata, Data 를 공백으로 구분하여 출력합니다.  \n\\# 예제 2: \"Smart\" 의 한 글자씩 늘어나는 부분 문자열 t, rt, art, mart, Smart 를 공백으로 구분하여 출력합니다.",
+      "starterCode": "s = input()\n\nfor i in range(0, len(s)):\n    for j in range(⬜, len(s)):\n        print(⬜, end=\"\")\n    print(end=\" \")\n",
+      "answerCode": "s = input()\n\nfor i in range(0, len(s)):\n    for j in range(len(s) - 1 - i, len(s)):\n        print(s[j], end=\"\")\n    print(end=\" \")\n",
+      "stdin": "Data\n---\nSmart\n---\nAIcode\n---\nMouse"
+    },
+    {
+      "id": "q3-04",
+      "grade": 3,
+      "title": "[빈칸] 홀수 번째 원소의 합",
+      "description": "### 문제 설명\n\n정수 n 과 n 개의 정수가 담긴 리스트 arr 이 주어졌을 때, arr 의 원소 중 홀수 번째(1, 3, 5 … 번째) 원소를 모두 더한 값을 출력하려 합니다.\n\n코드가 올바르게 동작할 수 있도록 **빈칸을 채워 전체 코드를 완성해 주세요.**\n\n### 입력 설명\n\n- n : arr 의 원소 개수로서 1 이상 100 이하의 자연수\n- arr : n 개의 정수가 담긴 리스트 (공백으로 구분)\n\n### 출력 설명\n\narr 의 홀수 번째 원소를 모두 더한 값을 출력해 주세요.\n\n### 예제\n\n| n | arr | result |\n|---|---|---|\n| 7 | 57 52 51 11 28 83 38 | 174 |\n| 7 | 48 81 78 90 78 78 73 | 277 |\n\n\\# 예제 1: 홀수 번째 원소는 57, 51, 28, 38 이고, 57 + 51 + 28 + 38 = 174 을 출력합니다.  \n\\# 예제 2: 홀수 번째 원소는 48, 78, 78, 73 이고, 48 + 78 + 78 + 73 = 277 을 출력합니다.",
+      "starterCode": "n = int(input())\narr = list(map(int, input().split()))\n\ntotal = 0\nfor i in range(⬜, n, 2):\n    total += arr[i]\n\nprint(total)\n",
+      "answerCode": "n = int(input())\narr = list(map(int, input().split()))\n\ntotal = 0\nfor i in range(0, n, 2):\n    total += arr[i]\n\nprint(total)\n",
+      "stdin": "7\n57 52 51 11 28 83 38\n---\n7\n48 81 78 90 78 78 73\n---\n8\n13 43 18 48 83 70 63 61\n---\n7\n75 31 89 14 59 16 54"
+    },
+    {
+      "id": "q3-05",
+      "grade": 3,
+      "title": "[빈칸] # 로 연결하기",
+      "description": "### 문제 설명\n\n문자열 두 개가 주어졌을 때, 첫 번째 문자열과 두 번째 문자열 사이에 특수문자(`#`)를 넣어 출력하려 합니다.\n\n코드가 올바르게 동작할 수 있도록 **빈칸을 채워 전체 코드를 완성해 주세요.**\n\n### 입력 설명\n\n- s1, s2 : 알파벳 소문자로 이루어진 문자열\n\n### 출력 설명\n\ns1, s2 순서로 사이에 `#` 를 넣은 문자열을 출력해 주세요.\n\n### 예제\n\n| s1 | s2 | result |\n|---|---|---|\n| lemon | orange | lemon\\#orange |\n| silver | violet | silver\\#violet |\n\n\\# 예제 1: 'lemon' 와 'orange' 사이에 \\# 를 넣어 lemon\\#orange 을 출력합니다.  \n\\# 예제 2: 'silver' 와 'violet' 사이에 \\# 를 넣어 silver\\#violet 을 출력합니다.",
+      "starterCode": "s1 = input()\ns2 = input()\n\nprint(⬜)\n",
+      "answerCode": "s1 = input()\ns2 = input()\n\nprint(s1 + \"#\" + s2)\n",
+      "stdin": "lemon\norange\n---\nsilver\nviolet\n---\nmelon\nschool\n---\nviolet\ncoffee"
+    },
+    {
+      "id": "q3-06",
       "grade": 3,
       "title": "[빈칸] 카드 게임 승자",
-      "description": "### 문제 설명\n\n두 사람 A, B 가 카드를 한 장씩 냅니다. 카드의 순위는 `\"JQK\"` 순서(J < Q < K)입니다. A 와 B 의 카드가 붙어서(예: `QJ` → A 는 Q, B 는 J) 입력될 때, **B 의 카드가 더 높으면 `B`**, 그렇지 않으면 `A` 를 출력하려고 합니다.\n\n**빈칸(⬜)을 채워** 전체 코드를 완성해 주세요.\n\n### 입출력 예\n\n| cards | result |\n|:---:|:---:|\n| `JK` | `B` |\n\n> 입력은 표의 왼쪽 칸부터 한 줄에 하나씩 주어집니다. 채점할 때는 다른 입력으로도 확인합니다.",
-      "starterCode": "# ⬜ 는 빈칸을 의미합니다.\ncards = input().strip()\n\npriority = \"JQK\"\nwinner = 'A'\n\nfor i in range(len(priority)):\n    if priority[i] == cards[0]:\n        for k in range(⬜, len(priority)):\n            if priority[k] == cards[1]:\n                winner = 'B'\n\nprint(winner)\n",
-      "answerCode": "cards = input().strip()\n\npriority = \"JQK\"\nwinner = 'A'\n\nfor i in range(len(priority)):\n    if priority[i] == cards[0]:\n        for k in range(i + 1, len(priority)):\n            if priority[k] == cards[1]:\n                winner = 'B'\n\nprint(winner)\n",
-      "stdin": "JK\n---\nQQ\n---\nJK\n---\nJJ"
+      "description": "### 문제 설명\n\nA 와 B 는 카드 게임을 하고 있습니다. J, Q, K, A 로 구성된 4장의 카드에서 A 와 B 가 1장씩 뽑았을 때, 우선순위가 높은 카드를 뽑은 사람이 이깁니다. 카드의 우선순위는 J < Q < K < A 입니다.\nA 와 B 가 뽑은 카드가 순서대로 저장된 문자열 cards 가 주어졌을 때, 이기는 사람을 출력하려 합니다.\n\n코드가 올바르게 동작할 수 있도록 **빈칸을 채워 전체 코드를 완성해 주세요.**\n\n### 입력 설명\n\n- cards : A 가 뽑은 카드와 B 가 뽑은 카드가 순서대로 저장된 문자열\n  - 각 문자는 J, Q, K, A 중 하나이며 같은 카드는 없습니다.\n\n### 출력 설명\n\nA 의 카드가 더 높으면 A 를, B 의 카드가 더 높으면 B 를 출력해 주세요.\n\n### 예제\n\n| cards | result |\n|---|---|\n| KJ | A |\n| KQ | A |\n\n\\# 예제 1: A 가 K, B 가 J 를 뽑았고 K 의 우선순위가 더 높으므로 A 를 출력합니다.  \n\\# 예제 2: A 가 K, B 가 Q 를 뽑았고 K 의 우선순위가 더 높으므로 A 를 출력합니다.",
+      "starterCode": "cards = input()\n\npriority = \"JQKA\"\nwinner = \"A\"\n\nfor i in range(0, len(priority)):\n    if priority[i] == cards[0]:\n        for k in range(⬜, len(priority)):\n            if priority[k] == cards[1]:\n                winner = \"B\"\n\nprint(winner)\n",
+      "answerCode": "cards = input()\n\npriority = \"JQKA\"\nwinner = \"A\"\n\nfor i in range(0, len(priority)):\n    if priority[i] == cards[0]:\n        for k in range(i + 1, len(priority)):\n            if priority[k] == cards[1]:\n                winner = \"B\"\n\nprint(winner)\n",
+      "stdin": "KJ\n---\nKQ\n---\nKA\n---\nQA"
     },
     {
-      "id": "g3-11",
+      "id": "q3-07",
       "grade": 3,
-      "title": "[빈칸] = 와 + 교차 출력",
-      "description": "### 문제 설명\n\n자연수 n 을 입력받아, `=` 는 0개부터 n-1개까지 1개씩 늘리고 `+` 는 n개부터 1개까지 1개씩 줄이면서, 한 줄에 `=` 묶음과 `+` 묶음을 번갈아 이어 출력하려고 합니다.\n\n예를 들어 n 이 3이면 (= 0개, + 3개), (= 1개, + 2개), (= 2개, + 1개) 를 이어서 `+++=++==+` 를 출력합니다.\n\n**빈칸(⬜)을 채워** 전체 코드를 완성해 주세요.\n\n### 입출력 예\n\n| n | result |\n|:---:|:---:|\n| `3` | `+++=++==+` |\n\n> 입력은 표의 왼쪽 칸부터 한 줄에 하나씩 주어집니다. 채점할 때는 다른 입력으로도 확인합니다.",
-      "starterCode": "# ⬜ 는 빈칸을 의미합니다.\nn = int(input())\n\nfor i in range(n):\n    print(⬜, end=\"\")\nprint()\n",
-      "answerCode": "n = int(input())\n\nfor i in range(n):\n    print(\"=\" * i + \"+\" * (n - i), end=\"\")\nprint()\n",
-      "stdin": "3\n---\n4\n---\n6"
+      "title": "[빈칸] 삼각형과 평행사변형의 넓이",
+      "description": "### 문제 설명\n\n밑변의 길이 base 와 높이 height 가 주어졌을 때, 삼각형의 넓이와 평행사변형의 넓이를 출력하려 합니다. 삼각형의 넓이는 소수점 아래 첫째 자리까지, 평행사변형의 넓이는 정수로 공백으로 구분하여 한 줄에 출력합니다.\n\n코드가 올바르게 동작할 수 있도록 **빈칸을 채워 전체 코드를 완성해 주세요.**\n\n### 입력 설명\n\n- base : 도형의 밑변 길이로서 1 이상 999 이하의 자연수\n- height : 도형의 높이로서 1 이상 999 이하의 자연수\n\n### 출력 설명\n\n삼각형 넓이와 평행사변형 넓이를 차례대로 출력해 주세요.\n- 삼각형 넓이 : 실수 (소수점 첫 번째 자리까지)\n- 평행사변형 넓이 : 정수\n\n### 예제\n\n| base | height | result |\n|---|---|---|\n| 3 | 82 | 123.0 246 |\n| 5 | 15 | 37.5 75 |\n\n\\# 예제 1: 밑변 3, 높이 82 이므로 삼각형 넓이는 3 x 82 / 2 = 123.0, 평행사변형 넓이는 3 x 82 = 246 입니다.  \n\\# 예제 2: 밑변 5, 높이 15 이므로 삼각형 넓이는 5 x 15 / 2 = 37.5, 평행사변형 넓이는 5 x 15 = 75 입니다.",
+      "starterCode": "base = int(input())\nheight = int(input())\n\ntriangle = base * height / 2\nother = base * height\n\nprint(\"⬜\" % (triangle, other))\n",
+      "answerCode": "base = int(input())\nheight = int(input())\n\ntriangle = base * height / 2\nother = base * height\n\nprint(\"%.1f %d\" % (triangle, other))\n",
+      "stdin": "3\n82\n---\n5\n15\n---\n92\n61\n---\n46\n43"
     },
     {
-      "id": "g3-12",
+      "id": "q3-08",
       "grade": 3,
-      "title": "[빈칸] 작은 수부터 정렬하기",
-      "description": "### 문제 설명\n\n여러 개의 숫자를 공백으로 구분해 입력받아, **작은 수부터 차례로** 공백으로 구분하여 출력하려고 합니다. (내장함수 `sorted`)\n\n**빈칸(⬜)을 채워** 전체 코드를 완성해 주세요.\n\n### 입출력 예\n\n| nums | result |\n|:---:|:---:|\n| `13 41 45 61 59` | `13 41 45 59 61` |\n\n> 입력은 표의 왼쪽 칸부터 한 줄에 하나씩 주어집니다. 채점할 때는 다른 입력으로도 확인합니다.",
-      "starterCode": "# ⬜ 는 빈칸을 의미합니다.\nnums = list(map(int, input().split()))\n\nnums = ⬜\nfor x in nums:\n    print(x, end=\" \")\n",
-      "answerCode": "nums = list(map(int, input().split()))\n\nnums = sorted(nums)\nfor x in nums:\n    print(x, end=\" \")\n",
-      "stdin": "13 41 45 61 59\n---\n50 24 90 26\n---\n24 73 36 11"
+      "title": "[빈칸] 평균 점수 구하기",
+      "description": "### 문제 설명\n\n영어, 음악, 국어 점수가 리스트(배열) score 에 순서대로 주어졌을 때, 세 과목의 평균 점수를 구하여 소수 두째 자리까지 반올림하여 출력하는 코드를 작성하려 합니다.\n\n코드가 올바르게 동작할 수 있도록 **빈칸을 채워 전체 코드를 완성해 주세요.**\n\n### 입력 설명\n\n- score 는 [영어, 음악, 국어] 점수가 순서대로 들어 있는 리스트(배열)입니다.\n  - 각 점수는 0 이상 100 이하의 정수\n\n### 출력 설명\n\n세 과목의 평균 점수를 계산하여 소수점 두 번째 자리까지 출력해 주세요.\n\n### 예제\n\n| score | result |\n|---|---|\n| 86 99 61 | 82.00 |\n| 91 98 66 | 85.00 |\n\n\\# 예제 1: 영어점수 : 86점, 음악점수 : 99점, 국어점수 : 61점이며, 평균 점수는 82 이므로 소수점 두 번째 자리까지 82.00 을 출력합니다.  \n\\# 예제 2: 영어점수 : 91점, 음악점수 : 98점, 국어점수 : 66점이며, 평균 점수는 85 이므로 소수점 두 번째 자리까지 85.00 을 출력합니다.",
+      "starterCode": "score = list(map(int, input().split()))\n\ntotal_score = 0\n\nfor subject in score:\n    total_score += subject\n\naverage = total_score / ⬜\n\nprint(\"%.2f\" % average)\n",
+      "answerCode": "score = list(map(int, input().split()))\n\ntotal_score = 0\n\nfor subject in score:\n    total_score += subject\n\naverage = total_score / len(score)\n\nprint(\"%.2f\" % average)\n",
+      "stdin": "86 99 61\n---\n91 98 66\n---\n91 52 98\n---\n64 79 97"
     },
     {
-      "id": "g3-13",
+      "id": "q3-09",
       "grade": 3,
-      "title": "[빈칸] 자릿수 세기",
-      "description": "### 문제 설명\n\n자연수 n 을 입력받아, n 이 **몇 자리 수**인지 출력하려고 합니다. (내장함수 `str`, `len`)\n\n**빈칸(⬜)을 채워** 전체 코드를 완성해 주세요.\n\n### 입출력 예\n\n| n | result |\n|:---:|:---:|\n| `6594949` | `7` |\n\n> 입력은 표의 왼쪽 칸부터 한 줄에 하나씩 주어집니다. 채점할 때는 다른 입력으로도 확인합니다.",
-      "starterCode": "# ⬜ 는 빈칸을 의미합니다.\nn = int(input())\n\nprint(len(⬜))\n",
-      "answerCode": "n = int(input())\n\nprint(len(str(n)))\n",
-      "stdin": "6594949\n---\n368605\n---\n8893621"
+      "title": "[빈칸] 숫자 개수 세기",
+      "description": "### 문제 설명\n\n문자열이 주어졌을 때, 문자열에 포함된 숫자의 개수를 출력하려 합니다.\n\n코드가 올바르게 동작할 수 있도록 **빈칸을 채워 전체 코드를 완성해 주세요.**\n\n### 입력 설명\n\n- s : 알파벳 대소문자와 숫자로 이루어진 문자열\n  - 문자열 길이는 1 이상 100 이하\n\n### 출력 설명\n\n문자열 s 에 포함된 숫자의 개수를 출력해 주세요.\n\n### 예제\n\n| s | result |\n|---|---|\n| 1zBzee | 1 |\n| 13zHH2x | 3 |\n\n\\# 예제 1: 문자열에 포함된 숫자는 '1' 이므로 1 을 출력합니다.  \n\\# 예제 2: 문자열에 포함된 숫자는 '1', '3', '2' 이므로 3 을 출력합니다.",
+      "starterCode": "count = 0\ns = input()\n\nfor i in range(0, len(s)):\n    if ⬜:\n        count += 1\n\nprint(count)\n",
+      "answerCode": "count = 0\ns = input()\n\nfor i in range(0, len(s)):\n    if s[i].isdigit():\n        count += 1\n\nprint(count)\n",
+      "stdin": "1zBzee\n---\n13zHH2x\n---\n21cxazcgH\n---\nzcFz2aY"
     },
     {
-      "id": "g3-14",
+      "id": "q3-10",
+      "grade": 3,
+      "title": "[빈칸] 절댓값이 더 큰 수",
+      "description": "### 문제 설명\n\n정수 a, b 가 주어졌을 때, 절댓값이 더 큰 수를 출력하는 프로그램을 작성하려 합니다.\n\n코드가 올바르게 동작할 수 있도록 **빈칸을 채워 전체 코드를 완성해 주세요.**\n\n### 입력 설명\n\n- a, b : -999 이상 999 이하의 정수\n  - a 와 b 의 절댓값은 항상 다르게 주어집니다.\n\n### 출력 설명\n\n입력된 a, b 중 절댓값이 더 큰 수를 출력해 주세요.\n\n### 예제\n\n| a | b | result |\n|---|---|---|\n| 284 | 481 | 481 |\n| 214 | -827 | -827 |\n\n\\# 예제 1: a 의 절댓값은 284, b 의 절댓값은 481 이므로 절댓값이 더 큰 b 의 값 481 을 출력합니다.  \n\\# 예제 2: a 의 절댓값은 214, b 의 절댓값은 827 이므로 절댓값이 더 큰 b 의 값 -827 을 출력합니다.",
+      "starterCode": "a = int(input())\nb = int(input())\n\nabs_a = a\nabs_b = b\n\nif a < 0:\n    abs_a = abs_a * ⬜\n\nif b < 0:\n    abs_b = abs_b * ⬜\n\nif abs_a > abs_b:\n    print(a)\nelse:\n    print(b)\n",
+      "answerCode": "a = int(input())\nb = int(input())\n\nabs_a = a\nabs_b = b\n\nif a < 0:\n    abs_a = abs_a * -1\n\nif b < 0:\n    abs_b = abs_b * -1\n\nif abs_a > abs_b:\n    print(a)\nelse:\n    print(b)\n",
+      "stdin": "284\n481\n---\n214\n-827\n---\n-321\n841\n---\n762\n948"
+    },
+    {
+      "id": "q3-11",
+      "grade": 3,
+      "title": "[빈칸] 알파벳 소문자 개수 세기",
+      "description": "### 문제 설명\n\n문자열이 주어졌을 때, 문자열에 포함된 알파벳 소문자의 개수를 출력하려 합니다.\n\n코드가 올바르게 동작할 수 있도록 **빈칸을 채워 전체 코드를 완성해 주세요.**\n\n### 입력 설명\n\n- s : 알파벳 대소문자와 숫자로 이루어진 문자열\n  - 문자열 길이는 1 이상 100 이하\n\n### 출력 설명\n\n문자열 s 에 포함된 알파벳 소문자의 개수를 출력해 주세요.\n\n### 예제\n\n| s | result |\n|---|---|\n| FeD3cDcc | 4 |\n| e03YxHD | 2 |\n\n\\# 예제 1: 문자열에 포함된 알파벳 소문자는 'e', 'c', 'c', 'c' 이므로 4 을 출력합니다.  \n\\# 예제 2: 문자열에 포함된 알파벳 소문자는 'e', 'x' 이므로 2 을 출력합니다.",
+      "starterCode": "count = 0\ns = input()\n\nfor i in range(0, len(s)):\n    if ⬜:\n        count += 1\n\nprint(count)\n",
+      "answerCode": "count = 0\ns = input()\n\nfor i in range(0, len(s)):\n    if s[i].islower():\n        count += 1\n\nprint(count)\n",
+      "stdin": "FeD3cDcc\n---\ne03YxHD\n---\naxc2g\n---\n3xez22FD0"
+    },
+    {
+      "id": "q3-12",
+      "grade": 3,
+      "title": "[빈칸] & 로 연결하기",
+      "description": "### 문제 설명\n\n문자열 두 개가 주어졌을 때, 두 번째 문자열을 앞에, 첫 번째 문자열을 뒤에 두고 사이에 특수문자(`&`)를 넣어 출력하려 합니다.\n\n코드가 올바르게 동작할 수 있도록 **빈칸을 채워 전체 코드를 완성해 주세요.**\n\n### 입력 설명\n\n- s1, s2 : 알파벳 소문자로 이루어진 문자열\n\n### 출력 설명\n\ns2, s1 순서로 사이에 `&` 를 넣은 문자열을 출력해 주세요.\n\n### 예제\n\n| s1 | s2 | result |\n|---|---|---|\n| mango | winter | winter&mango |\n| silver | school | school&silver |\n\n\\# 예제 1: 'winter' 와 'mango' 사이에 & 를 넣어 winter&mango 을 출력합니다.  \n\\# 예제 2: 'school' 와 'silver' 사이에 & 를 넣어 school&silver 을 출력합니다.",
+      "starterCode": "s1 = input()\ns2 = input()\n\nprint(⬜)\n",
+      "answerCode": "s1 = input()\ns2 = input()\n\nprint(s2 + \"&\" + s1)\n",
+      "stdin": "mango\nwinter\n---\nsilver\nschool\n---\nmango\nsummer\n---\nsummer\nmelon"
+    },
+    {
+      "id": "q3-13",
+      "grade": 3,
+      "title": "[빈칸] 뒤에서부터 한 글자씩 늘려 출력",
+      "description": "### 문제 설명\n\n문자열 하나가 주어졌을 때, 뒤에서부터 한 글자씩 늘어나는 부분 문자열을 공백으로 구분하여 순서대로 출력하려 합니다.\n\n코드가 올바르게 동작할 수 있도록 **빈칸을 채워 전체 코드를 완성해 주세요.**\n\n### 입력 설명\n\n- s : 알파벳 대소문자로 이루어진 문자열\n  - 문자열 길이는 1 이상 20 이하\n\n### 출력 설명\n\n한 글자씩 늘어나는 부분 문자열을 공백으로 구분하여 한 줄에 출력해 주세요.\n\n### 예제\n\n| s | result |\n|---|---|\n| Cloud | d ud oud loud Cloud |\n| Python | n on hon thon ython Python |\n\n\\# 예제 1: \"Cloud\" 의 한 글자씩 늘어나는 부분 문자열 d, ud, oud, loud, Cloud 를 공백으로 구분하여 출력합니다.  \n\\# 예제 2: \"Python\" 의 한 글자씩 늘어나는 부분 문자열 n, on, hon, thon, ython, Python 를 공백으로 구분하여 출력합니다.",
+      "starterCode": "s = input()\n\nfor i in range(0, len(s)):\n    for j in range(⬜, len(s)):\n        print(⬜, end=\"\")\n    print(end=\" \")\n",
+      "answerCode": "s = input()\n\nfor i in range(0, len(s)):\n    for j in range(len(s) - 1 - i, len(s)):\n        print(s[j], end=\"\")\n    print(end=\" \")\n",
+      "stdin": "Cloud\n---\nPython\n---\nPython\n---\nSmart"
+    },
+    {
+      "id": "q3-14",
+      "grade": 3,
+      "title": "[빈칸] 절댓값이 더 큰 수",
+      "description": "### 문제 설명\n\n정수 a, b 가 주어졌을 때, 절댓값이 더 큰 수를 출력하는 프로그램을 작성하려 합니다.\n\n코드가 올바르게 동작할 수 있도록 **빈칸을 채워 전체 코드를 완성해 주세요.**\n\n### 입력 설명\n\n- a, b : -999 이상 999 이하의 정수\n  - a 와 b 의 절댓값은 항상 다르게 주어집니다.\n\n### 출력 설명\n\n입력된 a, b 중 절댓값이 더 큰 수를 출력해 주세요.\n\n### 예제\n\n| a | b | result |\n|---|---|---|\n| -19 | 910 | 910 |\n| -362 | 156 | -362 |\n\n\\# 예제 1: a 의 절댓값은 19, b 의 절댓값은 910 이므로 절댓값이 더 큰 b 의 값 910 을 출력합니다.  \n\\# 예제 2: a 의 절댓값은 362, b 의 절댓값은 156 이므로 절댓값이 더 큰 a 의 값 -362 을 출력합니다.",
+      "starterCode": "a = int(input())\nb = int(input())\n\nabs_a = a\nabs_b = b\n\nif a < 0:\n    abs_a = abs_a * -1\n\nif b < 0:\n    abs_b = abs_b * -1\n\nif ⬜ > ⬜:\n    print(a)\nelse:\n    print(b)\n",
+      "answerCode": "a = int(input())\nb = int(input())\n\nabs_a = a\nabs_b = b\n\nif a < 0:\n    abs_a = abs_a * -1\n\nif b < 0:\n    abs_b = abs_b * -1\n\nif abs_a > abs_b:\n    print(a)\nelse:\n    print(b)\n",
+      "stdin": "-19\n910\n---\n-362\n156\n---\n-289\n-146\n---\n685\n125"
+    },
+    {
+      "id": "q3-15",
+      "grade": 3,
+      "title": "[빈칸] 영어사전 순 비교",
+      "description": "### 문제 설명\n\n두 문자열 중 영어사전 순으로 앞에 오는 문자열을 구하려 합니다. 서로 다른 문자열 두 개가 주어졌을 때, 영어사전 순으로 앞에 오는 문자열을 출력합니다.\n\n코드가 올바르게 동작할 수 있도록 **빈칸을 채워 전체 코드를 완성해 주세요.**\n\n### 입력 설명\n\n- s1, s2 : 알파벳 소문자로 이루어진 서로 다른 문자열\n\n### 출력 설명\n\n영어사전 순으로 앞에 오는 문자열을 출력해 주세요.\n\n### 예제\n\n| s1 | s2 | result |\n|---|---|---|\n| apple | winter | apple |\n| coffee | orange | coffee |\n\n\\# 예제 1: \"apple\" 와 \"winter\" 중 영어사전 순으로 앞에 오는 문자열은 \"apple\" 이므로 apple 을 출력합니다.  \n\\# 예제 2: \"coffee\" 와 \"orange\" 중 영어사전 순으로 앞에 오는 문자열은 \"coffee\" 이므로 coffee 을 출력합니다.",
+      "starterCode": "s1 = input()\ns2 = input()\n\nif ⬜:\n    print(s1)\nelse:\n    print(s2)\n",
+      "answerCode": "s1 = input()\ns2 = input()\n\nif s1 < s2:\n    print(s1)\nelse:\n    print(s2)\n",
+      "stdin": "apple\nwinter\n---\ncoffee\norange\n---\nviolet\nsummer\n---\npeach\nviolet"
+    },
+    {
+      "id": "q3-16",
       "grade": 3,
       "title": "[빈칸] 삼각형과 사각형의 넓이",
-      "description": "### 문제 설명\n\n밑변 base 와 높이 height 를 입력받아, **삼각형의 넓이는 소수점 아래 1자리까지**, **사각형의 넓이는 정수**로 공백으로 구분하여 한 줄에 출력하려고 합니다. (`%` 서식 문자)\n\n**빈칸(⬜)을 채워** 전체 코드를 완성해 주세요.\n\n### 입출력 예\n\n| base | height | result |\n|:---:|:---:|:---:|\n| `15` | `7` | `52.5 105` |\n\n> 입력은 표의 왼쪽 칸부터 한 줄에 하나씩 주어집니다. 채점할 때는 다른 입력으로도 확인합니다.",
-      "starterCode": "# ⬜ 는 빈칸을 의미합니다.\nbase = int(input())\nheight = int(input())\n\ntriangle = base * height / 2\nrectangle = base * height\n\nprint(\"⬜\" % (triangle, rectangle))\n",
-      "answerCode": "base = int(input())\nheight = int(input())\n\ntriangle = base * height / 2\nrectangle = base * height\n\nprint(\"%.1f %d\" % (triangle, rectangle))\n",
-      "stdin": "15\n7\n---\n10\n4\n---\n4\n14"
+      "description": "### 문제 설명\n\n밑변의 길이 base 와 높이 height 가 주어졌을 때, 삼각형의 넓이와 사각형의 넓이를 출력하려 합니다. 삼각형의 넓이는 소수점 아래 두째 자리까지, 사각형의 넓이는 정수로 공백으로 구분하여 한 줄에 출력합니다.\n\n코드가 올바르게 동작할 수 있도록 **빈칸을 채워 전체 코드를 완성해 주세요.**\n\n### 입력 설명\n\n- base : 도형의 밑변 길이로서 1 이상 999 이하의 자연수\n- height : 도형의 높이로서 1 이상 999 이하의 자연수\n\n### 출력 설명\n\n삼각형 넓이와 사각형 넓이를 차례대로 출력해 주세요.\n- 삼각형 넓이 : 실수 (소수점 두 번째 자리까지)\n- 사각형 넓이 : 정수\n\n### 예제\n\n| base | height | result |\n|---|---|---|\n| 4 | 23 | 46.00 92 |\n| 91 | 89 | 4049.50 8099 |\n\n\\# 예제 1: 밑변 4, 높이 23 이므로 삼각형 넓이는 4 x 23 / 2 = 46.00, 사각형 넓이는 4 x 23 = 92 입니다.  \n\\# 예제 2: 밑변 91, 높이 89 이므로 삼각형 넓이는 91 x 89 / 2 = 4049.50, 사각형 넓이는 91 x 89 = 8099 입니다.",
+      "starterCode": "base = int(input())\nheight = int(input())\n\ntriangle = base * height / 2\nother = base * height\n\nprint(\"⬜\" % (triangle, other))\n",
+      "answerCode": "base = int(input())\nheight = int(input())\n\ntriangle = base * height / 2\nother = base * height\n\nprint(\"%.2f %d\" % (triangle, other))\n",
+      "stdin": "4\n23\n---\n91\n89\n---\n16\n3\n---\n40\n44"
     },
     {
-      "id": "g3-15",
+      "id": "q3-17",
       "grade": 3,
-      "title": "[빈칸] 소문자로 바꾸기",
-      "description": "### 문제 설명\n\n영문 대소문자가 섞인 문자열을 입력받아, 모든 글자를 **소문자**로 바꾸어 출력하려고 합니다. (문자열 메서드)\n\n**빈칸(⬜)을 채워** 전체 코드를 완성해 주세요.\n\n### 입출력 예\n\n| a | result |\n|:---:|:---:|\n| `IoPnTnP` | `iopntnp` |\n\n> 입력은 표의 왼쪽 칸부터 한 줄에 하나씩 주어집니다. 채점할 때는 다른 입력으로도 확인합니다.",
-      "starterCode": "# ⬜ 는 빈칸을 의미합니다.\na = input()\n\nprint(a.⬜())\n",
-      "answerCode": "a = input()\n\nprint(a.lower())\n",
-      "stdin": "IoPnTnP\n---\nToOODoyeT\n---\noheTCnOA"
+      "title": "[빈칸] 평균 점수 구하기",
+      "description": "### 문제 설명\n\n음악, 영어, 국어, 과학 점수가 리스트(배열) score 에 순서대로 주어졌을 때, 네 과목의 평균 점수를 구하여 소수 두째 자리까지 반올림하여 출력하는 코드를 작성하려 합니다.\n\n코드가 올바르게 동작할 수 있도록 **빈칸을 채워 전체 코드를 완성해 주세요.**\n\n### 입력 설명\n\n- score 는 [음악, 영어, 국어, 과학] 점수가 순서대로 들어 있는 리스트(배열)입니다.\n  - 각 점수는 0 이상 100 이하의 정수\n\n### 출력 설명\n\n네 과목의 평균 점수를 계산하여 소수점 두 번째 자리까지 출력해 주세요.\n\n### 예제\n\n| score | result |\n|---|---|\n| 53 50 79 99 | 70.25 |\n| 99 94 85 84 | 90.50 |\n\n\\# 예제 1: 음악점수 : 53점, 영어점수 : 50점, 국어점수 : 79점, 과학점수 : 99점이며, 평균 점수는 70.25 이므로 소수점 두 번째 자리까지 70.25 을 출력합니다.  \n\\# 예제 2: 음악점수 : 99점, 영어점수 : 94점, 국어점수 : 85점, 과학점수 : 84점이며, 평균 점수는 90.5 이므로 소수점 두 번째 자리까지 90.50 을 출력합니다.",
+      "starterCode": "score = list(map(int, input().split()))\n\ntotal_score = 0\n\nfor subject in score:\n    total_score += subject\n\naverage = total_score / ⬜\n\nprint(\"%.2f\" % average)\n",
+      "answerCode": "score = list(map(int, input().split()))\n\ntotal_score = 0\n\nfor subject in score:\n    total_score += subject\n\naverage = total_score / len(score)\n\nprint(\"%.2f\" % average)\n",
+      "stdin": "53 50 79 99\n---\n99 94 85 84\n---\n64 76 88 52\n---\n70 71 65 57"
     },
     {
-      "id": "g3-16",
+      "id": "q3-18",
       "grade": 3,
-      "title": "[빈칸] 짝수 번째 원소의 합",
-      "description": "### 문제 설명\n\n정수 n 과 n 개의 정수가 담긴 리스트 arr 을 입력받아, arr 의 원소 중 **짝수 번째**(2, 4, 6 … 번째) 원소를 모두 더한 값을 출력하려고 합니다.\n\n**빈칸(⬜)을 채워** 전체 코드를 완성해 주세요.\n\n### 입출력 예\n\n| n | arr | result |\n|:---:|:---:|:---:|\n| `6` | `38 34 12 8 45 36` | `78` |\n\n> 입력은 표의 왼쪽 칸부터 한 줄에 하나씩 주어집니다. 채점할 때는 다른 입력으로도 확인합니다.",
-      "starterCode": "# ⬜ 는 빈칸을 의미합니다.\nn = int(input())\narr = list(map(int, input().split()))\n\ntotal = 0\nfor i in range(1, n, 2):\n    ⬜\n\nprint(total)\n",
-      "answerCode": "n = int(input())\narr = list(map(int, input().split()))\n\ntotal = 0\nfor i in range(1, n, 2):\n    total += arr[i]\n\nprint(total)\n",
-      "stdin": "6\n38 34 12 8 45 36\n---\n7\n20 31 26 45 40 30 16\n---\n8\n58 59 13 58 57 60 4 6"
+      "title": "[빈칸] 홀수 번째 원소의 합",
+      "description": "### 문제 설명\n\n정수 n 과 n 개의 정수가 담긴 리스트 arr 이 주어졌을 때, arr 의 원소 중 홀수 번째(1, 3, 5 … 번째) 원소를 모두 더한 값을 출력하려 합니다.\n\n코드가 올바르게 동작할 수 있도록 **빈칸을 채워 전체 코드를 완성해 주세요.**\n\n### 입력 설명\n\n- n : arr 의 원소 개수로서 1 이상 100 이하의 자연수\n- arr : n 개의 정수가 담긴 리스트 (공백으로 구분)\n\n### 출력 설명\n\narr 의 홀수 번째 원소를 모두 더한 값을 출력해 주세요.\n\n### 예제\n\n| n | arr | result |\n|---|---|---|\n| 8 | 55 3 85 59 10 10 38 40 | 188 |\n| 7 | 42 46 27 70 25 15 60 | 154 |\n\n\\# 예제 1: 홀수 번째 원소는 55, 85, 10, 38 이고, 55 + 85 + 10 + 38 = 188 을 출력합니다.  \n\\# 예제 2: 홀수 번째 원소는 42, 27, 25, 60 이고, 42 + 27 + 25 + 60 = 154 을 출력합니다.",
+      "starterCode": "n = int(input())\narr = list(map(int, input().split()))\n\ntotal = 0\nfor i in range(⬜, n, 2):\n    total += arr[i]\n\nprint(total)\n",
+      "answerCode": "n = int(input())\narr = list(map(int, input().split()))\n\ntotal = 0\nfor i in range(0, n, 2):\n    total += arr[i]\n\nprint(total)\n",
+      "stdin": "8\n55 3 85 59 10 10 38 40\n---\n7\n42 46 27 70 25 15 60\n---\n6\n6 55 7 54 77 65\n---\n5\n33 21 63 66 34"
     },
     {
-      "id": "g3-17",
+      "id": "q3-19",
       "grade": 3,
-      "title": "[빈칸] 성적 총점과 과목 수",
-      "description": "### 문제 설명\n\n과목별 성적을 공백으로 구분해 입력받아, **총점**과 **과목 수**를 공백으로 구분하여 출력하려고 합니다. (내장함수 `sum`, `len`)\n\n**빈칸(⬜)을 채워** 전체 코드를 완성해 주세요.\n\n### 입출력 예\n\n| scores | result |\n|:---:|:---:|\n| `62 94 98 50` | `304 4` |\n\n> 입력은 표의 왼쪽 칸부터 한 줄에 하나씩 주어집니다. 채점할 때는 다른 입력으로도 확인합니다.",
-      "starterCode": "# ⬜ 는 빈칸을 의미합니다.\nscores = list(map(int, input().split()))\n\nprint(⬜, ⬜)\n",
-      "answerCode": "scores = list(map(int, input().split()))\n\nprint(sum(scores), len(scores))\n",
-      "stdin": "62 94 98 50\n---\n62 64 56 56\n---\n97 59 70 50 85 94"
-    },
-    {
-      "id": "g3-18",
-      "grade": 3,
-      "title": "[빈칸] 홀수만 출력",
-      "description": "### 문제 설명\n\n자연수 n 을 입력받아, 1 부터 n 까지의 수 중 **홀수**만 공백으로 구분하여 출력하려고 합니다.\n\n**빈칸(⬜)을 채워** 전체 코드를 완성해 주세요.\n\n### 입출력 예\n\n| n | result |\n|:---:|:---:|\n| `19` | `1 3 5 7 9 11 13 15 17 19` |\n\n> 입력은 표의 왼쪽 칸부터 한 줄에 하나씩 주어집니다. 채점할 때는 다른 입력으로도 확인합니다.",
-      "starterCode": "# ⬜ 는 빈칸을 의미합니다.\nn = int(input())\n\nfor i in range(1, n + 1):\n    if ⬜:\n        print(i, end=\" \")\n",
-      "answerCode": "n = int(input())\n\nfor i in range(1, n + 1):\n    if i % 2 == 1:\n        print(i, end=\" \")\n",
-      "stdin": "19\n---\n10\n---\n8"
-    },
-    {
-      "id": "g3-19",
-      "grade": 3,
-      "title": "[빈칸] n 번째 수의 부호",
-      "description": "### 문제 설명\n\n정수 리스트 arr 와 1 부터 세는 순서 n 을 입력받아, arr 의 **n 번째 수**가 음수이면 `-1`, 양수이면 `1`, 0 이면 `0` 을 출력하려고 합니다.\n\n**빈칸(⬜)을 채워** 전체 코드를 완성해 주세요.\n\n### 입출력 예\n\n| arr | n | result |\n|:---:|:---:|:---:|\n| `10 -5 0 20` | `2` | `-1` |\n\n> 입력은 표의 왼쪽 칸부터 한 줄에 하나씩 주어집니다. 채점할 때는 다른 입력으로도 확인합니다.",
-      "starterCode": "# ⬜ 는 빈칸을 의미합니다.\narr = list(map(int, input().split()))\nn = int(input())\n\ntarget = ⬜\n\nif target < 0:\n    print(-1)\nelif target > 0:\n    print(1)\nelse:\n    print(0)\n",
-      "answerCode": "arr = list(map(int, input().split()))\nn = int(input())\n\ntarget = arr[n - 1]\n\nif target < 0:\n    print(-1)\nelif target > 0:\n    print(1)\nelse:\n    print(0)\n",
-      "stdin": "10 -5 0 20\n2\n---\n0 0 8 8 -9 -4\n5\n---\n0 -5 -7 0 9\n4\n---\n-4 4 0 4 -2 0\n5"
-    },
-    {
-      "id": "g3-20",
-      "grade": 3,
-      "title": "[빈칸] 각 반에서 키가 가장 작은 학생",
-      "description": "### 문제 설명\n\n두 반(green 반, yellow 반) 학생들의 키를 한 줄씩 입력받아, 각 반에서 **키가 가장 작은** 학생의 키를 공백으로 구분하여 출력하려고 합니다. (내장함수 `min`)\n\n**빈칸(⬜)을 채워** 전체 코드를 완성해 주세요.\n\n### 입출력 예\n\n| green | yellow | result |\n|:---:|:---:|:---:|\n| `140 143 150` | `126 155 144 139 122` | `140 122` |\n\n> 입력은 표의 왼쪽 칸부터 한 줄에 하나씩 주어집니다. 채점할 때는 다른 입력으로도 확인합니다.",
-      "starterCode": "# ⬜ 는 빈칸을 의미합니다.\ngreen = list(map(int, input().split()))\nyellow = list(map(int, input().split()))\n\nprint(⬜(green), ⬜(yellow))\n",
-      "answerCode": "green = list(map(int, input().split()))\nyellow = list(map(int, input().split()))\n\nprint(min(green), min(yellow))\n",
-      "stdin": "140 143 150\n126 155 144 139 122\n---\n167 159 161\n159 145 149 168 154\n---\n161 149 129 162\n166 141 120"
-    },
-    {
-      "id": "g3-21",
-      "grade": 3,
-      "title": "[빈칸] 공배수 판별",
-      "description": "### 문제 설명\n\n세 정수 a, b, c 를 입력받아, c 가 **a 와 b 모두의 배수(공배수)**이면 `True`, 아니면 `False` 를 출력하려고 합니다.\n\n**빈칸(⬜)을 채워** 전체 코드를 완성해 주세요.\n\n### 입출력 예\n\n| a | b | c | result |\n|:---:|:---:|:---:|:---:|\n| `2` | `3` | `12` | `True` |\n\n> 입력은 표의 왼쪽 칸부터 한 줄에 하나씩 주어집니다. 채점할 때는 다른 입력으로도 확인합니다.",
-      "starterCode": "# ⬜ 는 빈칸을 의미합니다.\na = int(input())\nb = int(input())\nc = int(input())\n\nif ⬜:\n    print(\"True\")\nelse:\n    print(\"False\")\n",
+      "title": "[빈칸] 공배수 판별하기",
+      "description": "### 문제 설명\n\n정수 a, b, c 가 주어졌을 때, c 가 a 와 b 의 공배수이면 True, 공배수가 아니면 False 를 출력하려 합니다.\n\n코드가 올바르게 동작할 수 있도록 **빈칸을 채워 전체 코드를 완성해 주세요.**\n\n### 입력 설명\n\n- a, b, c : 1 이상 999 이하의 자연수\n\n### 출력 설명\n\nc 가 a 와 b 의 공배수이면 True, 아니면 False 를 출력해 주세요.\n\n### 예제\n\n| a | b | c | result |\n|---|---|---|---|\n| 3 | 4 | 38 | False |\n| 3 | 8 | 48 | True |\n\n\\# 예제 1: 3 과 4 의 공배수는 12 의 배수이고, 38 는 12 의 배수가 아니므로 False 를 출력합니다.  \n\\# 예제 2: 3 과 8 의 공배수는 24 의 배수이고, 48 는 24 의 배수이므로 True 를 출력합니다.",
+      "starterCode": "a = int(input())\nb = int(input())\nc = int(input())\n\nif ⬜:\n    print(\"True\")\nelse:\n    print(\"False\")\n",
       "answerCode": "a = int(input())\nb = int(input())\nc = int(input())\n\nif c % a == 0 and c % b == 0:\n    print(\"True\")\nelse:\n    print(\"False\")\n",
-      "stdin": "2\n3\n12\n---\n4\n5\n14\n---\n2\n9\n53\n---\n2\n9\n54"
+      "stdin": "3\n4\n38\n---\n3\n8\n48\n---\n4\n8\n32\n---\n3\n2\n55"
     },
     {
-      "id": "g3-22",
+      "id": "q3-20",
       "grade": 3,
-      "title": "[빈칸] 더 작은 수 출력",
-      "description": "### 문제 설명\n\n서로 다른 숫자 두 개를 입력받아, 두 수 중 **더 작은 수**를 출력하려고 합니다.\n\n**빈칸(⬜)을 채워** 전체 코드를 완성해 주세요.\n\n### 입출력 예\n\n| a | b | result |\n|:---:|:---:|:---:|\n| `39` | `94` | `39` |\n\n> 입력은 표의 왼쪽 칸부터 한 줄에 하나씩 주어집니다. 채점할 때는 다른 입력으로도 확인합니다.",
-      "starterCode": "# ⬜ 는 빈칸을 의미합니다.\na = int(input())\nb = int(input())\n\nif ⬜:\n    print(a)\nelse:\n    print(b)\n",
-      "answerCode": "a = int(input())\nb = int(input())\n\nif a < b:\n    print(a)\nelse:\n    print(b)\n",
-      "stdin": "39\n94\n---\n51\n11\n---\n61\n35\n---\n7\n78"
+      "title": "[빈칸] 카드 게임 승자",
+      "description": "### 문제 설명\n\nA 와 B 는 카드 게임을 하고 있습니다. 1, 2, 3 로 구성된 3장의 카드에서 A 와 B 가 1장씩 뽑았을 때, 우선순위가 높은 카드를 뽑은 사람이 이깁니다. 카드의 우선순위는 1 < 2 < 3 입니다.\nA 와 B 가 뽑은 카드가 순서대로 저장된 문자열 cards 가 주어졌을 때, 이기는 사람을 출력하려 합니다.\n\n코드가 올바르게 동작할 수 있도록 **빈칸을 채워 전체 코드를 완성해 주세요.**\n\n### 입력 설명\n\n- cards : A 가 뽑은 카드와 B 가 뽑은 카드가 순서대로 저장된 문자열\n  - 각 문자는 1, 2, 3 중 하나이며 같은 카드는 없습니다.\n\n### 출력 설명\n\nA 의 카드가 더 높으면 A 를, B 의 카드가 더 높으면 B 를 출력해 주세요.\n\n### 예제\n\n| cards | result |\n|---|---|\n| 12 | B |\n| 32 | A |\n\n\\# 예제 1: A 가 1, B 가 2 를 뽑았고 2 의 우선순위가 더 높으므로 B 를 출력합니다.  \n\\# 예제 2: A 가 3, B 가 2 를 뽑았고 3 의 우선순위가 더 높으므로 A 를 출력합니다.",
+      "starterCode": "cards = input()\n\npriority = \"123\"\nwinner = \"A\"\n\nfor i in range(0, len(priority)):\n    if priority[i] == cards[0]:\n        for k in range(⬜, len(priority)):\n            if priority[k] == cards[1]:\n                winner = \"B\"\n\nprint(winner)\n",
+      "answerCode": "cards = input()\n\npriority = \"123\"\nwinner = \"A\"\n\nfor i in range(0, len(priority)):\n    if priority[i] == cards[0]:\n        for k in range(i + 1, len(priority)):\n            if priority[k] == cards[1]:\n                winner = \"B\"\n\nprint(winner)\n",
+      "stdin": "12\n---\n32\n---\n23\n---\n21"
     },
     {
-      "id": "g3-23",
+      "id": "q3-21",
       "grade": 3,
-      "title": "[빈칸] 5씩 더하여 출력",
-      "description": "### 문제 설명\n\n두 자연수 k 와 n 을 입력받아, k 에서 시작해 **5씩 더한 수**를 작은 것부터 n 개, 공백으로 구분하여 출력하려고 합니다.\n\n**빈칸(⬜)을 채워** 전체 코드를 완성해 주세요.\n\n### 입출력 예\n\n| k | n | result |\n|:---:|:---:|:---:|\n| `15` | `6` | `15 20 25 30 35 40` |\n\n> 입력은 표의 왼쪽 칸부터 한 줄에 하나씩 주어집니다. 채점할 때는 다른 입력으로도 확인합니다.",
-      "starterCode": "# ⬜ 는 빈칸을 의미합니다.\nk = int(input())\nn = int(input())\n\nfor i in range(n):\n    print(⬜, end=\" \")\n",
-      "answerCode": "k = int(input())\nn = int(input())\n\nfor i in range(n):\n    print(k + 5 * i, end=\" \")\n",
-      "stdin": "15\n6\n---\n16\n7\n---\n3\n8"
+      "title": "[빈칸] & 로 연결하기",
+      "description": "### 문제 설명\n\n문자열 두 개가 주어졌을 때, 두 번째 문자열을 앞에, 첫 번째 문자열을 뒤에 두고 사이에 특수문자(`&`)를 넣어 출력하려 합니다.\n\n코드가 올바르게 동작할 수 있도록 **빈칸을 채워 전체 코드를 완성해 주세요.**\n\n### 입력 설명\n\n- s1, s2 : 알파벳 소문자로 이루어진 문자열\n\n### 출력 설명\n\ns2, s1 순서로 사이에 `&` 를 넣은 문자열을 출력해 주세요.\n\n### 예제\n\n| s1 | s2 | result |\n|---|---|---|\n| silver | purple | purple&silver |\n| melon | summer | summer&melon |\n\n\\# 예제 1: 'purple' 와 'silver' 사이에 & 를 넣어 purple&silver 을 출력합니다.  \n\\# 예제 2: 'summer' 와 'melon' 사이에 & 를 넣어 summer&melon 을 출력합니다.",
+      "starterCode": "s1 = input()\ns2 = input()\n\nprint(⬜)\n",
+      "answerCode": "s1 = input()\ns2 = input()\n\nprint(s2 + \"&\" + s1)\n",
+      "stdin": "silver\npurple\n---\nmelon\nsummer\n---\npurple\nmelon\n---\napple\ncoffee"
     },
     {
-      "id": "g3-24",
-      "grade": 3,
-      "title": "[빈칸] 차이의 절댓값",
-      "description": "### 문제 설명\n\n숫자 두 개를 입력받아, 두 수의 **차이의 절댓값**을 출력하려고 합니다.\n\n**빈칸(⬜)을 채워** 전체 코드를 완성해 주세요.\n\n### 입출력 예\n\n| a | b | result |\n|:---:|:---:|:---:|\n| `24` | `30` | `6` |\n\n> 입력은 표의 왼쪽 칸부터 한 줄에 하나씩 주어집니다. 채점할 때는 다른 입력으로도 확인합니다.",
-      "starterCode": "# ⬜ 는 빈칸을 의미합니다.\na = int(input())\nb = int(input())\n\nif ⬜:\n    print(a - b)\nelse:\n    print(b - a)\n",
-      "answerCode": "a = int(input())\nb = int(input())\n\nif a > b:\n    print(a - b)\nelse:\n    print(b - a)\n",
-      "stdin": "24\n30\n---\n36\n11\n---\n12\n19\n---\n21\n3"
-    },
-    {
-      "id": "g3-25",
+      "id": "q3-22",
       "grade": 3,
       "title": "[빈칸] 한 글자씩 늘려 출력",
-      "description": "### 문제 설명\n\n문자열 하나를 입력받아, 앞에서부터 **한 글자씩 늘어나는 부분 문자열**을 공백으로 구분하여 순서대로 출력하려고 합니다.\n\n**빈칸(⬜)을 채워** 전체 코드를 완성해 주세요.\n\n### 입출력 예\n\n| s | result |\n|:---:|:---:|\n| `Data` | `D Da Dat Data` |\n\n> 입력은 표의 왼쪽 칸부터 한 줄에 하나씩 주어집니다. 채점할 때는 다른 입력으로도 확인합니다.",
-      "starterCode": "# ⬜ 는 빈칸을 의미합니다.\ns = input()\n\nfor i in range(0, len(s)):\n    for j in range(⬜):\n        print(⬜, end=\"\")\n    print(end=\" \")\n",
+      "description": "### 문제 설명\n\n문자열 하나가 주어졌을 때, 앞에서부터 한 글자씩 늘어나는 부분 문자열을 공백으로 구분하여 순서대로 출력하려 합니다.\n\n코드가 올바르게 동작할 수 있도록 **빈칸을 채워 전체 코드를 완성해 주세요.**\n\n### 입력 설명\n\n- s : 알파벳 대소문자로 이루어진 문자열\n  - 문자열 길이는 1 이상 20 이하\n\n### 출력 설명\n\n한 글자씩 늘어나는 부분 문자열을 공백으로 구분하여 한 줄에 출력해 주세요.\n\n### 예제\n\n| s | result |\n|---|---|\n| Smart | S Sm Sma Smar Smart |\n| Cloud | C Cl Clo Clou Cloud |\n\n\\# 예제 1: \"Smart\" 의 한 글자씩 늘어나는 부분 문자열 S, Sm, Sma, Smar, Smart 를 공백으로 구분하여 출력합니다.  \n\\# 예제 2: \"Cloud\" 의 한 글자씩 늘어나는 부분 문자열 C, Cl, Clo, Clou, Cloud 를 공백으로 구분하여 출력합니다.",
+      "starterCode": "s = input()\n\nfor i in range(0, len(s)):\n    for j in range(⬜):\n        print(⬜, end=\"\")\n    print(end=\" \")\n",
       "answerCode": "s = input()\n\nfor i in range(0, len(s)):\n    for j in range(i + 1):\n        print(s[j], end=\"\")\n    print(end=\" \")\n",
-      "stdin": "Data\n---\nIoT\n---\nCode"
+      "stdin": "Smart\n---\nCloud\n---\nPixel\n---\nPixel"
     },
     {
-      "id": "g3-26",
+      "id": "q3-23",
       "grade": 3,
-      "title": "[구현] 큰 수부터 정렬하기",
-      "description": "### 문제 설명\n\n여러 개의 숫자를 공백으로 구분해 입력받아, **큰 수부터 차례로** 공백으로 구분하여 출력하려고 합니다. (내장함수 `sorted`)\n\n코드를 작성해 주세요.\n\n### 입출력 예\n\n| nums | result |\n|:---:|:---:|\n| `88 82 79 66 17` | `88 82 79 66 17` |\n| `98 1 5 13 72 31 24` | `98 72 31 24 13 5 1` |\n\n> 입력은 표의 왼쪽 칸부터 한 줄에 하나씩 주어집니다. 채점할 때는 다른 입력으로도 확인합니다.",
-      "starterCode": "# 여기에 코드를 작성해 주세요.\nnums = list(map(int, input().split()))\n\n\n",
-      "answerCode": "nums = list(map(int, input().split()))\n\nnums = sorted(nums, reverse=True)\nfor x in nums:\n    print(x, end=\" \")\n",
-      "stdin": "88 82 79 66 17\n---\n98 1 5 13 72 31 24\n---\n65 98 86 38 75 72"
+      "title": "[빈칸] 카드 게임 승자",
+      "description": "### 문제 설명\n\nA 와 B 는 카드 게임을 하고 있습니다. J, Q, K, A 로 구성된 4장의 카드에서 A 와 B 가 1장씩 뽑았을 때, 우선순위가 높은 카드를 뽑은 사람이 이깁니다. 카드의 우선순위는 J < Q < K < A 입니다.\nA 와 B 가 뽑은 카드가 순서대로 저장된 문자열 cards 가 주어졌을 때, 이기는 사람을 출력하려 합니다.\n\n코드가 올바르게 동작할 수 있도록 **빈칸을 채워 전체 코드를 완성해 주세요.**\n\n### 입력 설명\n\n- cards : A 가 뽑은 카드와 B 가 뽑은 카드가 순서대로 저장된 문자열\n  - 각 문자는 J, Q, K, A 중 하나이며 같은 카드는 없습니다.\n\n### 출력 설명\n\nA 의 카드가 더 높으면 A 를, B 의 카드가 더 높으면 B 를 출력해 주세요.\n\n### 예제\n\n| cards | result |\n|---|---|\n| QK | B |\n| QJ | A |\n\n\\# 예제 1: A 가 Q, B 가 K 를 뽑았고 K 의 우선순위가 더 높으므로 B 를 출력합니다.  \n\\# 예제 2: A 가 Q, B 가 J 를 뽑았고 Q 의 우선순위가 더 높으므로 A 를 출력합니다.",
+      "starterCode": "cards = input()\n\npriority = \"JQKA\"\nwinner = \"A\"\n\nfor i in range(0, len(priority)):\n    if priority[i] == ⬜:\n        for k in range(i + 1, len(priority)):\n            if priority[k] == ⬜:\n                winner = \"B\"\n\nprint(winner)\n",
+      "answerCode": "cards = input()\n\npriority = \"JQKA\"\nwinner = \"A\"\n\nfor i in range(0, len(priority)):\n    if priority[i] == cards[0]:\n        for k in range(i + 1, len(priority)):\n            if priority[k] == cards[1]:\n                winner = \"B\"\n\nprint(winner)\n",
+      "stdin": "QK\n---\nQJ\n---\nQK\n---\nKJ"
     },
     {
-      "id": "g3-27",
+      "id": "q3-24",
       "grade": 3,
-      "title": "[구현] 성적 총점과 과목 수",
-      "description": "### 문제 설명\n\n과목별 성적을 공백으로 구분해 입력받아, **총점**과 **과목 수**를 공백으로 구분하여 출력하려고 합니다. (내장함수 `sum`, `len`)\n\n코드를 작성해 주세요.\n\n### 입출력 예\n\n| scores | result |\n|:---:|:---:|\n| `62 90 53 51 85 62` | `403 6` |\n| `59 95 82 78 64 64` | `442 6` |\n\n> 입력은 표의 왼쪽 칸부터 한 줄에 하나씩 주어집니다. 채점할 때는 다른 입력으로도 확인합니다.",
-      "starterCode": "# 여기에 코드를 작성해 주세요.\nscores = list(map(int, input().split()))\n\n\n",
-      "answerCode": "scores = list(map(int, input().split()))\n\nprint(sum(scores), len(scores))\n",
-      "stdin": "62 90 53 51 85 62\n---\n59 95 82 78 64 64\n---\n79 85 61 57 62"
-    },
-    {
-      "id": "g3-28",
-      "grade": 3,
-      "title": "[구현] 한 글자씩 늘려 출력",
-      "description": "### 문제 설명\n\n문자열 하나를 입력받아, 앞에서부터 **한 글자씩 늘어나는 부분 문자열**을 공백으로 구분하여 순서대로 출력하려고 합니다.\n\n코드를 작성해 주세요.\n\n### 입출력 예\n\n| s | result |\n|:---:|:---:|\n| `Hello` | `H He Hel Hell Hello` |\n| `AI` | `A AI` |\n\n> 입력은 표의 왼쪽 칸부터 한 줄에 하나씩 주어집니다. 채점할 때는 다른 입력으로도 확인합니다.",
-      "starterCode": "# 여기에 코드를 작성해 주세요.\ns = input()\n\n\n",
-      "answerCode": "s = input()\n\nfor i in range(0, len(s)):\n    for j in range(i + 1):\n        print(s[j], end=\"\")\n    print(end=\" \")\n",
-      "stdin": "Hello\n---\nAI\n---\nHello"
-    },
-    {
-      "id": "g3-29",
-      "grade": 3,
-      "title": "[구현] 영어사전 순 비교",
-      "description": "### 문제 설명\n\n알파벳 소문자로 된 서로 다른 문자열 두 개를 입력받아, 영어사전 순으로 **뒤에 오는** 문자열을 출력하려고 합니다.\n\n코드를 작성해 주세요.\n\n### 입출력 예\n\n| s1 | s2 | result |\n|:---:|:---:|:---:|\n| `green` | `apple` | `green` |\n| `banana` | `yellow` | `yellow` |\n\n> 입력은 표의 왼쪽 칸부터 한 줄에 하나씩 주어집니다. 채점할 때는 다른 입력으로도 확인합니다.",
-      "starterCode": "# 여기에 코드를 작성해 주세요.\ns1 = input()\ns2 = input()\n\n\n",
-      "answerCode": "s1 = input()\ns2 = input()\n\nif s1 > s2:\n    print(s1)\nelse:\n    print(s2)\n",
-      "stdin": "green\napple\n---\nbanana\nyellow\n---\npurple\nlemon\n---\nbanana\nlemon"
-    },
-    {
-      "id": "g3-30",
-      "grade": 3,
-      "title": "[구현] 더 작은 수 출력",
-      "description": "### 문제 설명\n\n서로 다른 숫자 두 개를 입력받아, 두 수 중 **더 작은 수**를 출력하려고 합니다.\n\n코드를 작성해 주세요.\n\n### 입출력 예\n\n| a | b | result |\n|:---:|:---:|:---:|\n| `38` | `62` | `38` |\n| `68` | `7` | `7` |\n\n> 입력은 표의 왼쪽 칸부터 한 줄에 하나씩 주어집니다. 채점할 때는 다른 입력으로도 확인합니다.",
-      "starterCode": "# 여기에 코드를 작성해 주세요.\na = int(input())\nb = int(input())\n\n\n",
-      "answerCode": "a = int(input())\nb = int(input())\n\nif a < b:\n    print(a)\nelse:\n    print(b)\n",
-      "stdin": "38\n62\n---\n68\n7\n---\n54\n33\n---\n83\n71"
-    },
-    {
-      "id": "g3-31",
-      "grade": 3,
-      "title": "[구현] n 번째 수의 부호",
-      "description": "### 문제 설명\n\n정수 리스트 arr 와 1 부터 세는 순서 n 을 입력받아, arr 의 **n 번째 수**가 음수이면 `-1`, 양수이면 `1`, 0 이면 `0` 을 출력하려고 합니다.\n\n코드를 작성해 주세요.\n\n### 입출력 예\n\n| arr | n | result |\n|:---:|:---:|:---:|\n| `10 -5 0 20` | `2` | `-1` |\n| `-8 0 -9 -1 9` | `1` | `-1` |\n\n> 입력은 표의 왼쪽 칸부터 한 줄에 하나씩 주어집니다. 채점할 때는 다른 입력으로도 확인합니다.",
-      "starterCode": "# 여기에 코드를 작성해 주세요.\narr = list(map(int, input().split()))\nn = int(input())\n\n\n",
-      "answerCode": "arr = list(map(int, input().split()))\nn = int(input())\n\ntarget = arr[n - 1]\n\nif target < 0:\n    print(-1)\nelif target > 0:\n    print(1)\nelse:\n    print(0)\n",
-      "stdin": "10 -5 0 20\n2\n---\n-8 0 -9 -1 9\n1\n---\n4 -8 0 -1 -7\n1\n---\n6 -6 0 -2 4 -6 -2\n1"
-    },
-    {
-      "id": "g3-32",
-      "grade": 3,
-      "title": "[구현] 소문자로 바꾸기",
-      "description": "### 문제 설명\n\n영문 대소문자가 섞인 문자열을 입력받아, 모든 글자를 **소문자**로 바꾸어 출력하려고 합니다. (문자열 메서드)\n\n코드를 작성해 주세요.\n\n### 입출력 예\n\n| a | result |\n|:---:|:---:|\n| `AIDhkCPnO` | `aidhkcpno` |\n| `yIkThnyh` | `yikthnyh` |\n\n> 입력은 표의 왼쪽 칸부터 한 줄에 하나씩 주어집니다. 채점할 때는 다른 입력으로도 확인합니다.",
-      "starterCode": "# 여기에 코드를 작성해 주세요.\na = input()\n\n\n",
-      "answerCode": "a = input()\n\nprint(a.lower())\n",
-      "stdin": "AIDhkCPnO\n---\nyIkThnyh\n---\nyhoAso"
-    },
-    {
-      "id": "g3-33",
-      "grade": 3,
-      "title": "[구현] 알파벳 소문자 개수",
-      "description": "### 문제 설명\n\n문자열 하나를 입력받아, 문자열에 들어 있는 **알파벳 소문자의 개수**를 출력하려고 합니다.\n\n코드를 작성해 주세요.\n\n### 입출력 예\n\n| s | result |\n|:---:|:---:|\n| `zxLO2bzbO` | `5` |\n| `xbxy3ILLc` | `5` |\n\n> 입력은 표의 왼쪽 칸부터 한 줄에 하나씩 주어집니다. 채점할 때는 다른 입력으로도 확인합니다.",
-      "starterCode": "# 여기에 코드를 작성해 주세요.\ns = input()\n\n\n",
+      "title": "[빈칸] 알파벳 소문자 개수 세기",
+      "description": "### 문제 설명\n\n문자열이 주어졌을 때, 문자열에 포함된 알파벳 소문자의 개수를 출력하려 합니다.\n\n코드가 올바르게 동작할 수 있도록 **빈칸을 채워 전체 코드를 완성해 주세요.**\n\n### 입력 설명\n\n- s : 알파벳 대소문자와 숫자로 이루어진 문자열\n  - 문자열 길이는 1 이상 100 이하\n\n### 출력 설명\n\n문자열 s 에 포함된 알파벳 소문자의 개수를 출력해 주세요.\n\n### 예제\n\n| s | result |\n|---|---|\n| exxD2FBFa | 4 |\n| BFg3ge1 | 3 |\n\n\\# 예제 1: 문자열에 포함된 알파벳 소문자는 'e', 'x', 'x', 'a' 이므로 4 을 출력합니다.  \n\\# 예제 2: 문자열에 포함된 알파벳 소문자는 'g', 'g', 'e' 이므로 3 을 출력합니다.",
+      "starterCode": "count = 0\ns = input()\n\nfor i in range(0, len(s)):\n    if ⬜:\n        count += 1\n\nprint(count)\n",
       "answerCode": "count = 0\ns = input()\n\nfor i in range(0, len(s)):\n    if s[i].islower():\n        count += 1\n\nprint(count)\n",
-      "stdin": "zxLO2bzbO\n---\nxbxy3ILLc\n---\n0IyOczO"
+      "stdin": "exxD2FBFa\n---\nBFg3ge1\n---\naBe3c3F31\n---\ncea2Bg1cg"
     },
     {
-      "id": "g3-34",
+      "id": "q3-25",
       "grade": 3,
-      "title": "[구현] 7 이전 값의 개수",
-      "description": "### 문제 설명\n\n여러 개의 숫자를 공백으로 구분해 입력받아, **7 보다 앞에 있는** 숫자의 개수를 출력하려고 합니다. (7 은 한 번만 나옵니다)\n\n코드를 작성해 주세요.\n\n### 입출력 예\n\n| nums | result |\n|:---:|:---:|\n| `10 7 40 41 57 58 72` | `1` |\n| `87 20 38 65 7 73 24 31` | `4` |\n\n> 입력은 표의 왼쪽 칸부터 한 줄에 하나씩 주어집니다. 채점할 때는 다른 입력으로도 확인합니다.",
-      "starterCode": "# 여기에 코드를 작성해 주세요.\nnums = list(map(int, input().split()))\n\n\n",
-      "answerCode": "nums = list(map(int, input().split()))\n\ncount = 0\nfor x in nums:\n    if x == 7:\n        break\n    count += 1\n\nprint(count)\n",
-      "stdin": "10 7 40 41 57 58 72\n---\n87 20 38 65 7 73 24 31\n---\n86 69 48 78 54 78 7 42"
+      "title": "[빈칸] 절댓값이 더 작은 수",
+      "description": "### 문제 설명\n\n정수 a, b 가 주어졌을 때, 절댓값이 더 작은 수를 출력하는 프로그램을 작성하려 합니다.\n\n코드가 올바르게 동작할 수 있도록 **빈칸을 채워 전체 코드를 완성해 주세요.**\n\n### 입력 설명\n\n- a, b : -999 이상 999 이하의 정수\n  - a 와 b 의 절댓값은 항상 다르게 주어집니다.\n\n### 출력 설명\n\n입력된 a, b 중 절댓값이 더 작은 수를 출력해 주세요.\n\n### 예제\n\n| a | b | result |\n|---|---|---|\n| -409 | -79 | -79 |\n| -447 | 442 | 442 |\n\n\\# 예제 1: a 의 절댓값은 409, b 의 절댓값은 79 이므로 절댓값이 더 작은 b 의 값 -79 을 출력합니다.  \n\\# 예제 2: a 의 절댓값은 447, b 의 절댓값은 442 이므로 절댓값이 더 작은 b 의 값 442 을 출력합니다.",
+      "starterCode": "a = int(input())\nb = int(input())\n\nabs_a = a\nabs_b = b\n\nif a < 0:\n    abs_a = abs_a * ⬜\n\nif b < 0:\n    abs_b = abs_b * ⬜\n\nif abs_a < abs_b:\n    print(a)\nelse:\n    print(b)\n",
+      "answerCode": "a = int(input())\nb = int(input())\n\nabs_a = a\nabs_b = b\n\nif a < 0:\n    abs_a = abs_a * -1\n\nif b < 0:\n    abs_b = abs_b * -1\n\nif abs_a < abs_b:\n    print(a)\nelse:\n    print(b)\n",
+      "stdin": "-409\n-79\n---\n-447\n442\n---\n222\n-430\n---\n188\n-725"
     },
     {
-      "id": "g3-35",
-      "grade": 3,
-      "title": "[구현] _ 와 # 교차 출력",
-      "description": "### 문제 설명\n\n자연수 n 을 입력받아, `_` 는 0개부터 n-1개까지 1개씩 늘리고 `#` 는 n개부터 1개까지 1개씩 줄이면서, 한 줄에 `_` 묶음과 `#` 묶음을 번갈아 이어 출력하려고 합니다.\n\n예를 들어 n 이 3이면 (_ 0개, # 3개), (_ 1개, # 2개), (_ 2개, # 1개) 를 이어서 `###_##__#` 를 출력합니다.\n\n코드를 작성해 주세요.\n\n### 입출력 예\n\n| n | result |\n|:---:|:---:|\n| `5` | `#####_####__###___##____#` |\n| `6` | `######_#####__####___###____##_____#` |\n\n> 입력은 표의 왼쪽 칸부터 한 줄에 하나씩 주어집니다. 채점할 때는 다른 입력으로도 확인합니다.",
-      "starterCode": "# 여기에 코드를 작성해 주세요.\nn = int(input())\n\n\n",
-      "answerCode": "n = int(input())\n\nfor i in range(n):\n    print(\"_\" * i + \"#\" * (n - i), end=\"\")\nprint()\n",
-      "stdin": "5\n---\n6\n---\n5"
-    },
-    {
-      "id": "g3-36",
-      "grade": 3,
-      "title": "[구현] 6의 배수 판별",
-      "description": "### 문제 설명\n\n자연수 n 을 입력받아, n 이 6의 배수이면 `YES`, 아니면 `NO` 를 출력하려고 합니다.\n\n코드를 작성해 주세요.\n\n### 입출력 예\n\n| n | result |\n|:---:|:---:|\n| `54` | `YES` |\n| `98` | `NO` |\n\n> 입력은 표의 왼쪽 칸부터 한 줄에 하나씩 주어집니다. 채점할 때는 다른 입력으로도 확인합니다.",
-      "starterCode": "# 여기에 코드를 작성해 주세요.\nn = int(input())\n\n\n",
-      "answerCode": "n = int(input())\n\nif n % 6 == 0:\n    print(\"YES\")\nelse:\n    print(\"NO\")\n",
-      "stdin": "54\n---\n98\n---\n62\n---\n13"
-    },
-    {
-      "id": "g3-37",
-      "grade": 3,
-      "title": "[구현] 삼각형과 사각형의 넓이",
-      "description": "### 문제 설명\n\n밑변 base 와 높이 height 를 입력받아, **삼각형의 넓이는 소수점 아래 1자리까지**, **사각형의 넓이는 정수**로 공백으로 구분하여 한 줄에 출력하려고 합니다. (`%` 서식 문자)\n\n코드를 작성해 주세요.\n\n### 입출력 예\n\n| base | height | result |\n|:---:|:---:|:---:|\n| `7` | `6` | `21.0 42` |\n| `5` | `8` | `20.0 40` |\n\n> 입력은 표의 왼쪽 칸부터 한 줄에 하나씩 주어집니다. 채점할 때는 다른 입력으로도 확인합니다.",
-      "starterCode": "# 여기에 코드를 작성해 주세요.\nbase = int(input())\nheight = int(input())\n\n\n",
-      "answerCode": "base = int(input())\nheight = int(input())\n\ntriangle = base * height / 2\nrectangle = base * height\n\nprint(\"%.1f %d\" % (triangle, rectangle))\n",
-      "stdin": "7\n6\n---\n5\n8\n---\n6\n12"
-    },
-    {
-      "id": "g3-38",
-      "grade": 3,
-      "title": "[구현] 'k' 와 'K' 개수 세기",
-      "description": "### 문제 설명\n\n영문 문자열 name 을 입력받아, 알파벳 `k` 와 `K` 가 **모두 합쳐 몇 번** 나오는지 출력하려고 합니다. (문자열 메서드 `count`)\n\n코드를 작성해 주세요.\n\n### 입출력 예\n\n| name | result |\n|:---:|:---:|\n| `rakao` | `1` |\n| `eraerrKei` | `1` |\n\n> 입력은 표의 왼쪽 칸부터 한 줄에 하나씩 주어집니다. 채점할 때는 다른 입력으로도 확인합니다.",
-      "starterCode": "# 여기에 코드를 작성해 주세요.\nname = input()\n\n\n",
-      "answerCode": "name = input()\n\nresult = name.count('K') + name.count('k')\nprint(result)\n",
-      "stdin": "rakao\n---\neraerrKei\n---\nouoKaKru"
-    },
-    {
-      "id": "g3-39",
-      "grade": 3,
-      "title": "[구현] 짝수 번째 원소의 합",
-      "description": "### 문제 설명\n\n정수 n 과 n 개의 정수가 담긴 리스트 arr 을 입력받아, arr 의 원소 중 **짝수 번째**(2, 4, 6 … 번째) 원소를 모두 더한 값을 출력하려고 합니다.\n\n코드를 작성해 주세요.\n\n### 입출력 예\n\n| n | arr | result |\n|:---:|:---:|:---:|\n| `8` | `40 49 18 45 11 25 16 18` | `137` |\n| `6` | `55 25 24 3 34 8` | `36` |\n\n> 입력은 표의 왼쪽 칸부터 한 줄에 하나씩 주어집니다. 채점할 때는 다른 입력으로도 확인합니다.",
-      "starterCode": "# 여기에 코드를 작성해 주세요.\nn = int(input())\narr = list(map(int, input().split()))\n\n\n",
-      "answerCode": "n = int(input())\narr = list(map(int, input().split()))\n\ntotal = 0\nfor i in range(1, n, 2):\n    total += arr[i]\n\nprint(total)\n",
-      "stdin": "8\n40 49 18 45 11 25 16 18\n---\n6\n55 25 24 3 34 8\n---\n7\n51 35 8 2 31 59 29"
-    },
-    {
-      "id": "g3-40",
-      "grade": 3,
-      "title": "[구현] 자릿수 세기",
-      "description": "### 문제 설명\n\n자연수 n 을 입력받아, n 이 **몇 자리 수**인지 출력하려고 합니다. (내장함수 `str`, `len`)\n\n코드를 작성해 주세요.\n\n### 입출력 예\n\n| n | result |\n|:---:|:---:|\n| `1014103` | `7` |\n| `9849564` | `7` |\n\n> 입력은 표의 왼쪽 칸부터 한 줄에 하나씩 주어집니다. 채점할 때는 다른 입력으로도 확인합니다.",
-      "starterCode": "# 여기에 코드를 작성해 주세요.\nn = int(input())\n\n\n",
-      "answerCode": "n = int(input())\n\nprint(len(str(n)))\n",
-      "stdin": "1014103\n---\n9849564\n---\n6489273"
-    },
-    {
-      "id": "g3-41",
-      "grade": 3,
-      "title": "[구현] 카드 게임 승자",
-      "description": "### 문제 설명\n\n두 사람 A, B 가 카드를 한 장씩 냅니다. 카드의 순위는 `\"JQK\"` 순서(J < Q < K)입니다. A 와 B 의 카드가 붙어서(예: `QJ` → A 는 Q, B 는 J) 입력될 때, **B 의 카드가 더 높으면 `B`**, 그렇지 않으면 `A` 를 출력하려고 합니다.\n\n코드를 작성해 주세요.\n\n### 입출력 예\n\n| cards | result |\n|:---:|:---:|\n| `JK` | `B` |\n| `QQ` | `A` |\n\n> 입력은 표의 왼쪽 칸부터 한 줄에 하나씩 주어집니다. 채점할 때는 다른 입력으로도 확인합니다.",
-      "starterCode": "# 여기에 코드를 작성해 주세요.\ncards = input().strip()\n\npriority = \"JQK\"\n\n\n",
-      "answerCode": "cards = input().strip()\n\npriority = \"JQK\"\nwinner = 'A'\n\nfor i in range(len(priority)):\n    if priority[i] == cards[0]:\n        for k in range(i + 1, len(priority)):\n            if priority[k] == cards[1]:\n                winner = 'B'\n\nprint(winner)\n",
-      "stdin": "JK\n---\nQQ\n---\nQQ\n---\nKJ"
-    },
-    {
-      "id": "g3-42",
-      "grade": 3,
-      "title": "[구현] 가장 큰 수",
-      "description": "### 문제 설명\n\n여러 개의 숫자를 공백으로 구분해 입력받아, 그중 **가장 큰 수**를 출력하려고 합니다. (max, min 함수를 쓰지 않고 반복문으로 풀어 보세요)\n\n코드를 작성해 주세요.\n\n### 입출력 예\n\n| nums | result |\n|:---:|:---:|\n| `39 24 81 58 26 21 70 96` | `96` |\n| `21 57 5 82 88 70 91` | `91` |\n\n> 입력은 표의 왼쪽 칸부터 한 줄에 하나씩 주어집니다. 채점할 때는 다른 입력으로도 확인합니다.",
-      "starterCode": "# 여기에 코드를 작성해 주세요.\nnums = list(map(int, input().split()))\n\n\n",
-      "answerCode": "nums = list(map(int, input().split()))\n\nbest = nums[0]\nfor x in nums:\n    if x > best:\n        best = x\n\nprint(best)\n",
-      "stdin": "39 24 81 58 26 21 70 96\n---\n21 57 5 82 88 70 91\n---\n77 75 21 86 69"
-    },
-    {
-      "id": "g3-43",
+      "id": "q3-26",
       "grade": 3,
       "title": "[구현] 차이의 절댓값",
-      "description": "### 문제 설명\n\n숫자 두 개를 입력받아, 두 수의 **차이의 절댓값**을 출력하려고 합니다.\n\n코드를 작성해 주세요.\n\n### 입출력 예\n\n| a | b | result |\n|:---:|:---:|:---:|\n| `4` | `42` | `38` |\n| `25` | `34` | `9` |\n\n> 입력은 표의 왼쪽 칸부터 한 줄에 하나씩 주어집니다. 채점할 때는 다른 입력으로도 확인합니다.",
-      "starterCode": "# 여기에 코드를 작성해 주세요.\na = int(input())\nb = int(input())\n\n\n",
-      "answerCode": "a = int(input())\nb = int(input())\n\nif a > b:\n    print(a - b)\nelse:\n    print(b - a)\n",
-      "stdin": "4\n42\n---\n25\n34\n---\n44\n9\n---\n10\n12"
+      "description": "### 문제 설명\n\n숫자 두 개가 주어졌을 때, 두 수의 차이 값의 절댓값을 출력하는 **프로그램을 완성해 주세요.**\n\n### 입력 설명\n\n- n1, n2 : 1 이상 999 이하의 자연수\n\n### 출력 설명\n\n두 수의 차이 값의 절댓값을 출력해 주세요.\n\n### 예제\n\n| n1 | n2 | result |\n|---|---|---|\n| 39 | 31 | 8 |\n| 77 | 39 | 38 |\n\n\\# 예제 1: 39 와 31 의 차이 값은 8 이고 그 절댓값은 8 이므로 8 을 출력합니다.  \n\\# 예제 2: 77 와 39 의 차이 값은 38 이고 그 절댓값은 38 이므로 38 을 출력합니다.",
+      "starterCode": "# 여기에 코드를 작성해주세요. 아래 주석은 예시입니다.\n# 입력값은 상수로 고정하지 말고, 표준 입력으로부터 읽어 변수에 할당한 뒤 그 변수를 사용합니다\n# a = input()\n# print(a)\n",
+      "answerCode": "n1 = int(input())\nn2 = int(input())\n\nif n1 > n2:\n    print(n1 - n2)\nelse:\n    print(n2 - n1)\n",
+      "stdin": "39\n31\n---\n77\n39\n---\n79\n55\n---\n93\n11"
     },
     {
-      "id": "g3-44",
+      "id": "q3-27",
       "grade": 3,
-      "title": "[구현] 공배수 판별",
-      "description": "### 문제 설명\n\n세 정수 a, b, c 를 입력받아, c 가 **a 와 b 모두의 배수(공배수)**이면 `True`, 아니면 `False` 를 출력하려고 합니다.\n\n코드를 작성해 주세요.\n\n### 입출력 예\n\n| a | b | c | result |\n|:---:|:---:|:---:|:---:|\n| `2` | `3` | `12` | `True` |\n| `4` | `5` | `14` | `False` |\n\n> 입력은 표의 왼쪽 칸부터 한 줄에 하나씩 주어집니다. 채점할 때는 다른 입력으로도 확인합니다.",
-      "starterCode": "# 여기에 코드를 작성해 주세요.\na = int(input())\nb = int(input())\nc = int(input())\n\n\n",
-      "answerCode": "a = int(input())\nb = int(input())\nc = int(input())\n\nif c % a == 0 and c % b == 0:\n    print(\"True\")\nelse:\n    print(\"False\")\n",
-      "stdin": "2\n3\n12\n---\n4\n5\n14\n---\n3\n9\n9\n---\n3\n4\n22"
+      "title": "[구현] 5 이후 값의 개수",
+      "description": "### 문제 설명\n\n숫자 정보를 가지는 리스트 n 이 주어졌을 때, 5 보다 뒤에 있는 숫자의 개수를 출력하는 **프로그램을 완성해 주세요.**\n\n### 입력 설명\n\n- n : 공백으로 구분된 자연수 리스트\n  - 5 은(는) 리스트에 꼭 한 번만 들어 있습니다.\n\n### 출력 설명\n\n5 보다 뒤에 있는 숫자의 개수를 출력해 주세요.\n\n### 예제\n\n| n | result |\n|---|---|\n| 20 5 59 16 88 26 30 | 5 |\n| 38 5 84 71 64 28 46 90 | 6 |\n\n\\# 예제 1: 5 보다 뒤에 있는 숫자는 59, 16, 88, 26, 30 이므로 5 을 출력합니다.  \n\\# 예제 2: 5 보다 뒤에 있는 숫자는 84, 71, 64, 28, 46, 90 이므로 6 을 출력합니다.",
+      "starterCode": "# 여기에 코드를 작성해주세요. 아래 주석은 예시입니다.\n# 입력값은 상수로 고정하지 말고, 표준 입력으로부터 읽어 변수에 할당한 뒤 그 변수를 사용합니다\n# a = input()\n# print(a)\n",
+      "answerCode": "n = list(map(int, input().split()))\n\ncount = 0\nfor x in n:\n    if x == 5:\n        break\n    count += 1\n\nprint(len(n) - 1 - count)\n",
+      "stdin": "20 5 59 16 88 26 30\n---\n38 5 84 71 64 28 46 90\n---\n27 27 53 65 86 5 39 16 54\n---\n37 79 29 5 32 30 78 83 36"
     },
     {
-      "id": "g3-45",
+      "id": "q3-28",
       "grade": 3,
-      "title": "[구현] + 로 연결하기",
-      "description": "### 문제 설명\n\n문자열 두 개를 입력받아, 첫 번째 문자열과 두 번째 문자열 사이에 `+` 를 넣어 출력하려고 합니다.\n\n코드를 작성해 주세요.\n\n### 입출력 예\n\n| s1 | s2 | result |\n|:---:|:---:|:---:|\n| `apple` | `yellow` | `apple+yellow` |\n| `silver` | `peach` | `silver+peach` |\n\n> 입력은 표의 왼쪽 칸부터 한 줄에 하나씩 주어집니다. 채점할 때는 다른 입력으로도 확인합니다.",
-      "starterCode": "# 여기에 코드를 작성해 주세요.\ns1 = input()\ns2 = input()\n\n\n",
-      "answerCode": "s1 = input()\ns2 = input()\n\nprint(s1 + \"+\" + s2)\n",
-      "stdin": "apple\nyellow\n---\nsilver\npeach\n---\npurple\nkiwi"
+      "title": "[구현] 등호(=)과 더하기(+) 교차 출력",
+      "description": "### 문제 설명\n\n자연수 n 이 주어졌을 때, 등호(`=`) 모양은 0개부터 n-1개까지 1개씩 늘어나고 더하기(`+`) 모양은 n개부터 1개까지 1개씩 줄어들면서, 두 모양을 교차하며 한 줄로 출력하는 **프로그램을 완성해 주세요.**\n\n### 입력 설명\n\n- n : 1 이상 9 이하의 자연수\n\n### 출력 설명\n\n(등호(`=`) 0개, 더하기(`+`) n개), (등호(`=`) 1개, 더하기(`+`) n-1개), … 를 이어 붙여 한 줄로 출력해 주세요.\n\n### 예제\n\n| n | result |\n|---|---|\n| 3 | +++=++==+ |\n| 5 | +++++=++++==+++===++====+ |\n\n\\# 예제 1: n 이 3 이므로 (0개, 3개), (1개, 2개), (2개, 1개) 를 이어 +++=++==+ 을 출력합니다.  \n\\# 예제 2: n 이 5 이므로 (0개, 5개), (1개, 4개), (2개, 3개), (3개, 2개), (4개, 1개) 를 이어 +++++=++++==+++===++====+ 을 출력합니다.",
+      "starterCode": "# 여기에 코드를 작성해주세요. 아래 주석은 예시입니다.\n# 입력값은 상수로 고정하지 말고, 표준 입력으로부터 읽어 변수에 할당한 뒤 그 변수를 사용합니다\n# a = input()\n# print(a)\n",
+      "answerCode": "n = int(input())\n\nfor i in range(n):\n    print(\"=\" * i + \"+\" * (n - i), end=\"\")\nprint()\n",
+      "stdin": "3\n---\n5\n---\n7\n---\n4"
     },
     {
-      "id": "g3-46",
+      "id": "q3-29",
       "grade": 3,
-      "title": "[구현] 문자열 거꾸로 출력",
-      "description": "### 문제 설명\n\n문자열 하나를 입력받아, **거꾸로 뒤집은** 문자열을 출력하려고 합니다.\n\n코드를 작성해 주세요.\n\n### 입출력 예\n\n| s | result |\n|:---:|:---:|\n| `banana` | `ananab` |\n| `green` | `neerg` |\n\n> 입력은 표의 왼쪽 칸부터 한 줄에 하나씩 주어집니다. 채점할 때는 다른 입력으로도 확인합니다.",
-      "starterCode": "# 여기에 코드를 작성해 주세요.\ns = input()\n\n\n",
-      "answerCode": "s = input()\n\nanswer = \"\"\nfor ch in s:\n    answer = ch + answer\n\nprint(answer)\n",
-      "stdin": "banana\n---\ngreen\n---\nbanana"
-    },
-    {
-      "id": "g3-47",
-      "grade": 3,
-      "title": "[구현] 각 반에서 키가 가장 작은 학생",
-      "description": "### 문제 설명\n\n두 반(green 반, yellow 반) 학생들의 키를 한 줄씩 입력받아, 각 반에서 **키가 가장 작은** 학생의 키를 공백으로 구분하여 출력하려고 합니다. (내장함수 `min`)\n\n코드를 작성해 주세요.\n\n### 입출력 예\n\n| green | yellow | result |\n|:---:|:---:|:---:|\n| `160 139 133` | `145 160 155 143 122 123` | `133 122` |\n| `137 153 158 165` | `131 146 153 162 136 168` | `137 131` |\n\n> 입력은 표의 왼쪽 칸부터 한 줄에 하나씩 주어집니다. 채점할 때는 다른 입력으로도 확인합니다.",
-      "starterCode": "# 여기에 코드를 작성해 주세요.\ngreen = list(map(int, input().split()))\nyellow = list(map(int, input().split()))\n\n\n",
+      "title": "[구현] 각 반의 최단신",
+      "description": "### 문제 설명\n\n초록반, 노랑반 원아들의 키가 두 개의 정수 리스트 green, yellow 에 주어졌을 때, 각 반의 최단신(가장 작은 키)을 출력하는 **프로그램을 완성해 주세요.**\n\n### 입력 설명\n\n- green : 4명의 초록반 원아들의 키가 저장된 정수 리스트\n  - 50 이상 150 이하의 자연수\n- yellow : 4명의 노랑반 원아들의 키가 저장된 정수 리스트\n  - 50 이상 150 이하의 자연수\n\n### 출력 설명\n\n초록반, 노랑반의 최단신을 차례대로 공백으로 구분하여 출력해 주세요.\n\n### 예제\n\n| green | yellow | result |\n|---|---|---|\n| 76 54 114 148 | 125 141 64 80 | 54 64 |\n| 101 120 138 149 | 106 146 94 109 | 101 94 |\n\n\\# 예제 1: 초록반에서 가장 작은 키는 54, 노랑반에서 가장 작은 키는 64 입니다.  \n\\# 예제 2: 초록반에서 가장 작은 키는 101, 노랑반에서 가장 작은 키는 94 입니다.",
+      "starterCode": "# 여기에 코드를 작성해주세요. 아래 주석은 예시입니다.\n# 입력값은 상수로 고정하지 말고, 표준 입력으로부터 읽어 변수에 할당한 뒤 그 변수를 사용합니다\n# a = input()\n# print(a)\n",
       "answerCode": "green = list(map(int, input().split()))\nyellow = list(map(int, input().split()))\n\nprint(min(green), min(yellow))\n",
-      "stdin": "160 139 133\n145 160 155 143 122 123\n---\n137 153 158 165\n131 146 153 162 136 168\n---\n160 147 141\n147 122 141"
+      "stdin": "76 54 114 148\n125 141 64 80\n---\n101 120 138 149\n106 146 94 109\n---\n129 84 77 74\n93 54 75 51\n---\n76 105 135 137\n67 140 96 146"
     },
     {
-      "id": "g3-48",
+      "id": "q3-30",
       "grade": 3,
-      "title": "[구현] 짝수 개수 × 홀수 개수",
-      "description": "### 문제 설명\n\n여러 개의 정수를 공백으로 구분해 입력받아, **짝수의 개수와 홀수의 개수를 곱한 값**을 출력하려고 합니다.\n\n코드를 작성해 주세요.\n\n### 입출력 예\n\n| arr | result |\n|:---:|:---:|\n| `1 2 3 4 5` | `6` |\n| `11 15 26 11` | `3` |\n\n> 입력은 표의 왼쪽 칸부터 한 줄에 하나씩 주어집니다. 채점할 때는 다른 입력으로도 확인합니다.",
-      "starterCode": "# 여기에 코드를 작성해 주세요.\narr = list(map(int, input().split()))\n\nodd_count = 0\neven_count = 0\n\n\n",
-      "answerCode": "arr = list(map(int, input().split()))\n\nodd_count = 0\neven_count = 0\n\nfor num in arr:\n    if num % 2 != 0:\n        odd_count += 1\n    else:\n        even_count += 1\n\nprint(odd_count * even_count)\n",
-      "stdin": "1 2 3 4 5\n---\n11 15 26 11\n---\n29 22 2 26"
+      "title": "[구현] n 번째 원소의 부호",
+      "description": "### 문제 설명\n\n5개 정수로 구성된 리스트 arr 과 정수 n 이 주어졌을 때, arr 의 n 번째 원소가 음수이면 -1, 0 이면 0, 양수이면 1 을 출력하는 **프로그램을 완성해 주세요.**\n\n### 입력 설명\n\n- arr : 5개 정수를 원소로 가지는 리스트\n  - 각 원소는 -999 이상 999 이하\n- n : 1 이상 5 이하의 자연수\n\n### 출력 설명\n\narr 의 n 번째 원소가 음수이면 -1, 0 이면 0, 양수이면 1 을 출력해 주세요.\n\n### 예제\n\n| arr | n | result |\n|---|---|---|\n| -836 0 911 738 -607 | 3 | 1 |\n| 846 -808 0 -159 -149 | 1 | 1 |\n\n\\# 예제 1: 3 번째 원소는 911 이고 양수 이므로 1 을 출력합니다.  \n\\# 예제 2: 1 번째 원소는 846 이고 양수 이므로 1 을 출력합니다.",
+      "starterCode": "# 여기에 코드를 작성해주세요. 아래 주석은 예시입니다.\n# 입력값은 상수로 고정하지 말고, 표준 입력으로부터 읽어 변수에 할당한 뒤 그 변수를 사용합니다\n# a = input()\n# print(a)\n",
+      "answerCode": "arr = list(map(int, input().split()))\nn = int(input())\n\ntarget = arr[n - 1]\n\nif target < 0:\n    print(-1)\nelif target > 0:\n    print(1)\nelse:\n    print(0)\n",
+      "stdin": "-836 0 911 738 -607\n3\n---\n846 -808 0 -159 -149\n1\n---\n0 -465 379 756 -175\n2\n---\n396 -813 537 0 227\n1"
     },
     {
-      "id": "g3-49",
+      "id": "q3-31",
       "grade": 3,
-      "title": "[구현] 절댓값이 더 큰 수",
-      "description": "### 문제 설명\n\n두 정수 a 와 b 를 입력받아 절댓값을 비교합니다. **절댓값이 더 큰 원래 수**를 출력하고, 절댓값이 같으면 `same` 을 출력하려고 합니다. (내장함수 `abs`)\n\n코드를 작성해 주세요.\n\n### 입출력 예\n\n| a | b | result |\n|:---:|:---:|:---:|\n| `-10` | `-2` | `-10` |\n| `8` | `3` | `8` |\n\n> 입력은 표의 왼쪽 칸부터 한 줄에 하나씩 주어집니다. 채점할 때는 다른 입력으로도 확인합니다.",
-      "starterCode": "# 여기에 코드를 작성해 주세요.\na = int(input())\nb = int(input())\n\n\n",
-      "answerCode": "a = int(input())\nb = int(input())\n\nabs_a = abs(a)\nabs_b = abs(b)\n\nif abs_a > abs_b:\n    print(a)\nelif abs_a < abs_b:\n    print(b)\nelse:\n    print(\"same\")\n",
-      "stdin": "-10\n-2\n---\n8\n3\n---\n-1\n1\n---\n-2\n-6"
+      "title": "[구현] 6씩 더하여 출력",
+      "description": "### 문제 설명\n\n두 자연수 k 와 n 이 주어졌을 때, k 에서 시작해 6씩 더한 수를 크기가 작은 순서대로 n 개 출력하는 **프로그램을 완성해 주세요.**\n\n### 입력 설명\n\n- k : 1 이상 100 이하의 자연수\n- n : 1 이상 20 이하의 자연수\n\n### 출력 설명\n\nk 부터 6씩 더한 수 n 개를 공백으로 구분하여 한 줄에 출력해 주세요.\n\n### 예제\n\n| k | n | result |\n|---|---|---|\n| 24 | 4 | 24 30 36 42 |\n| 26 | 8 | 26 32 38 44 50 56 62 68 |\n\n\\# 예제 1: 24 에서부터 6씩 더한 4개를 나열하면 24 30 36 42 입니다.  \n\\# 예제 2: 26 에서부터 6씩 더한 8개를 나열하면 26 32 38 44 50 56 62 68 입니다.",
+      "starterCode": "# 여기에 코드를 작성해주세요. 아래 주석은 예시입니다.\n# 입력값은 상수로 고정하지 말고, 표준 입력으로부터 읽어 변수에 할당한 뒤 그 변수를 사용합니다\n# a = input()\n# print(a)\n",
+      "answerCode": "k = int(input())\nn = int(input())\n\nfor i in range(n):\n    print(k + 6 * i, end=\" \")\n",
+      "stdin": "24\n4\n---\n26\n8\n---\n12\n7\n---\n1\n5"
     },
     {
-      "id": "g3-50",
+      "id": "q3-32",
       "grade": 3,
-      "title": "[구현] 홀수만 출력",
-      "description": "### 문제 설명\n\n자연수 n 을 입력받아, 1 부터 n 까지의 수 중 **홀수**만 공백으로 구분하여 출력하려고 합니다.\n\n코드를 작성해 주세요.\n\n### 입출력 예\n\n| n | result |\n|:---:|:---:|\n| `13` | `1 3 5 7 9 11 13` |\n| `10` | `1 3 5 7 9` |\n\n> 입력은 표의 왼쪽 칸부터 한 줄에 하나씩 주어집니다. 채점할 때는 다른 입력으로도 확인합니다.",
-      "starterCode": "# 여기에 코드를 작성해 주세요.\nn = int(input())\n\n\n",
-      "answerCode": "n = int(input())\n\nfor i in range(1, n + 1):\n    if i % 2 == 1:\n        print(i, end=\" \")\n",
-      "stdin": "13\n---\n10\n---\n16"
+      "title": "[구현] 소문자로 바꾸기",
+      "description": "### 문제 설명\n\n숫자, 기호, 알파벳 소문자/대문자로 구성된 문자열 password 가 주어졌을 때, 대문자를 모두 소문자로 바꾸어 출력하는 **프로그램을 완성해 주세요.**\n\n### 입력 설명\n\n- password : 숫자, 기호, 알파벳 소문자, 대문자의 조합으로 구성된 문자열\n\n### 출력 설명\n\n대문자는 모두 소문자로 바뀐 문자열을 출력해 주세요.\n\n### 예제\n\n| password | result |\n|---|---|\n| BcMcDa172\\# | bcmcda172\\# |\n| KDaBkh2078$ | kdabkh2078$ |\n\n\\# 예제 1: 대문자 'B', 'M', 'D' 를 소문자로 바꾸어 bcmcda172\\# 을 출력합니다.  \n\\# 예제 2: 대문자 'K', 'D', 'B' 를 소문자로 바꾸어 kdabkh2078$ 을 출력합니다.",
+      "starterCode": "# 여기에 코드를 작성해주세요. 아래 주석은 예시입니다.\n# 입력값은 상수로 고정하지 말고, 표준 입력으로부터 읽어 변수에 할당한 뒤 그 변수를 사용합니다\n# a = input()\n# print(a)\n",
+      "answerCode": "password = input()\n\nprint(password.lower())\n",
+      "stdin": "BcMcDa172#\n---\nKDaBkh2078$\n---\nBMeHe1374@\n---\nBMHkMc308!"
+    },
+    {
+      "id": "q3-33",
+      "grade": 3,
+      "title": "[구현] 'n' 와 'N' 개수 세기",
+      "description": "### 문제 설명\n\n영어 알파벳으로 구성된 이름 문자열 name 이 주어졌을 때, 이름에 대문자 'N' 와 소문자 'n' 가 모두 몇 개 포함되어 있는지 출력하는 **프로그램을 완성해 주세요.**\n\n### 입력 설명\n\n- name : 알파벳 대소문자의 조합으로 구성된 문자열\n  - 문자열 길이는 2 이상, 999 이하\n\n### 출력 설명\n\n문자열 name 에 포함된 대문자 'N' 와 소문자 'n' 의 개수를 모두 합산하여 출력해 주세요.\n\n### 예제\n\n| name | result |\n|---|---|\n| AoynNoul | 2 |\n| Nliir | 1 |\n\n\\# 예제 1: 대문자 N 1개와 소문자 n 1개이므로 총 2개를 출력합니다.  \n\\# 예제 2: 대문자 N 1개와 소문자 n 0개이므로 총 1개를 출력합니다.",
+      "starterCode": "# 여기에 코드를 작성해주세요. 아래 주석은 예시입니다.\n# 입력값은 상수로 고정하지 말고, 표준 입력으로부터 읽어 변수에 할당한 뒤 그 변수를 사용합니다\n# a = input()\n# print(a)\n",
+      "answerCode": "name = input()\n\nresult = name.count(\"N\") + name.count(\"n\")\nprint(result)\n",
+      "stdin": "AoynNoul\n---\nNliir\n---\nNeuyua\n---\nEieoyyNa"
+    },
+    {
+      "id": "q3-34",
+      "grade": 3,
+      "title": "[구현] 홀수 개수와 짝수 개수의 곱",
+      "description": "### 문제 설명\n\n7개의 정수를 원소로 가지는 리스트 arr 이 주어졌을 때, 홀수 개수와 짝수 개수의 곱셈 결과를 출력하는 **프로그램을 완성해 주세요.**\n\n### 입력 설명\n\n- arr : 1 이상 100 이하의 자연수 7개로 구성된 정수 리스트\n\n### 출력 설명\n\narr 의 원소 중 홀수 개수와 짝수 개수를 세어 두 수의 곱를 출력해 주세요.\n\n### 예제\n\n| arr | result |\n|---|---|\n| 69 60 47 9 22 73 54 | 12 |\n| 81 44 87 51 97 11 59 | 6 |\n\n\\# 예제 1: 홀수는 69, 47, 9, 73 (4개), 짝수는 60, 22, 54 (3개) 이므로 4 x 3 = 12 을 출력합니다.  \n\\# 예제 2: 홀수는 81, 87, 51, 97, 11, 59 (6개), 짝수는 44 (1개) 이므로 6 x 1 = 6 을 출력합니다.",
+      "starterCode": "# 여기에 코드를 작성해주세요. 아래 주석은 예시입니다.\n# 입력값은 상수로 고정하지 말고, 표준 입력으로부터 읽어 변수에 할당한 뒤 그 변수를 사용합니다\n# a = input()\n# print(a)\n",
+      "answerCode": "arr = list(map(int, input().split()))\n\nodd_count = 0\neven_count = 0\n\nfor num in arr:\n    if num % 2 == 1:\n        odd_count += 1\n    else:\n        even_count += 1\n\nprint(odd_count * even_count)\n",
+      "stdin": "69 60 47 9 22 73 54\n---\n81 44 87 51 97 11 59\n---\n76 57 90 39 22 61 44\n---\n15 47 93 74 86 20 8"
+    },
+    {
+      "id": "q3-35",
+      "grade": 3,
+      "title": "[구현] 더 작은 수 출력",
+      "description": "### 문제 설명\n\n서로 다른 숫자 두 개가 주어졌을 때, 두 수 중 더 작은 수를 출력하는 **프로그램을 완성해 주세요.**\n\n### 입력 설명\n\n- n1, n2 : 1 이상 999 이하의 서로 다른 자연수\n\n### 출력 설명\n\n두 수 중 더 작은 수를 출력해 주세요.\n\n### 예제\n\n| n1 | n2 | result |\n|---|---|---|\n| 648 | 202 | 202 |\n| 9 | 610 | 9 |\n\n\\# 예제 1: 648 과 202 중에서 더 작은 수는 202 이므로 202 을 출력합니다.  \n\\# 예제 2: 9 과 610 중에서 더 작은 수는 9 이므로 9 을 출력합니다.",
+      "starterCode": "# 여기에 코드를 작성해주세요. 아래 주석은 예시입니다.\n# 입력값은 상수로 고정하지 말고, 표준 입력으로부터 읽어 변수에 할당한 뒤 그 변수를 사용합니다\n# a = input()\n# print(a)\n",
+      "answerCode": "n1 = int(input())\nn2 = int(input())\n\nif n1 < n2:\n    print(n1)\nelse:\n    print(n2)\n",
+      "stdin": "648\n202\n---\n9\n610\n---\n928\n770\n---\n875\n764"
+    },
+    {
+      "id": "q3-36",
+      "grade": 3,
+      "title": "[구현] 5씩 더하여 출력",
+      "description": "### 문제 설명\n\n두 자연수 k 와 n 이 주어졌을 때, k 에서 시작해 5씩 더한 수를 크기가 작은 순서대로 n 개 출력하는 **프로그램을 완성해 주세요.**\n\n### 입력 설명\n\n- k : 1 이상 100 이하의 자연수\n- n : 1 이상 20 이하의 자연수\n\n### 출력 설명\n\nk 부터 5씩 더한 수 n 개를 공백으로 구분하여 한 줄에 출력해 주세요.\n\n### 예제\n\n| k | n | result |\n|---|---|---|\n| 18 | 7 | 18 23 28 33 38 43 48 |\n| 9 | 8 | 9 14 19 24 29 34 39 44 |\n\n\\# 예제 1: 18 에서부터 5씩 더한 7개를 나열하면 18 23 28 33 38 43 48 입니다.  \n\\# 예제 2: 9 에서부터 5씩 더한 8개를 나열하면 9 14 19 24 29 34 39 44 입니다.",
+      "starterCode": "# 여기에 코드를 작성해주세요. 아래 주석은 예시입니다.\n# 입력값은 상수로 고정하지 말고, 표준 입력으로부터 읽어 변수에 할당한 뒤 그 변수를 사용합니다\n# a = input()\n# print(a)\n",
+      "answerCode": "k = int(input())\nn = int(input())\n\nfor i in range(n):\n    print(k + 5 * i, end=\" \")\n",
+      "stdin": "18\n7\n---\n9\n8\n---\n21\n4\n---\n21\n3"
+    },
+    {
+      "id": "q3-37",
+      "grade": 3,
+      "title": "[구현] n 번째 원소의 부호",
+      "description": "### 문제 설명\n\n5개 정수로 구성된 리스트 arr 과 정수 n 이 주어졌을 때, arr 의 n 번째 원소가 음수이면 -1, 0 이면 0, 양수이면 1 을 출력하는 **프로그램을 완성해 주세요.**\n\n### 입력 설명\n\n- arr : 5개 정수를 원소로 가지는 리스트\n  - 각 원소는 -999 이상 999 이하\n- n : 1 이상 5 이하의 자연수\n\n### 출력 설명\n\narr 의 n 번째 원소가 음수이면 -1, 0 이면 0, 양수이면 1 을 출력해 주세요.\n\n### 예제\n\n| arr | n | result |\n|---|---|---|\n| 379 0 -84 -466 -90 | 3 | -1 |\n| 660 -295 -285 -941 0 | 3 | -1 |\n\n\\# 예제 1: 3 번째 원소는 -84 이고 음수 이므로 -1 을 출력합니다.  \n\\# 예제 2: 3 번째 원소는 -285 이고 음수 이므로 -1 을 출력합니다.",
+      "starterCode": "# 여기에 코드를 작성해주세요. 아래 주석은 예시입니다.\n# 입력값은 상수로 고정하지 말고, 표준 입력으로부터 읽어 변수에 할당한 뒤 그 변수를 사용합니다\n# a = input()\n# print(a)\n",
+      "answerCode": "arr = list(map(int, input().split()))\nn = int(input())\n\ntarget = arr[n - 1]\n\nif target < 0:\n    print(-1)\nelif target > 0:\n    print(1)\nelse:\n    print(0)\n",
+      "stdin": "379 0 -84 -466 -90\n3\n---\n660 -295 -285 -941 0\n3\n---\n105 445 -336 -393 0\n1\n---\n0 -573 541 665 638\n5"
+    },
+    {
+      "id": "q3-38",
+      "grade": 3,
+      "title": "[구현] 각 반의 최장신",
+      "description": "### 문제 설명\n\n초록반, 노랑반 원아들의 키가 두 개의 정수 리스트 green, yellow 에 주어졌을 때, 각 반의 최장신(가장 큰 키)을 출력하는 **프로그램을 완성해 주세요.**\n\n### 입력 설명\n\n- green : 4명의 초록반 원아들의 키가 저장된 정수 리스트\n  - 50 이상 150 이하의 자연수\n- yellow : 4명의 노랑반 원아들의 키가 저장된 정수 리스트\n  - 50 이상 150 이하의 자연수\n\n### 출력 설명\n\n초록반, 노랑반의 최장신을 차례대로 공백으로 구분하여 출력해 주세요.\n\n### 예제\n\n| green | yellow | result |\n|---|---|---|\n| 117 104 87 70 | 94 112 67 93 | 117 112 |\n| 69 148 111 97 | 132 107 63 73 | 148 132 |\n\n\\# 예제 1: 초록반에서 가장 큰 키는 117, 노랑반에서 가장 큰 키는 112 입니다.  \n\\# 예제 2: 초록반에서 가장 큰 키는 148, 노랑반에서 가장 큰 키는 132 입니다.",
+      "starterCode": "# 여기에 코드를 작성해주세요. 아래 주석은 예시입니다.\n# 입력값은 상수로 고정하지 말고, 표준 입력으로부터 읽어 변수에 할당한 뒤 그 변수를 사용합니다\n# a = input()\n# print(a)\n",
+      "answerCode": "green = list(map(int, input().split()))\nyellow = list(map(int, input().split()))\n\nprint(max(green), max(yellow))\n",
+      "stdin": "117 104 87 70\n94 112 67 93\n---\n69 148 111 97\n132 107 63 73\n---\n84 110 63 91\n133 131 115 90\n---\n136 80 109 97\n88 115 118 99"
+    },
+    {
+      "id": "q3-39",
+      "grade": 3,
+      "title": "[구현] 하이픈(-)과 별(*) 교차 출력",
+      "description": "### 문제 설명\n\n자연수 n 이 주어졌을 때, 하이픈(`-`) 모양은 0개부터 n-1개까지 1개씩 늘어나고 별(`*`) 모양은 n개부터 1개까지 1개씩 줄어들면서, 두 모양을 교차하며 한 줄로 출력하는 **프로그램을 완성해 주세요.**\n\n### 입력 설명\n\n- n : 1 이상 9 이하의 자연수\n\n### 출력 설명\n\n(하이픈(`-`) 0개, 별(`*`) n개), (하이픈(`-`) 1개, 별(`*`) n-1개), … 를 이어 붙여 한 줄로 출력해 주세요.\n\n### 예제\n\n| n | result |\n|---|---|\n| 7 | \\*\\*\\*\\*\\*\\*\\*-\\*\\*\\*\\*\\*\\*--\\*\\*\\*\\*\\*---\\*\\*\\*\\*----\\*\\*\\*-----\\*\\*------\\* |\n| 7 | \\*\\*\\*\\*\\*\\*\\*-\\*\\*\\*\\*\\*\\*--\\*\\*\\*\\*\\*---\\*\\*\\*\\*----\\*\\*\\*-----\\*\\*------\\* |\n\n\\# 예제 1: n 이 7 이므로 (0개, 7개), (1개, 6개), (2개, 5개), (3개, 4개), (4개, 3개), (5개, 2개), (6개, 1개) 를 이어 \\*\\*\\*\\*\\*\\*\\*-\\*\\*\\*\\*\\*\\*--\\*\\*\\*\\*\\*---\\*\\*\\*\\*----\\*\\*\\*-----\\*\\*------\\* 을 출력합니다.  \n\\# 예제 2: n 이 7 이므로 (0개, 7개), (1개, 6개), (2개, 5개), (3개, 4개), (4개, 3개), (5개, 2개), (6개, 1개) 를 이어 \\*\\*\\*\\*\\*\\*\\*-\\*\\*\\*\\*\\*\\*--\\*\\*\\*\\*\\*---\\*\\*\\*\\*----\\*\\*\\*-----\\*\\*------\\* 을 출력합니다.",
+      "starterCode": "# 여기에 코드를 작성해주세요. 아래 주석은 예시입니다.\n# 입력값은 상수로 고정하지 말고, 표준 입력으로부터 읽어 변수에 할당한 뒤 그 변수를 사용합니다\n# a = input()\n# print(a)\n",
+      "answerCode": "n = int(input())\n\nfor i in range(n):\n    print(\"-\" * i + \"*\" * (n - i), end=\"\")\nprint()\n",
+      "stdin": "7\n---\n7\n---\n6\n---\n3"
+    },
+    {
+      "id": "q3-40",
+      "grade": 3,
+      "title": "[구현] 홀수 개수와 짝수 개수의 곱",
+      "description": "### 문제 설명\n\n7개의 정수를 원소로 가지는 리스트 arr 이 주어졌을 때, 홀수 개수와 짝수 개수의 곱셈 결과를 출력하는 **프로그램을 완성해 주세요.**\n\n### 입력 설명\n\n- arr : 1 이상 100 이하의 자연수 7개로 구성된 정수 리스트\n\n### 출력 설명\n\narr 의 원소 중 홀수 개수와 짝수 개수를 세어 두 수의 곱를 출력해 주세요.\n\n### 예제\n\n| arr | result |\n|---|---|\n| 46 76 36 96 100 95 92 | 6 |\n| 20 65 23 20 24 42 18 | 10 |\n\n\\# 예제 1: 홀수는 95 (1개), 짝수는 46, 76, 36, 96, 100, 92 (6개) 이므로 1 x 6 = 6 을 출력합니다.  \n\\# 예제 2: 홀수는 65, 23 (2개), 짝수는 20, 20, 24, 42, 18 (5개) 이므로 2 x 5 = 10 을 출력합니다.",
+      "starterCode": "# 여기에 코드를 작성해주세요. 아래 주석은 예시입니다.\n# 입력값은 상수로 고정하지 말고, 표준 입력으로부터 읽어 변수에 할당한 뒤 그 변수를 사용합니다\n# a = input()\n# print(a)\n",
+      "answerCode": "arr = list(map(int, input().split()))\n\nodd_count = 0\neven_count = 0\n\nfor num in arr:\n    if num % 2 == 1:\n        odd_count += 1\n    else:\n        even_count += 1\n\nprint(odd_count * even_count)\n",
+      "stdin": "46 76 36 96 100 95 92\n---\n20 65 23 20 24 42 18\n---\n1 94 89 2 84 47 89\n---\n3 51 4 31 43 21 83"
+    },
+    {
+      "id": "q3-41",
+      "grade": 3,
+      "title": "[구현] 더 큰 수 출력",
+      "description": "### 문제 설명\n\n서로 다른 숫자 두 개가 주어졌을 때, 두 수 중 더 큰 수를 출력하는 **프로그램을 완성해 주세요.**\n\n### 입력 설명\n\n- n1, n2 : 1 이상 999 이하의 서로 다른 자연수\n\n### 출력 설명\n\n두 수 중 더 큰 수를 출력해 주세요.\n\n### 예제\n\n| n1 | n2 | result |\n|---|---|---|\n| 905 | 232 | 905 |\n| 478 | 947 | 947 |\n\n\\# 예제 1: 905 과 232 중에서 더 큰 수는 905 이므로 905 을 출력합니다.  \n\\# 예제 2: 478 과 947 중에서 더 큰 수는 947 이므로 947 을 출력합니다.",
+      "starterCode": "# 여기에 코드를 작성해주세요. 아래 주석은 예시입니다.\n# 입력값은 상수로 고정하지 말고, 표준 입력으로부터 읽어 변수에 할당한 뒤 그 변수를 사용합니다\n# a = input()\n# print(a)\n",
+      "answerCode": "n1 = int(input())\nn2 = int(input())\n\nif n1 > n2:\n    print(n1)\nelse:\n    print(n2)\n",
+      "stdin": "905\n232\n---\n478\n947\n---\n935\n208\n---\n688\n289"
+    },
+    {
+      "id": "q3-42",
+      "grade": 3,
+      "title": "[구현] 'm' 와 'M' 개수 세기",
+      "description": "### 문제 설명\n\n영어 알파벳으로 구성된 이름 문자열 name 이 주어졌을 때, 이름에 대문자 'M' 와 소문자 'm' 가 모두 몇 개 포함되어 있는지 출력하는 **프로그램을 완성해 주세요.**\n\n### 입력 설명\n\n- name : 알파벳 대소문자의 조합으로 구성된 문자열\n  - 문자열 길이는 2 이상, 999 이하\n\n### 출력 설명\n\n문자열 name 에 포함된 대문자 'M' 와 소문자 'm' 의 개수를 모두 합산하여 출력해 주세요.\n\n### 예제\n\n| name | result |\n|---|---|\n| Eyi aeum | 1 |\n| Aerrm | 1 |\n\n\\# 예제 1: 대문자 M 0개와 소문자 m 1개이므로 총 1개를 출력합니다.  \n\\# 예제 2: 대문자 M 0개와 소문자 m 1개이므로 총 1개를 출력합니다.",
+      "starterCode": "# 여기에 코드를 작성해주세요. 아래 주석은 예시입니다.\n# 입력값은 상수로 고정하지 말고, 표준 입력으로부터 읽어 변수에 할당한 뒤 그 변수를 사용합니다\n# a = input()\n# print(a)\n",
+      "answerCode": "name = input()\n\nresult = name.count(\"M\") + name.count(\"m\")\nprint(result)\n",
+      "stdin": "Eyi aeum\n---\nAerrm\n---\nMmim\n---\nOullrm"
+    },
+    {
+      "id": "q3-43",
+      "grade": 3,
+      "title": "[구현] 소문자로 바꾸기",
+      "description": "### 문제 설명\n\n숫자, 기호, 알파벳 소문자/대문자로 구성된 문자열 password 가 주어졌을 때, 대문자를 모두 소문자로 바꾸어 출력하는 **프로그램을 완성해 주세요.**\n\n### 입력 설명\n\n- password : 숫자, 기호, 알파벳 소문자, 대문자의 조합으로 구성된 문자열\n\n### 출력 설명\n\n대문자는 모두 소문자로 바뀐 문자열을 출력해 주세요.\n\n### 예제\n\n| password | result |\n|---|---|\n| SegDr1145\\# | segdr1145\\# |\n| SBBc860\\# | sbbc860\\# |\n\n\\# 예제 1: 대문자 'S', 'D' 를 소문자로 바꾸어 segdr1145\\# 을 출력합니다.  \n\\# 예제 2: 대문자 'S', 'B', 'B' 를 소문자로 바꾸어 sbbc860\\# 을 출력합니다.",
+      "starterCode": "# 여기에 코드를 작성해주세요. 아래 주석은 예시입니다.\n# 입력값은 상수로 고정하지 말고, 표준 입력으로부터 읽어 변수에 할당한 뒤 그 변수를 사용합니다\n# a = input()\n# print(a)\n",
+      "answerCode": "password = input()\n\nprint(password.lower())\n",
+      "stdin": "SegDr1145#\n---\nSBBc860#\n---\nPaMBck1588#\n---\nKeFe584#"
+    },
+    {
+      "id": "q3-44",
+      "grade": 3,
+      "title": "[구현] 차이의 절댓값",
+      "description": "### 문제 설명\n\n숫자 두 개가 주어졌을 때, 두 수의 차이 값의 절댓값을 출력하는 **프로그램을 완성해 주세요.**\n\n### 입력 설명\n\n- n1, n2 : 1 이상 999 이하의 자연수\n\n### 출력 설명\n\n두 수의 차이 값의 절댓값을 출력해 주세요.\n\n### 예제\n\n| n1 | n2 | result |\n|---|---|---|\n| 39 | 26 | 13 |\n| 71 | 84 | 13 |\n\n\\# 예제 1: 39 와 26 의 차이 값은 13 이고 그 절댓값은 13 이므로 13 을 출력합니다.  \n\\# 예제 2: 71 와 84 의 차이 값은 -13 이고 그 절댓값은 13 이므로 13 을 출력합니다.",
+      "starterCode": "# 여기에 코드를 작성해주세요. 아래 주석은 예시입니다.\n# 입력값은 상수로 고정하지 말고, 표준 입력으로부터 읽어 변수에 할당한 뒤 그 변수를 사용합니다\n# a = input()\n# print(a)\n",
+      "answerCode": "n1 = int(input())\nn2 = int(input())\n\nif n1 > n2:\n    print(n1 - n2)\nelse:\n    print(n2 - n1)\n",
+      "stdin": "39\n26\n---\n71\n84\n---\n38\n30\n---\n7\n98"
+    },
+    {
+      "id": "q3-45",
+      "grade": 3,
+      "title": "[구현] 5 이후 값의 개수",
+      "description": "### 문제 설명\n\n숫자 정보를 가지는 리스트 n 이 주어졌을 때, 5 보다 뒤에 있는 숫자의 개수를 출력하는 **프로그램을 완성해 주세요.**\n\n### 입력 설명\n\n- n : 공백으로 구분된 자연수 리스트\n  - 5 은(는) 리스트에 꼭 한 번만 들어 있습니다.\n\n### 출력 설명\n\n5 보다 뒤에 있는 숫자의 개수를 출력해 주세요.\n\n### 예제\n\n| n | result |\n|---|---|\n| 67 83 12 88 5 72 52 | 2 |\n| 51 12 63 55 74 5 55 23 32 50 | 4 |\n\n\\# 예제 1: 5 보다 뒤에 있는 숫자는 72, 52 이므로 2 을 출력합니다.  \n\\# 예제 2: 5 보다 뒤에 있는 숫자는 55, 23, 32, 50 이므로 4 을 출력합니다.",
+      "starterCode": "# 여기에 코드를 작성해주세요. 아래 주석은 예시입니다.\n# 입력값은 상수로 고정하지 말고, 표준 입력으로부터 읽어 변수에 할당한 뒤 그 변수를 사용합니다\n# a = input()\n# print(a)\n",
+      "answerCode": "n = list(map(int, input().split()))\n\ncount = 0\nfor x in n:\n    if x == 5:\n        break\n    count += 1\n\nprint(len(n) - 1 - count)\n",
+      "stdin": "67 83 12 88 5 72 52\n---\n51 12 63 55 74 5 55 23 32 50\n---\n90 5 13 60 70 57 36 87 47 14\n---\n5 19 55 39 45 56 62"
+    },
+    {
+      "id": "q3-46",
+      "grade": 3,
+      "title": "[구현] 차이의 절댓값",
+      "description": "### 문제 설명\n\n숫자 두 개가 주어졌을 때, 두 수의 차이 값의 절댓값을 출력하는 **프로그램을 완성해 주세요.**\n\n### 입력 설명\n\n- n1, n2 : 1 이상 999 이하의 자연수\n\n### 출력 설명\n\n두 수의 차이 값의 절댓값을 출력해 주세요.\n\n### 예제\n\n| n1 | n2 | result |\n|---|---|---|\n| 21 | 9 | 12 |\n| 69 | 65 | 4 |\n\n\\# 예제 1: 21 와 9 의 차이 값은 12 이고 그 절댓값은 12 이므로 12 을 출력합니다.  \n\\# 예제 2: 69 와 65 의 차이 값은 4 이고 그 절댓값은 4 이므로 4 을 출력합니다.",
+      "starterCode": "# 여기에 코드를 작성해주세요. 아래 주석은 예시입니다.\n# 입력값은 상수로 고정하지 말고, 표준 입력으로부터 읽어 변수에 할당한 뒤 그 변수를 사용합니다\n# a = input()\n# print(a)\n",
+      "answerCode": "n1 = int(input())\nn2 = int(input())\n\nif n1 > n2:\n    print(n1 - n2)\nelse:\n    print(n2 - n1)\n",
+      "stdin": "21\n9\n---\n69\n65\n---\n72\n25\n---\n2\n24"
+    },
+    {
+      "id": "q3-47",
+      "grade": 3,
+      "title": "[구현] 홀수 개수와 짝수 개수의 차이",
+      "description": "### 문제 설명\n\n7개의 정수를 원소로 가지는 리스트 arr 이 주어졌을 때, 홀수 개수와 짝수 개수의 차이(큰 수에서 작은 수를 뺀 값)를 출력하는 **프로그램을 완성해 주세요.**\n\n### 입력 설명\n\n- arr : 1 이상 100 이하의 자연수 7개로 구성된 정수 리스트\n\n### 출력 설명\n\narr 의 원소 중 홀수 개수와 짝수 개수를 세어 두 수의 차이를 출력해 주세요.\n\n### 예제\n\n| arr | result |\n|---|---|\n| 71 34 73 36 83 67 2 | 1 |\n| 91 14 45 89 48 1 17 | 3 |\n\n\\# 예제 1: 홀수는 71, 73, 83, 67 (4개), 짝수는 34, 36, 2 (3개) 이므로 4 - 3 = 1 을 출력합니다.  \n\\# 예제 2: 홀수는 91, 45, 89, 1, 17 (5개), 짝수는 14, 48 (2개) 이므로 5 - 2 = 3 을 출력합니다.",
+      "starterCode": "# 여기에 코드를 작성해주세요. 아래 주석은 예시입니다.\n# 입력값은 상수로 고정하지 말고, 표준 입력으로부터 읽어 변수에 할당한 뒤 그 변수를 사용합니다\n# a = input()\n# print(a)\n",
+      "answerCode": "arr = list(map(int, input().split()))\n\nodd_count = 0\neven_count = 0\n\nfor num in arr:\n    if num % 2 == 1:\n        odd_count += 1\n    else:\n        even_count += 1\n\nprint(abs(odd_count - even_count))\n",
+      "stdin": "71 34 73 36 83 67 2\n---\n91 14 45 89 48 1 17\n---\n57 3 15 15 54 38 75\n---\n34 23 2 28 63 55 94"
+    },
+    {
+      "id": "q3-48",
+      "grade": 3,
+      "title": "[구현] 더 작은 수 출력",
+      "description": "### 문제 설명\n\n서로 다른 숫자 두 개가 주어졌을 때, 두 수 중 더 작은 수를 출력하는 **프로그램을 완성해 주세요.**\n\n### 입력 설명\n\n- n1, n2 : 1 이상 999 이하의 서로 다른 자연수\n\n### 출력 설명\n\n두 수 중 더 작은 수를 출력해 주세요.\n\n### 예제\n\n| n1 | n2 | result |\n|---|---|---|\n| 88 | 784 | 88 |\n| 703 | 193 | 193 |\n\n\\# 예제 1: 88 과 784 중에서 더 작은 수는 88 이므로 88 을 출력합니다.  \n\\# 예제 2: 703 과 193 중에서 더 작은 수는 193 이므로 193 을 출력합니다.",
+      "starterCode": "# 여기에 코드를 작성해주세요. 아래 주석은 예시입니다.\n# 입력값은 상수로 고정하지 말고, 표준 입력으로부터 읽어 변수에 할당한 뒤 그 변수를 사용합니다\n# a = input()\n# print(a)\n",
+      "answerCode": "n1 = int(input())\nn2 = int(input())\n\nif n1 < n2:\n    print(n1)\nelse:\n    print(n2)\n",
+      "stdin": "88\n784\n---\n703\n193\n---\n40\n901\n---\n495\n663"
+    },
+    {
+      "id": "q3-49",
+      "grade": 3,
+      "title": "[구현] 각 반의 최장신",
+      "description": "### 문제 설명\n\n해바라기반, 장미반 원아들의 키가 두 개의 정수 리스트 sunflower, rose 에 주어졌을 때, 각 반의 최장신(가장 큰 키)을 출력하는 **프로그램을 완성해 주세요.**\n\n### 입력 설명\n\n- sunflower : 4명의 해바라기반 원아들의 키가 저장된 정수 리스트\n  - 50 이상 150 이하의 자연수\n- rose : 4명의 장미반 원아들의 키가 저장된 정수 리스트\n  - 50 이상 150 이하의 자연수\n\n### 출력 설명\n\n해바라기반, 장미반의 최장신을 차례대로 공백으로 구분하여 출력해 주세요.\n\n### 예제\n\n| sunflower | rose | result |\n|---|---|---|\n| 84 130 139 112 | 137 150 147 71 | 139 150 |\n| 93 119 136 98 | 58 79 97 116 | 136 116 |\n\n\\# 예제 1: 해바라기반에서 가장 큰 키는 139, 장미반에서 가장 큰 키는 150 입니다.  \n\\# 예제 2: 해바라기반에서 가장 큰 키는 136, 장미반에서 가장 큰 키는 116 입니다.",
+      "starterCode": "# 여기에 코드를 작성해주세요. 아래 주석은 예시입니다.\n# 입력값은 상수로 고정하지 말고, 표준 입력으로부터 읽어 변수에 할당한 뒤 그 변수를 사용합니다\n# a = input()\n# print(a)\n",
+      "answerCode": "sunflower = list(map(int, input().split()))\nrose = list(map(int, input().split()))\n\nprint(max(sunflower), max(rose))\n",
+      "stdin": "84 130 139 112\n137 150 147 71\n---\n93 119 136 98\n58 79 97 116\n---\n115 74 74 64\n96 100 149 102\n---\n125 114 79 131\n130 51 129 117"
+    },
+    {
+      "id": "q3-50",
+      "grade": 3,
+      "title": "[구현] 2씩 더하여 출력",
+      "description": "### 문제 설명\n\n두 자연수 k 와 n 이 주어졌을 때, k 에서 시작해 2씩 더한 수를 크기가 작은 순서대로 n 개 출력하는 **프로그램을 완성해 주세요.**\n\n### 입력 설명\n\n- k : 1 이상 100 이하의 자연수\n- n : 1 이상 20 이하의 자연수\n\n### 출력 설명\n\nk 부터 2씩 더한 수 n 개를 공백으로 구분하여 한 줄에 출력해 주세요.\n\n### 예제\n\n| k | n | result |\n|---|---|---|\n| 21 | 7 | 21 23 25 27 29 31 33 |\n| 23 | 8 | 23 25 27 29 31 33 35 37 |\n\n\\# 예제 1: 21 에서부터 2씩 더한 7개를 나열하면 21 23 25 27 29 31 33 입니다.  \n\\# 예제 2: 23 에서부터 2씩 더한 8개를 나열하면 23 25 27 29 31 33 35 37 입니다.",
+      "starterCode": "# 여기에 코드를 작성해주세요. 아래 주석은 예시입니다.\n# 입력값은 상수로 고정하지 말고, 표준 입력으로부터 읽어 변수에 할당한 뒤 그 변수를 사용합니다\n# a = input()\n# print(a)\n",
+      "answerCode": "k = int(input())\nn = int(input())\n\nfor i in range(n):\n    print(k + 2 * i, end=\" \")\n",
+      "stdin": "21\n7\n---\n23\n8\n---\n7\n3\n---\n29\n8"
     }
   ]
 }
