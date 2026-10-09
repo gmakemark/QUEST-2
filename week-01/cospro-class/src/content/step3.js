@@ -48,6 +48,7 @@ export default {
           ### input().split()
           시험에서는 \`85 90 77\` 처럼 **한 줄에 공백으로 띄운 여러 값**을 자주 입력받는다.
           \`input().split()\` 은 한 줄을 공백으로 나눠 **문자열 리스트**를 만든다.
+          \`a, b = input().split()\` 처럼 바로 나눠 담을 때는 **나뉜 개수와 변수 개수가 같아야** 한다. 다르면 \`ValueError\` 가 난다.
         `,
         task(`한 줄에 과일 이름 여러 개를 입력받아 리스트로 출력하기`, py`
           words = input().split()
@@ -59,7 +60,8 @@ export default {
         `, { sample: "민지 15" }),
         md`
           ### map(int, …): 모두 정수로
-          나눈 값은 아직 문자열이라 계산이 안 된다. \`map(int, 리스트)\` 는 리스트의 **모든 값에 int 를 적용**하고, \`list()\` 로 감싸면 리스트가 된다.
+          나눈 값은 아직 문자열이라 계산이 안 된다. \`map(int, 리스트)\` 는 리스트의 **모든 값에 int 를 적용**한다.
+          \`map()\` 의 결과는 그대로 출력하면 \`<map object …>\` 로만 보이므로, \`list()\` 로 감싸 리스트로 만들거나 \`a, b = …\` 처럼 나눠 받는다.
 
           | 코드 | 결과 (입력 \`3 5 7\`) |
           |---|---|
@@ -138,9 +140,9 @@ export default {
           | 내장 함수 | 하는 일 | STEP2 에서 직접 만든 방법 |
           |---|---|---|
           | \`sum(리스트)\` | 합계 | \`total += x\` 반복 |
-          | \`max(리스트)\` / \`min(리스트)\` | 가장 큰 / 작은 값 | \`if x > best: best = x\` |
+          | \`max(리스트)\` / \`min(리스트)\` | 가장 큰 / 작은 값 (\`max(3, 9)\` 처럼 값을 바로 여러 개 넣어도 됨) | \`if x > best: best = x\` |
           | \`abs(x)\` | 절댓값 | \`if x < 0: x = x * -1\` |
-          | \`round(x, n)\` | 소수 n 자리로 반올림 | – |
+          | \`round(x, n)\` | 소수 n 자리로 반올림 (n 을 빼면 정수로) | – |
           | \`sorted(리스트)\` | 정렬한 **새** 리스트 (원래 리스트는 그대로) | \`리스트.sort()\` 는 원래 리스트를 바꿈 |
         `,
         task(`scores 의 합계 출력하기 (sum)`, py`print(sum(scores))`, { given: py`scores = [80, 95, 72, 88]` }),
@@ -149,6 +151,11 @@ export default {
         task(`-7 의 절댓값과 3 - 10 의 절댓값 출력하기 (abs)`, py`print(abs(-7), abs(3 - 10))`),
         task(`3.146 을 소수 둘째 자리로 반올림해 출력하기 (round)`, py`print(round(3.146, 2))`),
         task(`sorted() 로 정렬한 리스트와 원래 scores 를 함께 출력하기`, py`print(sorted(scores), scores)`, { given: py`scores = [80, 95, 72, 88]` }),
+        md`
+          \`round()\` 는 **정확히 반(.5)** 인 값을 가장 가까운 **짝수** 쪽으로 보낸다. (\`round(2.5)\` → \`2\`, \`round(3.5)\` → \`4\`)
+          "몇째 자리까지 출력" 같은 시험 조건은 \`round()\` 대신 아래의 \`%.nf\` 서식으로 맞춘다.
+        `,
+        task(`round(2.5) 와 round(3.5) 를 한 줄에 출력해 결과 확인하기`, py`print(round(2.5), round(3.5))`),
         md`
           ### 검사 메서드
           STEP2 에서 비교 연산자(\`'A' <= ch <= 'Z'\`)로 했던 판별을 메서드로도 할 수 있다. 결과는 \`True\`/\`False\` 이다. (기출: "소문자 개수 세기" 의 빈칸)
@@ -159,11 +166,14 @@ export default {
           | \`islower()\` | 소문자 |
           | \`isdigit()\` | 숫자 |
           | \`isalpha()\` | 글자(알파벳·한글) |
+
+          문자열에 쓰면 **모든 글자가** 조건에 맞아야 \`True\` 이다. (\`"Ab".isupper()\` 는 \`False\`) 그래서 보통 한 글자씩 꺼내 검사한다.
         `,
         task(`"PyThon3" 의 각 글자가 대문자인지 한 줄에 하나씩 출력하기 (isupper)`, py`
           for ch in "PyThon3":
               print(ch, ch.isupper())
         `),
+        task(`"AB" 와 "Ab" 가 모두 대문자인지 한 줄에 출력하기 (결과: True False)`, py`print("AB".isupper(), "Ab".isupper())`),
         task(`문자열을 입력받아 소문자 개수 출력하기 (islower)`, py`
           s = input()
           count = 0
@@ -299,6 +309,7 @@ export default {
           | \`%s\` | 문자열 | \`"%s" % "hi"\` | \`hi\` |
 
           값이 여러 개면 괄호로 묶는다: \`"%.1f %d" % (a, b)\`
+          \`%d\` 에 실수를 넣으면 반올림하지 않고 소수점 아래를 **버린다**. \`%.1f\` 처럼 자리를 정하면 그 자리에서 **반올림**한다.
         `,
         task(`avg 를 소수 둘째 자리까지 출력하기`, py`print("%.2f" % avg)`, { given: py`avg = 88.3333` }),
         task(`avg 를 소수 첫째 자리까지 출력하기`, py`print("%.1f" % avg)`, { given: py`avg = 88.3333` }),

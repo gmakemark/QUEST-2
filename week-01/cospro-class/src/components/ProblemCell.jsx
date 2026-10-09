@@ -77,7 +77,7 @@ export default function ProblemCell({ problem, onVerdict }) {
 
   return (
     <div className="space-y-4">
-      <Markdown>{problem.description}</Markdown>
+      <Markdown exam>{problem.description}</Markdown>
 
       {isBlank ? (
         <BlankCode

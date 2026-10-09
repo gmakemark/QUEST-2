@@ -24,14 +24,14 @@ export default {
         md`
           ### 메서드
           **메서드**는 값 뒤에 점을 찍고 부르는 기능이다. \`값.기능()\`
-          문자열 메서드는 원래 문자열을 바꾸지 않고 **새 문자열을 돌려준다**. 바뀐 값을 쓰려면 출력하거나 변수에 다시 저장한다.
+          문자열 메서드는 **원래 문자열을 바꾸지 않고**, 결과를 새 값으로 돌려준다. 바뀐 값을 쓰려면 출력하거나 변수에 다시 저장한다.
 
-          | 메서드 | 하는 일 |
-          |---|---|
-          | \`upper()\` / \`lower()\` | 대문자로 / 소문자로 |
-          | \`replace(a, b)\` | a 를 모두 b 로 바꿈 |
-          | \`count(x)\` | x 가 몇 번 나오는지 |
-          | \`split()\` | 공백으로 나눠 리스트로 |
+          | 메서드 | 하는 일 | 돌려주는 값 |
+          |---|---|---|
+          | \`upper()\` / \`lower()\` | 영문자를 대문자로 / 소문자로 (다른 글자는 그대로) | 새 문자열 |
+          | \`replace(a, b)\` | a 를 모두 b 로 바꿈 | 새 문자열 |
+          | \`count(x)\` | x 가 몇 번 나오는지 (겹치지 않게 셈) | 정수 |
+          | \`split()\` | 공백을 기준으로 나눔 (공백이 여러 칸이어도 하나로 봄) | 리스트 |
         `,
         task(`s 를 모두 대문자로 출력하기`, py`print(s.upper())`, { given: py`s = "Hello World"` }),
         task(`s 를 모두 소문자로 출력하기`, py`print(s.lower())`, { given: py`s = "Hello World"` }),
@@ -50,11 +50,29 @@ export default {
         task(`s 를 공백으로 나눈 리스트 출력하기`, py`print(s.split())`, { given: py`s = "사과 배 감"` }),
         task(`s 를 나눈 리스트의 원소 개수 출력하기`, py`print(len(s.split()))`, { given: py`s = "사과 배 감"` }),
         md`
+          \`split()\` 괄호 안에 글자를 넣으면 공백 대신 **그 글자를 기준으로** 나눈다. (\`"2026-10-10".split("-")\` → \`['2026', '10', '10']\`)
+        `,
+        task(`d 를 "-" 기준으로 나눈 리스트 출력하기`, py`print(d.split("-"))`, { given: py`d = "2026-10-10"` }),
+        md`
+          ### 문자열은 한 글자만 바꿀 수 없다
+          \`s[0]\` 으로 꺼내 볼 수는 있지만, \`s[0] = "J"\` 처럼 **한 글자만 바꿀 수는 없다**(\`TypeError\`). 바꾸려면 새 문자열을 만들어 다시 저장한다.
+        `,
+        task(`실행해서 TypeError 를 확인한 뒤, 슬라이싱으로 새 문자열을 만들어 "Java" 출력하기`, py`
+          s = "Hava"
+          s = "J" + s[1:]
+          print(s)
+        `, { given: py`
+          s = "Hava"
+          s[0] = "J"
+          print(s)
+        `, fix: true }),
+        md`
           ### in: 들어 있는지
-          \`x in 문자열\` 은 x 가 들어 있으면 \`True\`, 없으면 \`False\` 이다.
+          \`x in 문자열\` 은 x 가 들어 있으면 \`True\`, 없으면 \`False\` 이다. 반대로 "들어 있지 않은지" 는 \`x not in 문자열\` 로 쓴다. (리스트에도 똑같이 쓴다)
         `,
         task(`"a" 가 "cat" 에 들어 있는지 출력하기`, py`print("a" in "cat")`),
         task(`"dog" 가 s 에 들어 있는지 출력하기`, py`print("dog" in s)`, { given: py`s = "I love cats"` }),
+        task(`"z" 가 s 에 들어 있지 않은지 출력하기 (not in)`, py`print("z" not in s)`, { given: py`s = "I love cats"` }),
         ex({
           title: "이름 대문자로",
           prompt: md`
@@ -105,16 +123,16 @@ export default {
         `, { given: py`nums = [5, 2, 8]` }),
         md`
           ### 리스트 메서드
-          리스트 메서드는 문자열과 달리 **리스트 자체를 바꾼다**.
+          문자열과 달리, 아래 위쪽 다섯 메서드는 **리스트 자체를 바꾼다**. \`index\`, \`count\` 는 바꾸지 않고 값만 알려 준다.
 
           | 메서드 | 하는 일 |
           |---|---|
           | \`append(x)\` | 맨 뒤에 x 추가 |
           | \`insert(i, x)\` | i 위치에 x 끼워 넣기 |
-          | \`remove(x)\` | 처음 나오는 x 지우기 |
-          | \`pop()\` | 맨 뒤 값을 꺼내며 지우기 |
+          | \`remove(x)\` | 처음 나오는 x 하나 지우기 (없으면 \`ValueError\`) |
+          | \`pop()\` / \`pop(i)\` | 맨 뒤 값 / i 위치 값을 꺼내 돌려주고 지우기 |
           | \`sort()\` / \`sort(reverse=True)\` | 작은 순 / 큰 순 정렬 |
-          | \`index(x)\` / \`count(x)\` | x 의 위치 / x 의 개수 |
+          | \`index(x)\` / \`count(x)\` | x 가 처음 나오는 위치 / x 의 개수 |
         `,
         task(`nums 맨 뒤에 1 을 추가하고 출력하기`, py`
           nums.append(1)
@@ -136,6 +154,18 @@ export default {
           nums.sort()
           print(nums)
         `, { given: py`nums = [5, 2, 8, 1]` }),
+        md`
+          \`sort()\` 는 리스트를 바꾸기만 하고 **결과를 돌려주지 않는다**(\`None\`). \`nums = nums.sort()\` 라고 쓰면 nums 가 \`None\` 이 되어 버린다.
+        `,
+        task(`실행해서 None 이 나오는 것을 확인한 뒤, 정렬된 리스트가 출력되게 고치기`, py`
+          nums = [5, 2, 8, 1]
+          nums.sort()
+          print(nums)
+        `, { given: py`
+          nums = [5, 2, 8, 1]
+          nums = nums.sort()
+          print(nums)
+        `, fix: true }),
         task(`nums 를 큰 순으로 정렬해 출력하기`, py`
           nums.sort(reverse=True)
           print(nums)
@@ -222,6 +252,7 @@ export default {
           | 리스트를 한 번에 공백으로 | \`print(*nums)\` | \`1 2 3\` |
           | 리스트를 한 번에 다른 글자로 | \`print(*nums, sep=",")\` | \`1,2,3\` |
 
+          \`print(*nums)\` 의 \`*\` 는 리스트를 **풀어서 값을 하나씩** 넘긴다는 뜻이다. \`print(1, 2, 3)\` 과 같다.
           \`print(nums)\` 는 \`[1, 2, 3]\` 처럼 대괄호까지 나온다. 반복이 끝난 뒤 \`print()\` 를 한 번 쓰면 줄이 바뀐다.
         `,
         task(`nums 의 원소를 10 배 해서 한 줄에 출력하기 (결과: 10 20 30)`, py`
@@ -345,6 +376,7 @@ export default {
         md`
           ### 최댓값과 최솟값
           **첫 값을 기준으로 두고**, 더 큰 값(최솟값이면 더 작은 값)을 만나면 기준을 바꾼다.
+          기준을 \`0\` 으로 두면 안 된다. 음수만 있는 리스트에서는 0 보다 큰 값이 없어서 답이 0 으로 나온다. (기출 "한 줄 고치기" 에 나오는 실수)
         `,
         task(`nums 의 가장 큰 값 출력하기`, py`
           best = nums[0]
@@ -360,6 +392,21 @@ export default {
                   low = x
           print(low)
         `, { given: py`nums = [12, 45, 7, 33]` }),
+        task(`실행해서 답이 0 으로 나오는 것을 확인한 뒤, 한 줄만 고쳐 가장 큰 값 -2 가 나오게 하기`, py`
+          nums = [-5, -2, -8]
+          best = nums[0]
+          for x in nums:
+              if x > best:
+                  best = x
+          print(best)
+        `, { given: py`
+          nums = [-5, -2, -8]
+          best = 0
+          for x in nums:
+              if x > best:
+                  best = x
+          print(best)
+        `, fix: true }),
         md`
           ### 절댓값
           음수이면 \`-1\` 을 곱해 양수로 바꾼다. (0 과 양수는 그대로)
@@ -397,6 +444,8 @@ export default {
           | \`'A' <= ch <= 'Z'\` | ch 가 대문자 |
           | \`'a' <= ch <= 'z'\` | ch 가 소문자 |
           | \`'0' <= ch <= '9'\` | ch 가 숫자 |
+
+          번호는 숫자 → 대문자 → 소문자 순서라서, 대문자가 소문자보다 작다. (\`'Z' < 'a'\` 는 \`True\`)
         `,
         task(`"aZ5?" 의 각 글자가 대문자인지 한 줄에 하나씩 출력하기`, py`
           for ch in "aZ5?":
@@ -409,6 +458,20 @@ export default {
           else:
               print("아님")
         `, { sample: "g" }),
+        md`
+          ### 문자열의 크기 비교 (사전 순)
+          문자열끼리 \`<\`, \`>\` 로 비교하면 **첫 글자부터 차례로** 비교한다. 영어사전에서 앞에 오는 단어가 더 작다. (\`"apple" < "banana"\` 는 \`True\`)
+          기출 "영어사전 순 비교" 에 나온다.
+        `,
+        task(`"apple" 이 "banana" 보다 작은지 출력하기`, py`print("apple" < "banana")`),
+        task(`두 단어를 한 줄에 하나씩 입력받아 영어사전 순으로 뒤에 오는 단어 출력하기`, py`
+          a = input()
+          b = input()
+          if a > b:
+              print(a)
+          else:
+              print(b)
+        `, { sample: "yellow\ngreen" }),
         ex({
           title: "빈칸 채우기 · 합계와 평균",
           prompt: md`
@@ -573,6 +636,7 @@ export default {
         md`
           ### break: 반복 끝내기
           \`break\` 를 만나면 반복을 **바로 끝내고** 반복문 다음 줄로 간다.
+          \`while True:\` 는 조건이 늘 참이라 끝없이 반복하므로, 안에서 원하는 때에 \`break\` 로 끝낸다.
         `,
         task(`nums 를 차례로 출력하다가 음수를 만나면 "멈춤" 을 출력하고 끝내기`, py`
           for n in nums:
@@ -581,6 +645,14 @@ export default {
                   break
               print(n)
         `, { given: py`nums = [3, 8, -1, 5]` }),
+        task(`while True 와 break 로 n 을 1 부터 늘려 가며 출력하다가 n 이 5 가 되면 끝내기`, py`
+          n = 1
+          while True:
+              print(n, end=" ")
+              if n == 5:
+                  break
+              n += 1
+        `),
         md`
           ### continue: 이번 차례 건너뛰기
           \`continue\` 를 만나면 아래 코드를 건너뛰고 **다음 차례**로 간다.

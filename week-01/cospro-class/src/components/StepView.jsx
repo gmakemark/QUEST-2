@@ -14,16 +14,23 @@ export default function StepView({ step, onVerdict }) {
   function renderBlock(b, key) {
     if (b.type === "md") return <Markdown>{b.text}</Markdown>;
     if (b.type === "code") return <CodeRunner id={key} code={b.code} />;
-    if (b.type === "task") return <CodeRunner id={key} code={b.starter} answer={b.answer} label={`연습 ${numbers[key]}`} />;
+    // 연습과 실습은 같은 카드: 흐린 테두리로 한 문제의 범위를 묶고, 문제(글·주석)와 코드만 눈에 띄게
+    if (b.type === "task") {
+      return (
+        <Card label={`연습 ${numbers[key]}`}>
+          <CodeRunner id={key} code={b.starter} answer={b.answer} />
+        </Card>
+      );
+    }
     if (b.type === "exercise") {
       return (
-        <div className="space-y-3 rounded-lg border border-mint-200 dark:border-mint-800 bg-mint-50 dark:bg-mint-950/30 p-4">
-          <div className="text-sm font-bold text-mint-700 dark:text-mint-300">
-            실습 {numbers[key]} · {b.title}
+        <Card label={`실습 ${numbers[key]}`}>
+          <div className="font-semibold text-slate-800 dark:text-slate-100">{b.title}</div>
+          <div className="font-semibold [&_.prose]:text-slate-800 dark:[&_.prose]:text-slate-100">
+            <Markdown>{b.prompt}</Markdown>
           </div>
-          <Markdown>{b.prompt}</Markdown>
           <CodeRunner id={key} code={b.starter} answer={b.answer} />
-        </div>
+        </Card>
       );
     }
     if (b.type === "problem") {
@@ -57,7 +64,7 @@ export default function StepView({ step, onVerdict }) {
 
       {/* 한 번 읽고 나면 눈에 띄지 않도록 회색 글씨로만 */}
       {step.intro && (
-        <div className="space-y-1 text-sm leading-6 text-slate-400 dark:text-slate-500">
+        <div className="text-sm leading-[1.15rem] text-slate-400 dark:text-slate-500">
           {step.intro.map((line) => (
             <p key={line}>{line}</p>
           ))}
@@ -81,6 +88,15 @@ export default function StepView({ step, onVerdict }) {
           })}
         </section>
       ))}
+    </div>
+  );
+}
+
+function Card({ label, children }) {
+  return (
+    <div className="space-y-3 rounded-xl border border-slate-200/80 dark:border-slate-700/70 bg-white dark:bg-slate-900 p-4">
+      <div className="text-xs text-slate-400 dark:text-slate-500">{label}</div>
+      {children}
     </div>
   );
 }

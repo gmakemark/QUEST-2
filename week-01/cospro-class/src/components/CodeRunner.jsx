@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Eye, EyeOff, Loader2, Play, RotateCcw } from "lucide-react";
+import { CirclePlay, Eye, EyeOff, Loader2, RotateCcw } from "lucide-react";
 import CodeEditor from "./CodeEditor";
 import { runPython } from "../lib/pyRunner";
 import { codeKey, readLS, removeLS, writeLS } from "../lib/storage";
@@ -34,7 +34,11 @@ export default function CodeRunner({ id, code: initialCode, answer, label }) {
     setOutput(null);
   }
 
-  const btn = "inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium disabled:opacity-50";
+  // 미니멀 아웃라인: 흰 배경 + 얇은 회색 테두리. 보라색은 아이콘과 마우스를 올렸을 때만.
+  const btn =
+    "group inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-normal text-slate-400 transition-colors " +
+    "hover:border-accent-300 hover:text-accent-700 disabled:opacity-50 " +
+    "dark:border-slate-700 dark:bg-slate-900 dark:text-slate-500 dark:hover:border-accent-600 dark:hover:text-accent-200";
   return (
     <div className="space-y-2" data-cell={id}>
       {label && <div className="text-xs font-semibold text-accent-600 dark:text-accent-300">{label}</div>}
@@ -44,17 +48,23 @@ export default function CodeRunner({ id, code: initialCode, answer, label }) {
         <button
           onClick={() => run()}
           disabled={running}
-          className={btn + " border border-accent-200 bg-accent-100 text-accent-800 hover:bg-accent-200 dark:border-accent-800 dark:bg-accent-900/60 dark:text-accent-100 dark:hover:bg-accent-800"}
+          className={btn}
           title="Ctrl+Enter"
         >
-          {running ? <Loader2 size={15} className="animate-spin" /> : <Play size={15} />} 실행
+          {running ? (
+            <Loader2 size={16} className="animate-spin text-accent-500" />
+          ) : (
+            <CirclePlay size={16} className="text-slate-400 group-hover:text-accent-500 dark:text-slate-500" />
+          )}{" "}
+          실행
         </button>
         {answer && (
           <button
             onClick={() => setShowAnswer((v) => !v)}
-            className={btn + " border border-peach-200 text-peach-700 hover:bg-peach-50 dark:border-peach-800 dark:text-peach-300 dark:hover:bg-peach-950/40"}
+            className={btn}
           >
-            {showAnswer ? <EyeOff size={15} /> : <Eye size={15} />} {showAnswer ? "예시 답안 닫기" : "예시 답안"}
+            {showAnswer ? <EyeOff size={16} className="text-accent-500" /> : <Eye size={16} className="text-accent-500" />}{" "}
+            {showAnswer ? "예시 답안 닫기" : "예시 답안"}
           </button>
         )}
         {code !== initialCode && (
@@ -67,8 +77,8 @@ export default function CodeRunner({ id, code: initialCode, answer, label }) {
       {(running || output) && <Console running={running} output={output} onInput={(v) => run([...inputs, v])} />}
 
       {showAnswer && (
-        <div className="space-y-2 rounded-md border border-peach-200 dark:border-peach-800 bg-peach-50 dark:bg-peach-950/30 p-3">
-          <div className="text-sm font-semibold text-peach-700 dark:text-peach-200">예시 답안 (다른 방법도 가능)</div>
+        <div className="space-y-1.5 pt-1">
+          <div className="text-xs text-slate-400 dark:text-slate-500">예시 답안 · 다른 방법도 가능</div>
           <CodeEditor value={answer} readOnly minHeight={40} />
         </div>
       )}

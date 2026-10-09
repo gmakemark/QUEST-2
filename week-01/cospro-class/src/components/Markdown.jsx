@@ -8,18 +8,22 @@ function urlTransform(url, key) {
 }
 
 // 인라인 코드는 typography 기본값(앞뒤 백틱 표시) 대신 옅은 배경으로 보인다.
-// 시험 화면처럼: 소제목(### 문제 설명 등)은 왼쪽 막대 + 밑줄, 굵은 글씨(**…**)는 밑줄까지
+// 시험 화면처럼: 소제목(### 문제 설명 등)은 왼쪽 막대 + 밑줄. 수업 설명의 굵은 글씨는 밑줄 없이(소제목과 헷갈리지 않게)
 const components = {
   h3: ({ children }) => (
     <h3 className="mb-2 mt-6 border-l-4 border-slate-400 pl-2 text-base font-bold underline underline-offset-4 first:mt-0 dark:border-slate-500">{children}</h3>
   ),
+};
+// 시험 지문처럼 굵은 글씨에 밑줄까지 (실전 문제 지문에서만)
+const examComponents = {
+  ...components,
   strong: ({ children }) => <strong className="underline underline-offset-4">{children}</strong>,
 };
 
-export default function Markdown({ children }) {
+export default function Markdown({ children, exam = false }) {
   return (
     <div className="prose prose-slate dark:prose-invert max-w-none prose-img:rounded-md prose-pre:bg-slate-800 prose-table:text-sm prose-table:w-auto prose-code:before:content-none prose-code:after:content-none prose-code:font-normal [&_:not(pre)>code]:rounded [&_:not(pre)>code]:bg-slate-100 [&_:not(pre)>code]:px-1 [&_:not(pre)>code]:py-0.5 dark:[&_:not(pre)>code]:bg-slate-800 prose-th:border prose-th:px-3 prose-td:border prose-td:px-3 prose-th:border-slate-300 prose-td:border-slate-300 dark:prose-th:border-slate-600 dark:prose-td:border-slate-600">
-      <ReactMarkdown remarkPlugins={[remarkGfm]} urlTransform={urlTransform} components={components}>
+      <ReactMarkdown remarkPlugins={[remarkGfm]} urlTransform={urlTransform} components={exam ? examComponents : components}>
         {children || ""}
       </ReactMarkdown>
     </div>
