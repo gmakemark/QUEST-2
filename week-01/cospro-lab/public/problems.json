@@ -1,0 +1,28 @@
+{
+  "problems": [
+    {
+      "id": "sample-1",
+      "title": "짝수의 합",
+      "description": "### 문제 설명\n\n정수가 담긴 리스트 `numbers` 가 주어질 때, **짝수만 모두 더한 값**을 return 하도록 `solution` 함수를 완성해 주세요.\n\n### 매개변수 설명\n- `numbers` : 정수가 담긴 리스트 (길이 1 이상 100 이하)\n\n### 예시\n\n| numbers | return |\n|---|---|\n| [1, 2, 3, 4] | 6 |\n| [5, 7] | 0 |",
+      "starterCode": "def solution(numbers):\n    answer = 0\n    # 여기에 코드를 작성하세요\n    return answer\n\n\n# 아래는 테스트 코드입니다. 고치지 마세요.\nprint(solution([1, 2, 3, 4]))\nprint(solution([5, 7]))\nprint(solution([10, 20, 31]))\n",
+      "answerCode": "def solution(numbers):\n    answer = 0\n    for n in numbers:\n        if n % 2 == 0:\n            answer += n\n    return answer\n\n\nprint(solution([1, 2, 3, 4]))\nprint(solution([5, 7]))\nprint(solution([10, 20, 31]))\n",
+      "stdin": ""
+    },
+    {
+      "id": "sample-2",
+      "title": "빈칸 채우기 - 문자열 뒤집기",
+      "description": "### 문제 설명\n\n문자열 `s` 를 거꾸로 뒤집은 문자열을 return 하려고 합니다. 빈칸(`____`)을 채워 `solution` 함수를 완성해 주세요.\n\n### 예시\n\n| s | return |\n|---|---|\n| \"abc\" | \"cba\" |\n| \"python\" | \"nohtyp\" |",
+      "starterCode": "def solution(s):\n    answer = \"\"\n    for ch in s:\n        answer = ____\n    return answer\n\n\nprint(solution(\"abc\"))\nprint(solution(\"python\"))\n",
+      "answerCode": "def solution(s):\n    answer = \"\"\n    for ch in s:\n        answer = ch + answer\n    return answer\n\n\nprint(solution(\"abc\"))\nprint(solution(\"python\"))\n",
+      "stdin": ""
+    },
+    {
+      "id": "sample-3",
+      "title": "한 줄 고치기 - 최댓값 찾기",
+      "description": "### 문제 설명\n\n리스트 `arr` 에서 가장 큰 값을 찾는 함수입니다. 그런데 코드 **한 줄**이 잘못되어 올바른 답이 나오지 않습니다. 한 줄만 고쳐 주세요.\n\n> 힌트: 음수만 들어 있는 리스트로 시험해 보세요.",
+      "starterCode": "def solution(arr):\n    answer = 0\n    for x in arr:\n        if x > answer:\n            answer = x\n    return answer\n\n\nprint(solution([3, 9, 2]))\nprint(solution([-5, -2, -8]))\n",
+      "answerCode": "def solution(arr):\n    answer = arr[0]\n    for x in arr:\n        if x > answer:\n            answer = x\n    return answer\n\n\nprint(solution([3, 9, 2]))\nprint(solution([-5, -2, -8]))\n",
+      "stdin": ""
+    }
+  ]
+}

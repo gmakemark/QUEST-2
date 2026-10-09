@@ -1,0 +1,15 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-slate-100 text-slate-800;
+  font-family: "Pretendard", "Malgun Gothic", system-ui, sans-serif;
+}
+
+.font-code {
+  font-family: Consolas, "D2Coding", "Courier New", monospace;
+}

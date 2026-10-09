@@ -1,0 +1,5 @@
+node_modules
+dist
+# 관리자 비밀번호 해시는 여기에만 적고 GitHub 에는 올리지 않음
+.env.local
+.env.*.local
