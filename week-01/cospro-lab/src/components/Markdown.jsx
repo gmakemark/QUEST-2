@@ -9,7 +9,7 @@ function urlTransform(url, key) {
 
 export default function Markdown({ children }) {
   return (
-    <div className="prose prose-slate max-w-none prose-img:rounded-md prose-pre:bg-slate-800 prose-table:text-sm">
+    <div className="prose prose-slate dark:prose-invert max-w-none prose-img:rounded-md prose-pre:bg-slate-800 prose-table:text-sm">
       <ReactMarkdown remarkPlugins={[remarkGfm]} urlTransform={urlTransform}>
         {children || ""}
       </ReactMarkdown>

@@ -1,7 +1,7 @@
 // ─────────────────────────────────────────────────────────────
 // 문제 자동 생성 (템플릿 방식 · 인터넷/API 필요 없음)
 //
-// 템플릿 하나 = 문제 틀 하나. make(r) 를 부를 때마다 숫자·조건·테스트 값이 무작위로 바뀐다.
+// 템플릿 하나 = 문제 틀 하나. grade 는 COS PRO 급수(1·2·3급), topic 은 범위. make(r) 를 부를 때마다 숫자·조건·테스트 값이 무작위로 바뀐다.
 // 각 템플릿은 정답 코드(body) 와 함께
 //   blank : [정답 코드에서 찾을 글자, 빈칸으로 바꾼 글자]   → "빈칸 채우기" 문제
 //   bug   : [정답 코드에서 찾을 글자, 틀리게 바꾼 글자]     → "한 줄 고치기" 문제
@@ -56,6 +56,7 @@ const WORDS = ["apple", "banana", "computer", "python", "education", "orange", "
 // ── 템플릿 ──
 const TEMPLATES = [
   {
+    grade: 2,
     topic: "if",
     make(r) {
       const k = r.int(3, 9);
@@ -75,6 +76,7 @@ const TEMPLATES = [
     },
   },
   {
+    grade: 2,
     topic: "if",
     make(r) {
       const a = r.int(17, 19) * 5;
@@ -95,6 +97,7 @@ const TEMPLATES = [
     },
   },
   {
+    grade: 2,
     topic: "loop",
     make(r) {
       const k = r.int(2, 7);
@@ -118,6 +121,7 @@ const TEMPLATES = [
     },
   },
   {
+    grade: 2,
     topic: "loop",
     make(r) {
       const tests = [[r.int(100, 999)], [r.int(1000, 9999)], [r.int(10000, 99999)]];
@@ -136,6 +140,7 @@ const TEMPLATES = [
     },
   },
   {
+    grade: 2,
     topic: "loop",
     make(r) {
       const a = r.int(2, 5);
@@ -160,6 +165,7 @@ const TEMPLATES = [
     },
   },
   {
+    grade: 2,
     topic: "loop",
     make(r) {
       const x = r.int(1, 20);
@@ -184,6 +190,7 @@ const TEMPLATES = [
     },
   },
   {
+    grade: 2,
     topic: "list",
     make(r) {
       const one = () => {
@@ -207,6 +214,7 @@ const TEMPLATES = [
     },
   },
   {
+    grade: 2,
     topic: "list",
     make(r) {
       const tests = [[r.list(r.int(4, 7), 1, 99)], [r.list(r.int(4, 7), 1, 99)], [r.list(r.int(4, 7), 1, 99)]];
@@ -225,6 +233,7 @@ const TEMPLATES = [
     },
   },
   {
+    grade: 2,
     topic: "list",
     make(r) {
       const tests = [[r.list(r.int(5, 8), 1, 30)], [r.list(r.int(5, 8), 1, 30)], [r.list(r.int(5, 8), 1, 30)]];
@@ -243,6 +252,7 @@ const TEMPLATES = [
     },
   },
   {
+    grade: 2,
     topic: "string",
     make(r) {
       const one = () => {
@@ -265,6 +275,7 @@ const TEMPLATES = [
     },
   },
   {
+    grade: 2,
     topic: "string",
     make(r) {
       const one = () => r.word(r.int(6, 10), "aBcDeFgHkMpQ");
@@ -284,6 +295,7 @@ const TEMPLATES = [
     },
   },
   {
+    grade: 2,
     topic: "string",
     make(r) {
       const tests = r.shuffle(WORDS).slice(0, 3).map((w) => [w]);
@@ -302,6 +314,7 @@ const TEMPLATES = [
     },
   },
   {
+    grade: 2,
     topic: "dict",
     make(r) {
       const tests = [[r.list(r.int(8, 12), 1, 5)], [r.list(r.int(8, 12), 1, 5)], [r.list(r.int(8, 12), 1, 5)]];
@@ -324,6 +337,7 @@ const TEMPLATES = [
     },
   },
   {
+    grade: 2,
     topic: "dict",
     make(r) {
       const one = () => {
@@ -355,7 +369,7 @@ const TYPE_SENTENCE = {
 const TITLE_PREFIX = { complete: "", blank: "빈칸 채우기 - ", bug: "한 줄 고치기 - " };
 
 // 템플릿이 만든 재료로 문제 하나를 조립한다.
-export function buildProblem(t, type) {
+export function buildProblem(t, type, grade) {
   const prints = t.tests.map((args) => `print(solution(${args.map(pyLit).join(", ")}))`).join("\n");
   const footer = `\n\n\n# 아래는 테스트 코드입니다. 고치지 마세요.\n${prints}\n`;
 
@@ -386,6 +400,7 @@ export function buildProblem(t, type) {
 
   return {
     id: newId(),
+    grade,
     title: TITLE_PREFIX[type] + t.title,
     description,
     starterCode: starter + footer,
@@ -396,24 +411,31 @@ export function buildProblem(t, type) {
   };
 }
 
-export function countTemplates(topics) {
-  return TEMPLATES.filter((t) => topics.includes(t.topic)).length;
+const poolOf = (grade, topics) => TEMPLATES.filter((t) => t.grade === grade && topics.includes(t.topic));
+
+export function countTemplates(grade, topics) {
+  return poolOf(grade, topics).length;
+}
+
+// 그 급수에 문제 틀이 있는 범위만
+export function topicsOf(grade) {
+  return TOPICS.filter((topic) => TEMPLATES.some((t) => t.grade === grade && t.topic === topic.key));
 }
 
 /**
- * topics: ["if", "loop", ...]  types: ["complete", "blank", "bug"]  count: 만들 문제 수
+ * grade: 1 | 2 | 3  topics: ["if", "loop", ...]  types: ["complete", "blank", "bug"]  count: 만들 문제 수
  * 같은 틀이 연달아 나오지 않도록, 고른 범위의 틀을 섞어서 차례로 돌려 쓴다.
  */
-export function generateProblems({ topics, types, count }, rand) {
+export function generateProblems({ grade = 2, topics, types, count }, rand) {
   const r = makeRandom(rand);
-  const pool = TEMPLATES.filter((t) => topics.includes(t.topic));
+  const pool = poolOf(grade, topics);
   if (!pool.length || !types.length) return [];
   let order = [];
   const result = [];
   for (let i = 0; i < count; i++) {
     if (!order.length) order = r.shuffle(pool);
     const tpl = order.pop();
-    result.push(buildProblem(tpl.make(r), types[i % types.length]));
+    result.push(buildProblem(tpl.make(r), types[i % types.length], tpl.grade));
   }
   return result;
 }

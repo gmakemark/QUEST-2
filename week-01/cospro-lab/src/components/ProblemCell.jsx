@@ -55,7 +55,7 @@ export default function ProblemCell({ problem, onVerdict }) {
         <button
           onClick={handleRun}
           disabled={running}
-          className="inline-flex items-center gap-1.5 rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium hover:bg-slate-50 disabled:opacity-50"
+          className="inline-flex items-center gap-1.5 rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 py-1.5 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-50"
           title="Ctrl+Enter"
         >
           {running ? <Loader2 size={16} className="animate-spin" /> : <Play size={16} />} 코드 실행
@@ -67,7 +67,7 @@ export default function ProblemCell({ problem, onVerdict }) {
         >
           <CheckCheck size={16} /> 채점하기
         </button>
-        <button onClick={handleReset} className="ml-auto inline-flex items-center gap-1 rounded-md px-2 py-1.5 text-xs text-slate-500 hover:bg-slate-100">
+        <button onClick={handleReset} className="ml-auto inline-flex items-center gap-1 rounded-md px-2 py-1.5 text-xs text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800">
           <RotateCcw size={14} /> 처음 코드로
         </button>
       </div>

@@ -21,11 +21,11 @@ export default function SettingsDialog({ onClose }) {
     setMsg("비밀번호를 바꿨습니다.");
   }
 
-  const input = "w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-blue-500";
+  const input = "w-full rounded-md border border-slate-300 dark:border-slate-600 px-3 py-2 text-sm outline-none focus:border-blue-500";
   return (
     <Modal title="관리자 비밀번호" onClose={onClose}>
       {isPasswordFromEnv() ? (
-        <p className="text-sm text-slate-600">
+        <p className="text-sm text-slate-600 dark:text-slate-300">
           비밀번호가 .env.local 의 VITE_ADMIN_PASSWORD_HASH 로 정해져 있습니다. 바꾸려면 그 값을 바꾸고 다시 빌드하세요.
         </p>
       ) : (
@@ -34,7 +34,7 @@ export default function SettingsDialog({ onClose }) {
           <input type="password" className={input} placeholder="새 비밀번호" value={newPw} onChange={(e) => setNewPw(e.target.value)} />
           <input type="password" className={input} placeholder="새 비밀번호 한 번 더" value={newPw2} onChange={(e) => setNewPw2(e.target.value)} />
           <button className="w-full rounded-md bg-blue-600 py-2 text-sm font-medium text-white hover:bg-blue-700">바꾸기</button>
-          {msg && <p className="rounded bg-slate-100 px-3 py-2 text-sm">{msg}</p>}
+          {msg && <p className="rounded bg-slate-100 dark:bg-slate-800 px-3 py-2 text-sm">{msg}</p>}
         </form>
       )}
     </Modal>

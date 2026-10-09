@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Download, KeyRound, Loader2, Lock, LockOpen, Menu, RefreshCw, Upload, Wand2 } from "lucide-react";
+import { Download, KeyRound, Loader2, Lock, LockOpen, Menu, Moon, RefreshCw, Sun, Upload, Wand2 } from "lucide-react";
 import Sidebar from "./components/Sidebar";
 import ProblemCell from "./components/ProblemCell";
 import ProblemEditor from "./components/ProblemEditor";
@@ -7,6 +7,7 @@ import LoginDialog from "./components/LoginDialog";
 import SettingsDialog from "./components/SettingsDialog";
 import GenerateDialog from "./components/GenerateDialog";
 import { preload, subscribeStatus } from "./lib/pyRunner";
+import { toggleTheme, useTheme } from "./lib/theme";
 import {
   clearSavedProblems,
   fetchDefaultProblems,
@@ -25,6 +26,8 @@ export default function App() {
   const [activeId, setActiveId] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [pyStatus, setPyStatus] = useState("idle");
+  const [gradeFilter, setGradeFilter] = useState("all"); // "all" | 1 | 2 | 3
+  const theme = useTheme();
   const importRef = useRef(null);
 
   useEffect(() => {
@@ -45,7 +48,10 @@ export default function App() {
     );
     document.querySelectorAll("[data-pid]").forEach((el) => observer.observe(el));
     return () => observer.disconnect();
-  }, [problems, isAdmin]);
+  }, [problems, isAdmin, gradeFilter]);
+
+  // 목차에서 고른 급수의 문제만 보여 준다.
+  const visible = problems && (gradeFilter === "all" ? problems : problems.filter((p) => p.grade === gradeFilter));
 
   // ── 관리자: 문제 추가/수정/삭제/이동 ──
   function commit(next) {
@@ -54,7 +60,8 @@ export default function App() {
   }
 
   function addProblem() {
-    const p = { id: newId(), title: "새 문제", description: "### 문제 설명\n\n", starterCode: "def solution():\n    answer = 0\n    return answer\n\n\nprint(solution())\n", answerCode: "", stdin: "" };
+    const grade = gradeFilter === "all" ? 2 : gradeFilter;
+    const p = { id: newId(), grade, title: "새 문제", description: "### 문제 설명\n\n", starterCode: "def solution():\n    answer = 0\n    return answer\n\n\nprint(solution())\n", answerCode: "", stdin: "" };
     commit([...problems, p]);
     setTimeout(() => document.getElementById(`p-${p.id}`)?.scrollIntoView({ behavior: "smooth" }), 50);
   }
@@ -62,6 +69,8 @@ export default function App() {
   function addGenerated(list) {
     commit([...problems, ...list.map(({ expected, ...p }) => p)]);
     setDialog(null);
+    // 지금 다른 급수만 보고 있으면, 만든 문제가 보이도록 그 급수로 바꾼다
+    if (gradeFilter !== "all" && gradeFilter !== list[0]?.grade) setGradeFilter(list[0].grade);
     setTimeout(() => document.getElementById(`p-${list[0]?.id}`)?.scrollIntoView({ behavior: "smooth" }), 50);
   }
 
@@ -72,9 +81,12 @@ export default function App() {
     commit(problems.filter((p) => p.id !== id));
   }
 
+  // 화면에 보이는 목록에서 바로 위/아래 문제와 자리를 바꾼다.
   function moveProblem(index, dir) {
+    const a = problems.indexOf(visible[index]);
+    const b = problems.indexOf(visible[index + dir]);
     const next = [...problems];
-    [next[index], next[index + dir]] = [next[index + dir], next[index]];
+    [next[a], next[b]] = [next[b], next[a]];
     commit(next);
   }
 
@@ -110,25 +122,33 @@ export default function App() {
     else setDialog("login");
   }
 
-  const toolBtn = "inline-flex items-center gap-1.5 rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm hover:bg-slate-50";
+  const toolBtn = "inline-flex items-center gap-1.5 rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 py-1.5 text-sm hover:bg-slate-50 dark:hover:bg-slate-800";
 
   return (
     <div className="min-h-screen">
       {/* ── 상단 바 ── */}
-      <header className="fixed inset-x-0 top-0 z-30 flex h-14 items-center gap-3 border-b bg-white px-3 md:px-4">
-        <button className="rounded p-1.5 hover:bg-slate-100 md:hidden" onClick={() => setSidebarOpen((v) => !v)} aria-label="목차">
+      <header className="fixed inset-x-0 top-0 z-30 flex h-14 items-center gap-3 border-b bg-white dark:bg-slate-900 px-3 md:px-4">
+        <button className="rounded p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 md:hidden" onClick={() => setSidebarOpen((v) => !v)} aria-label="목차">
           <Menu size={20} />
         </button>
-        <h1 className="truncate font-bold text-slate-800">
-          <span className="text-blue-600">COS PRO</span> 파이썬 실습
+        <h1 className="truncate font-bold text-slate-800 dark:text-slate-100">
+          <span className="text-blue-600 dark:text-blue-400">COS PRO</span> 파이썬 실습
         </h1>
         <PyStatus status={pyStatus} />
 
         <div className="ml-auto flex items-center gap-2">
           <button
+            onClick={toggleTheme}
+            className="rounded-md p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+            title={theme === "dark" ? "라이트 모드로" : "다크 모드로"}
+            aria-label={theme === "dark" ? "라이트 모드로" : "다크 모드로"}
+          >
+            {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+          </button>
+          <button
             onClick={toggleMode}
             className={`inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium ${
-              isAdmin ? "bg-amber-500 text-white hover:bg-amber-600" : "border border-slate-300 hover:bg-slate-50"
+              isAdmin ? "bg-amber-500 text-white hover:bg-amber-600" : "border border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800"
             }`}
           >
             {isAdmin ? <LockOpen size={16} /> : <Lock size={16} />}
@@ -139,13 +159,16 @@ export default function App() {
 
       {/* ── 좌측 사이드바 ── */}
       <aside
-        className={`fixed bottom-0 left-0 top-14 z-20 w-64 border-r bg-white transition-transform md:translate-x-0 ${
+        className={`fixed bottom-0 left-0 top-14 z-20 w-64 border-r bg-white dark:bg-slate-900 transition-transform md:translate-x-0 ${
           sidebarOpen ? "translate-x-0 shadow-lg" : "-translate-x-full"
         }`}
       >
         {problems && (
           <Sidebar
-            problems={problems}
+            problems={visible}
+            allProblems={problems}
+            gradeFilter={gradeFilter}
+            onGradeFilter={setGradeFilter}
             activeId={activeId}
             verdicts={verdicts}
             isAdmin={isAdmin}
@@ -159,8 +182,8 @@ export default function App() {
       <main className="px-4 pb-24 pt-20 md:ml-64">
         <div className="mx-auto max-w-4xl space-y-6">
           {isAdmin && (
-            <div className="flex flex-wrap items-center gap-2 rounded-lg border border-amber-300 bg-amber-50 p-3">
-              <span className="mr-auto text-sm font-medium text-amber-800">관리자 모드 · 고친 내용은 이 브라우저에 저장됩니다</span>
+            <div className="flex flex-wrap items-center gap-2 rounded-lg border border-amber-300 dark:border-amber-700 bg-amber-50 dark:bg-amber-950/40 p-3">
+              <span className="mr-auto text-sm font-medium text-amber-800 dark:text-amber-200">관리자 모드 · 고친 내용은 이 브라우저에 저장됩니다</span>
               <button className={toolBtn} onClick={() => setDialog("generate")}>
                 <Wand2 size={16} /> 자동 생성
               </button>
@@ -180,25 +203,32 @@ export default function App() {
             </div>
           )}
 
-          {loadError && <div className="rounded-md bg-red-50 p-4 text-red-700">{loadError}</div>}
+          {loadError && <div className="rounded-md bg-red-50 dark:bg-red-950/40 p-4 text-red-700 dark:text-red-300">{loadError}</div>}
           {!problems && !loadError && (
-            <div className="flex items-center gap-2 text-slate-500">
+            <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400">
               <Loader2 size={18} className="animate-spin" /> 문제를 불러오는 중…
             </div>
           )}
 
-          {problems?.map((p, i) => (
-            <section key={p.id} id={`p-${p.id}`} data-pid={p.id} className="scroll-mt-20 rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
-              <div className="mb-3 text-sm font-semibold text-blue-600">
+          {visible?.length === 0 && (
+            <div className="rounded-lg border border-dashed border-slate-300 dark:border-slate-600 p-8 text-center text-sm text-slate-500 dark:text-slate-400">
+              {gradeFilter}급 문제가 아직 없습니다.{isAdmin && " 왼쪽 아래 [문제 추가] 나 위의 [자동 생성] 으로 만들어 보세요."}
+            </div>
+          )}
+
+          {visible?.map((p, i) => (
+            <section key={p.id} id={`p-${p.id}`} data-pid={p.id} className="scroll-mt-20 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5 shadow-sm">
+              <div className="mb-3 text-sm font-semibold text-blue-600 dark:text-blue-400">
                 문제 {i + 1}
-                {!isAdmin && p.title && <span className="ml-2 text-slate-800">{p.title}</span>}
+                <GradeBadge grade={p.grade} />
+                {!isAdmin && p.title && <span className="ml-2 text-slate-800 dark:text-slate-100">{p.title}</span>}
               </div>
               {isAdmin ? (
                 <ProblemEditor
                   key={p.id}
                   problem={p}
                   isFirst={i === 0}
-                  isLast={i === problems.length - 1}
+                  isLast={i === visible.length - 1}
                   onSave={saveProblem}
                   onDelete={() => deleteProblem(p.id, i + 1)}
                   onMove={(dir) => moveProblem(i, dir)}
@@ -225,17 +255,25 @@ export default function App() {
         />
       )}
       {dialog === "settings" && <SettingsDialog onClose={() => setDialog(null)} />}
-      {dialog === "generate" && <GenerateDialog onClose={() => setDialog(null)} onGenerate={addGenerated} />}
+      {dialog === "generate" && (
+        <GenerateDialog defaultGrade={gradeFilter === "all" ? 2 : gradeFilter} onClose={() => setDialog(null)} onGenerate={addGenerated} />
+      )}
     </div>
+  );
+}
+
+export function GradeBadge({ grade }) {
+  return (
+    <span className="ml-2 rounded bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 text-xs font-medium text-slate-600 dark:text-slate-300">{grade}급</span>
   );
 }
 
 function PyStatus({ status }) {
   const map = {
-    idle: ["bg-slate-100 text-slate-500", "파이썬 준비 전"],
-    loading: ["bg-amber-100 text-amber-700", "파이썬 불러오는 중…"],
-    ready: ["bg-green-100 text-green-700", "파이썬 준비됨"],
-    error: ["bg-red-100 text-red-700", "파이썬 불러오기 실패"],
+    idle: ["bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400", "파이썬 준비 전"],
+    loading: ["bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-300", "파이썬 불러오는 중…"],
+    ready: ["bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-300", "파이썬 준비됨"],
+    error: ["bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-300", "파이썬 불러오기 실패"],
   };
   const [cls, text] = map[status] || map.idle;
   return <span className={`hidden rounded-full px-2 py-0.5 text-xs sm:inline ${cls}`}>{text}</span>;

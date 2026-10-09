@@ -30,18 +30,18 @@ export default function OutputPanel({ running, output, gradeResult }) {
 
 function Verdict({ result }) {
   if (result.problemError) {
-    return <div className="rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-800">{result.problemError}</div>;
+    return <div className="rounded-md bg-amber-50 dark:bg-amber-950/40 px-3 py-2 text-sm text-amber-800 dark:text-amber-200">{result.problemError}</div>;
   }
   if (result.pass) {
     return (
-      <div className="flex items-center gap-2 rounded-md bg-green-50 px-3 py-2 font-semibold text-green-700">
+      <div className="flex items-center gap-2 rounded-md bg-green-50 dark:bg-green-950/40 px-3 py-2 font-semibold text-green-700 dark:text-green-300">
         <CheckCircle2 size={18} /> 정답입니다!
       </div>
     );
   }
   return (
-    <div className="space-y-2 rounded-md bg-red-50 px-3 py-2">
-      <div className="flex items-center gap-2 font-semibold text-red-700">
+    <div className="space-y-2 rounded-md bg-red-50 dark:bg-red-950/40 px-3 py-2">
+      <div className="flex items-center gap-2 font-semibold text-red-700 dark:text-red-300">
         <XCircle size={18} /> 오답입니다.
         {!result.student.ok && <span className="text-sm font-normal">(코드에서 오류가 났어요)</span>}
       </div>
@@ -58,8 +58,8 @@ function Verdict({ result }) {
 function OutputBox({ label, text }) {
   return (
     <div>
-      <div className="mb-1 text-slate-500">{label}</div>
-      <pre className="font-code max-h-48 overflow-auto whitespace-pre-wrap break-all rounded border bg-white p-2">{text || "(출력 없음)"}</pre>
+      <div className="mb-1 text-slate-500 dark:text-slate-400">{label}</div>
+      <pre className="font-code max-h-48 overflow-auto whitespace-pre-wrap break-all rounded border bg-white dark:bg-slate-900 p-2">{text || "(출력 없음)"}</pre>
     </div>
   );
 }

@@ -1,9 +1,11 @@
 import { useRef, useState } from "react";
 import Editor from "@monaco-editor/react";
+import { useTheme } from "../lib/theme";
 
 // Monaco 에디터. 코드 길이에 맞춰 높이가 늘어나고, Ctrl+Enter 로 실행할 수 있다.
 export default function CodeEditor({ value, onChange, onRun, readOnly = false, minHeight = 120, maxHeight = 600 }) {
   const [height, setHeight] = useState(minHeight);
+  const theme = useTheme();
   const onRunRef = useRef(onRun);
   onRunRef.current = onRun;
 
@@ -15,15 +17,15 @@ export default function CodeEditor({ value, onChange, onRun, readOnly = false, m
   }
 
   return (
-    <div className="overflow-hidden rounded-md border border-slate-300 bg-white">
+    <div className="overflow-hidden rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900">
       <Editor
         height={height}
         language="python"
-        theme="vs"
+        theme={theme === "dark" ? "vs-dark" : "vs"}
         value={value}
         onChange={(v) => onChange?.(v ?? "")}
         onMount={handleMount}
-        loading={<div className="p-3 text-sm text-slate-400">에디터 불러오는 중…</div>}
+        loading={<div className="p-3 text-sm text-slate-400 dark:text-slate-500">에디터 불러오는 중…</div>}
         options={{
           readOnly,
           fontSize: 14,
