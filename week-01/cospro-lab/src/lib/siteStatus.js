@@ -1,0 +1,42 @@
+// 사이트 공개/비공개 상태 (배포 사이트의 서버 함수 /api/status 와 주고받는다)
+// 내 컴퓨터에서 npm run dev 로 볼 때는 서버 함수가 없으므로 "서버 없음 · 공개" 로 본다.
+
+const URL = "/api/status";
+
+/** { server: 서버 함수가 있는지, open: 공개인지 } */
+export async function fetchSiteStatus() {
+  try {
+    const res = await fetch(URL, { cache: "no-store" });
+    // 서버 함수가 없으면 개발 서버가 HTML 을 돌려준다
+    if (!res.ok || !(res.headers.get("content-type") || "").includes("application/json")) throw new Error("no server");
+    const data = await res.json();
+    return { server: true, open: data.open !== false };
+  } catch {
+    return { server: false, open: true };
+  }
+}
+
+async function post(body) {
+  const res = await fetch(URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  const data = await res.json().catch(() => ({}));
+  return { status: res.status, data };
+}
+
+/** 관리자 비밀번호가 맞는지 서버에 묻는다. 틀리면 false, 서버 설정 문제면 오류를 던진다. */
+export async function checkServerPassword(password) {
+  const { status, data } = await post({ password, check: true });
+  if (status === 200) return true;
+  if (status === 401) return false;
+  throw new Error(data.error || `서버 오류 (${status})`);
+}
+
+/** 공개/비공개를 바꾼다. 바뀐 open 값을 돌려준다. */
+export async function setSiteOpen(open, password) {
+  const { status, data } = await post({ password, open });
+  if (status !== 200) throw new Error(data.error || `서버 오류 (${status})`);
+  return data.open;
+}

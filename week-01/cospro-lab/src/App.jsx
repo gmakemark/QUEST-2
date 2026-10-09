@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Download, KeyRound, Loader2, Lock, LockOpen, Menu, Moon, PanelLeftClose, PanelLeftOpen, RefreshCw, RotateCcw, Shuffle, Sun, Upload, Wand2 } from "lucide-react";
+import { Download, Eye, EyeOff, KeyRound, Loader2, Lock, LockOpen, Menu, Moon, PanelLeftClose, PanelLeftOpen, RefreshCw, RotateCcw, Shuffle, Sun, Upload, Wand2 } from "lucide-react";
 import Sidebar from "./components/Sidebar";
 import ProblemCell from "./components/ProblemCell";
 import ProblemEditor from "./components/ProblemEditor";
@@ -8,6 +8,8 @@ import SettingsDialog from "./components/SettingsDialog";
 import GenerateDialog from "./components/GenerateDialog";
 import { preload, subscribeStatus } from "./lib/pyRunner";
 import { toggleTheme, useTheme } from "./lib/theme";
+import { fetchSiteStatus, setSiteOpen } from "./lib/siteStatus";
+import { getSessionPassword } from "./lib/auth";
 import { SET_SIZE, isValidSet, loadSets, pickSet, saveSets } from "./lib/practiceSet";
 import {
   clearSavedProblems,
@@ -35,6 +37,7 @@ export default function App() {
   const [sidebarHidden, setSidebarHidden] = useState(() => readLS("cospro.sidebarHidden", "") === "1"); // 넓은 화면: 목차 접기
   const [pyStatus, setPyStatus] = useState("idle");
   const gradeFilter = 3; // 지금은 3급만 운영한다 (1·2급 문제 틀 코드는 남겨 둠)
+  const [site, setSite] = useState({ loaded: false, server: false, open: true }); // 배포 사이트의 공개/비공개
   const [sets, setSets] = useState(loadSets); // 학생 모드: 급수 탭마다 지금 푸는 문제 id 목록
   const [round, setRound] = useState(0); // [다시 풀기] 때 문항 화면을 새로 그리려고
   const theme = useTheme();
@@ -42,9 +45,19 @@ export default function App() {
 
   useEffect(() => {
     preload(); // 페이지가 열리면 바로 파이썬을 미리 불러온다
+    // 공개/비공개 상태: 처음 한 번, 그 뒤 2분마다, 그리고 창으로 돌아올 때 다시 확인
+    const refreshSite = () => fetchSiteStatus().then((st) => setSite({ loaded: true, ...st }));
+    refreshSite();
+    const timer = setInterval(refreshSite, 2 * 60 * 1000);
+    window.addEventListener("focus", refreshSite);
     loadProblems().then(setProblems).catch((e) => setLoadError(e.message));
     fetchDefaultProblems().then(setPublished).catch((e) => setLoadError(e.message));
-    return subscribeStatus(setPyStatus);
+    const unsubscribe = subscribeStatus(setPyStatus);
+    return () => {
+      clearInterval(timer);
+      window.removeEventListener("focus", refreshSite);
+      unsubscribe();
+    };
   }, []);
 
   // 학생 모드는 이 브라우저에 저장된 관리자 수정본과 상관없이 배포된 문제(problems.json)만 본다.
@@ -54,7 +67,10 @@ export default function App() {
   // 관리자는 전부, 학생은 그중 고른 SET_SIZE 개만 본다.
   const setIds = sets[gradeFilter];
   const setReady = !!pool && isValidSet(setIds, pool);
-  const visible = !pool ? null : isAdmin ? pool : setReady ? setIds.map((id) => pool.find((p) => p.id === id)) : [];
+  // 학생: 공개 상태를 확인하기 전(waiting)이나 비공개(closed)일 때는 문제를 보여 주지 않는다.
+  const waiting = !isAdmin && !site.loaded;
+  const closed = !isAdmin && site.loaded && !site.open;
+  const visible = !pool ? null : isAdmin ? pool : waiting || closed ? [] : setReady ? setIds.map((id) => pool.find((p) => p.id === id)) : [];
 
   // 화면에 보이는 문항을 사이드바에서 강조
   useEffect(() => {
@@ -178,6 +194,19 @@ export default function App() {
     setProblems(await fetchDefaultProblems());
   }
 
+  // 관리자: 학생에게 공개/비공개 (배포 사이트에서만)
+  async function toggleOpen() {
+    const next = !site.open;
+    const msg = next ? "학생들에게 문제를 공개할까요?" : "비공개로 바꿀까요? 학생들은 문제를 볼 수 없게 됩니다. (이미 열어 둔 화면은 2분 안에, 또는 새로고침할 때 닫힙니다)";
+    if (!confirm(msg)) return;
+    try {
+      const open = await setSiteOpen(next, getSessionPassword());
+      setSite((s) => ({ ...s, open }));
+    } catch (err) {
+      alert("바꾸지 못했습니다: " + err.message);
+    }
+  }
+
   function toggleMode() {
     if (isAdmin) setIsAdmin(false);
     else setDialog("login");
@@ -249,6 +278,21 @@ export default function App() {
           {isAdmin && (
             <div className="flex flex-wrap items-center gap-2 rounded-lg border border-amber-300 dark:border-amber-700 bg-amber-50 dark:bg-amber-950/40 p-3">
               <span className="mr-auto text-sm font-medium text-amber-800 dark:text-amber-200">관리자 모드 · 고친 내용은 이 브라우저에만 저장됩니다 (학생 모드에는 problems.json 의 문제가 보입니다)</span>
+              {site.server ? (
+                <button
+                  onClick={toggleOpen}
+                  title="눌러서 학생 공개/비공개를 바꿉니다"
+                  className={`inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-semibold text-white ${
+                    site.open ? "bg-green-600 hover:bg-green-700" : "bg-slate-500 hover:bg-slate-600"
+                  }`}
+                >
+                  {site.open ? <Eye size={16} /> : <EyeOff size={16} />} {site.open ? "학생 공개 중" : "비공개"}
+                </button>
+              ) : (
+                <span className="text-xs text-amber-700 dark:text-amber-300" title="npm run dev 로 볼 때는 서버 함수가 없습니다">
+                  공개/비공개는 배포 사이트에서만
+                </span>
+              )}
               <button className={toolBtn} onClick={() => setDialog("generate")}>
                 <Wand2 size={16} /> 자동 생성
               </button>
@@ -269,13 +313,21 @@ export default function App() {
           )}
 
           {loadError && <div className="rounded-md bg-red-50 dark:bg-red-950/40 p-4 text-red-700 dark:text-red-300">{loadError}</div>}
-          {!shown && !loadError && (
+          {(!shown || waiting) && !loadError && (
             <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400">
               <Loader2 size={18} className="animate-spin" /> 문제를 불러오는 중…
             </div>
           )}
 
-          {!isAdmin && pool?.length > 0 && (
+          {closed && (
+            <div className="rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-10 text-center">
+              <EyeOff size={32} className="mx-auto mb-3 text-slate-400 dark:text-slate-500" />
+              <p className="font-semibold text-slate-700 dark:text-slate-200">지금은 공개 기간이 아닙니다.</p>
+              <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">선생님이 공개하면 다시 문제를 풀 수 있어요.</p>
+            </div>
+          )}
+
+          {!isAdmin && !waiting && !closed && pool?.length > 0 && (
             <div className="flex flex-wrap items-center gap-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-3">
               <span className="mr-auto text-sm text-slate-600 dark:text-slate-300">
                 {gradeFilter}급 {pool.length}문제 중 <b>{visible.length}문제</b>
@@ -294,7 +346,7 @@ export default function App() {
             </div>
           )}
 
-          {pool?.length === 0 && (
+          {pool?.length === 0 && !closed && !waiting && (
             <div className="rounded-lg border border-dashed border-slate-300 dark:border-slate-600 p-8 text-center text-sm text-slate-500 dark:text-slate-400">
               {gradeFilter}급 문제가 아직 없습니다.{isAdmin && " 왼쪽 아래 [문제 추가] 나 위의 [자동 생성] 으로 만들어 보세요."}
             </div>
@@ -328,8 +380,9 @@ export default function App() {
         </div>
       </main>
 
-      {dialog === "login" && (
+      {dialog === "login" && site.loaded && (
         <LoginDialog
+          serverMode={site.server}
           onClose={() => setDialog(null)}
           onSuccess={() => {
             setIsAdmin(true);
@@ -337,7 +390,7 @@ export default function App() {
           }}
         />
       )}
-      {dialog === "settings" && <SettingsDialog onClose={() => setDialog(null)} />}
+      {dialog === "settings" && <SettingsDialog serverMode={site.server} onClose={() => setDialog(null)} />}
       {dialog === "generate" && (
         <GenerateDialog grade={gradeFilter} onClose={() => setDialog(null)} onGenerate={addGenerated} />
       )}

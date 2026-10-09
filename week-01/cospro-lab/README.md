@@ -87,10 +87,28 @@ Copy-Item .env.example .env.local
 줄 끝 공백과 마지막 빈 줄 차이는 무시합니다. 그래서 문제의 시작 코드 아래에 `print(solution(...))` 같은 테스트 코드를 넣어 두는 것이 좋습니다.
 실행이 10초를 넘으면(무한 반복 등) 자동으로 멈춥니다.
 
-## 배포 (선택)
-```powershell
-npm run build      # dist 폴더가 만들어짐 → GitHub Pages, Netlify 등에 올리면 됨
-```
+## 배포 (Netlify)
+
+학생들에게는 Netlify 로 배포한 주소(예: `https://이름.netlify.app`)를 나눠 줍니다.
+
+1. 이 저장소를 GitHub 에 올립니다(push).
+2. Netlify → **Add new site → Import an existing project → GitHub** → 이 저장소 선택.
+3. 빌드 설정
+   - **Base directory**: `week-01/cospro-lab`
+   - Build command `npm run build`, Publish directory `dist` 는 `netlify.toml` 에 적혀 있어서 그대로 두면 됩니다.
+4. **Site configuration → Environment variables** 에 `ADMIN_PASSWORD` = (관리자 비밀번호) 를 추가합니다.
+   - 비밀번호는 여기에만 넣고, 어떤 파일에도 적지 않습니다(공개 저장소).
+   - 처음 배포 뒤에 넣었거나 바꿨다면 **Deploys → Trigger deploy** 로 다시 배포해야 적용됩니다.
+5. 사이트 이름은 Site configuration → Change site name 에서 바꿀 수 있습니다.
+
+이후에는 GitHub 에 push 할 때마다 Netlify 가 자동으로 다시 배포합니다(1~2분).
+
+### 학생 공개 / 비공개
+- 배포 사이트의 관리자 모드(자물쇠 → `ADMIN_PASSWORD`)에 **[학생 공개 중] / [비공개]** 버튼이 있습니다. 누르면 모든 학생에게 바로 적용됩니다.
+- 비공개이면 학생 화면에는 "지금은 공개 기간이 아닙니다" 만 보입니다. 이미 열어 둔 화면도 2분 안에(또는 창을 다시 누르거나 새로고침할 때) 닫힙니다.
+- 상태는 Netlify Blobs 에 저장되고, 서버 함수 `netlify/functions/status.mjs`(주소 `/api/status`)가 읽고 바꿉니다. 처음 배포했을 때는 **공개** 상태입니다.
+- 내 컴퓨터(`npm run dev`)에는 서버 함수가 없어서 언제나 공개이고, 관리자 비밀번호도 예전처럼 브라우저에 저장된 비밀번호를 씁니다.
+- 막는 것은 학생 **화면**입니다. 공개 저장소라서 GitHub 에서 문제 파일을 직접 찾아보는 것까지 막지는 않습니다.
 
 ## 알아 둘 한계
 - 서버가 없는 구조라서 **정답 코드와 관리자 잠금은 완벽히 숨겨지지 않습니다.** 개발자 도구를 아는 학생은 problems.json 의 정답 코드를 볼 수 있습니다. 연습용으로 쓰고, 중요한 평가에는 쓰지 마세요.

@@ -3,7 +3,7 @@ import Modal from "./Modal";
 import { checkPassword, isPasswordFromEnv, setLocalPassword } from "../lib/auth";
 
 // 관리자 비밀번호 바꾸기 (이 브라우저에 저장된 비밀번호일 때만)
-export default function SettingsDialog({ onClose }) {
+export default function SettingsDialog({ serverMode, onClose }) {
   const [oldPw, setOldPw] = useState("");
   const [newPw, setNewPw] = useState("");
   const [newPw2, setNewPw2] = useState("");
@@ -11,7 +11,7 @@ export default function SettingsDialog({ onClose }) {
 
   async function changePw(e) {
     e.preventDefault();
-    if (!(await checkPassword(oldPw))) return setMsg("지금 비밀번호가 틀렸습니다.");
+    if (!(await checkPassword(oldPw, false))) return setMsg("지금 비밀번호가 틀렸습니다.");
     if (newPw.length < 4) return setMsg("새 비밀번호는 4글자 이상으로 해 주세요.");
     if (newPw !== newPw2) return setMsg("새 비밀번호 두 개가 다릅니다.");
     await setLocalPassword(newPw);
@@ -24,7 +24,11 @@ export default function SettingsDialog({ onClose }) {
   const input = "w-full rounded-md border border-slate-300 dark:border-slate-600 px-3 py-2 text-sm outline-none focus:border-blue-500";
   return (
     <Modal title="관리자 비밀번호" onClose={onClose}>
-      {isPasswordFromEnv() ? (
+      {serverMode ? (
+        <p className="text-sm text-slate-600 dark:text-slate-300">
+          배포 사이트에서는 Netlify 의 환경 변수 <b>ADMIN_PASSWORD</b> 가 관리자 비밀번호입니다. 바꾸려면 Netlify 사이트 설정 → Environment variables 에서 값을 바꾸고 다시 배포(Deploys → Trigger deploy)하세요.
+        </p>
+      ) : isPasswordFromEnv() ? (
         <p className="text-sm text-slate-600 dark:text-slate-300">
           비밀번호가 .env.local 의 VITE_ADMIN_PASSWORD_HASH 로 정해져 있습니다. 바꾸려면 그 값을 바꾸고 다시 빌드하세요.
         </p>

@@ -2,8 +2,8 @@ import { useState } from "react";
 import Modal from "./Modal";
 import { checkPassword, hasPassword, setLocalPassword } from "../lib/auth";
 
-export default function LoginDialog({ onClose, onSuccess }) {
-  const creating = !hasPassword();
+export default function LoginDialog({ serverMode, onClose, onSuccess }) {
+  const creating = !hasPassword(serverMode);
   const [pw, setPw] = useState("");
   const [pw2, setPw2] = useState("");
   const [error, setError] = useState("");
@@ -16,10 +16,13 @@ export default function LoginDialog({ onClose, onSuccess }) {
       if (pw !== pw2) return setError("두 비밀번호가 다릅니다.");
       await setLocalPassword(pw);
       onSuccess();
-    } else if (await checkPassword(pw)) {
-      onSuccess();
     } else {
-      setError("비밀번호가 틀렸습니다.");
+      try {
+        if (await checkPassword(pw, serverMode)) onSuccess();
+        else setError("비밀번호가 틀렸습니다.");
+      } catch (err) {
+        setError(err.message);
+      }
     }
   }
 
