@@ -23,7 +23,8 @@ import {
 } from "./lib/storage";
 
 export default function App() {
-  const [problems, setProblems] = useState(null);
+  const [problems, setProblems] = useState(null); // 관리자용: 이 브라우저에서 고친 내용(없으면 problems.json)
+  const [published, setPublished] = useState(null); // 학생용: 언제나 public/problems.json
   const [loadError, setLoadError] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
   const [dialog, setDialog] = useState(null); // 'login' | 'settings' | 'generate' | null
@@ -41,12 +42,22 @@ export default function App() {
   useEffect(() => {
     preload(); // 페이지가 열리면 바로 파이썬을 미리 불러온다
     loadProblems().then(setProblems).catch((e) => setLoadError(e.message));
+    fetchDefaultProblems().then(setPublished).catch((e) => setLoadError(e.message));
     return subscribeStatus(setPyStatus);
   }, []);
 
+  // 학생 모드는 이 브라우저에 저장된 관리자 수정본과 상관없이 배포된 문제(problems.json)만 본다.
+  const shown = isAdmin ? problems : published;
+  // 목차에서 고른 급수의 문제들
+  const pool = shown && shown.filter((p) => p.grade === gradeFilter);
+  // 관리자는 전부, 학생은 그중 고른 SET_SIZE 개만 본다.
+  const setIds = sets[gradeFilter];
+  const setReady = !!pool && isValidSet(setIds, pool);
+  const visible = !pool ? null : isAdmin ? pool : setReady ? setIds.map((id) => pool.find((p) => p.id === id)) : [];
+
   // 화면에 보이는 문항을 사이드바에서 강조
   useEffect(() => {
-    if (!problems) return;
+    if (!shown) return;
     const observer = new IntersectionObserver(
       (entries) => {
         const visible = entries.filter((e) => e.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
@@ -56,14 +67,7 @@ export default function App() {
     );
     document.querySelectorAll("[data-pid]").forEach((el) => observer.observe(el));
     return () => observer.disconnect();
-  }, [problems, isAdmin, sets]);
-
-  // 목차에서 고른 급수의 문제들
-  const pool = problems && problems.filter((p) => p.grade === gradeFilter);
-  // 관리자는 전부, 학생은 그중 고른 SET_SIZE 개만 본다.
-  const setIds = sets[gradeFilter];
-  const setReady = !!pool && isValidSet(setIds, pool);
-  const visible = !pool ? null : isAdmin ? pool : setReady ? setIds.map((id) => pool.find((p) => p.id === id)) : [];
+  }, [shown, isAdmin, sets]);
 
   // 학생 모드인데 세트가 없거나 문제 목록이 바뀌어 맞지 않으면 새로 고른다.
   useEffect(() => {
@@ -222,7 +226,7 @@ export default function App() {
           sidebarOpen ? "translate-x-0 shadow-lg" : "-translate-x-full"
         } ${sidebarHidden ? "md:-translate-x-full" : "md:translate-x-0 md:shadow-none"}`}
       >
-        {problems && (
+        {visible && (
           <Sidebar
             problems={visible}
             gradeLabel={`${gradeFilter}급`}
@@ -240,7 +244,7 @@ export default function App() {
         <div className="mx-auto max-w-4xl space-y-6">
           {isAdmin && (
             <div className="flex flex-wrap items-center gap-2 rounded-lg border border-amber-300 dark:border-amber-700 bg-amber-50 dark:bg-amber-950/40 p-3">
-              <span className="mr-auto text-sm font-medium text-amber-800 dark:text-amber-200">관리자 모드 · 고친 내용은 이 브라우저에 저장됩니다</span>
+              <span className="mr-auto text-sm font-medium text-amber-800 dark:text-amber-200">관리자 모드 · 고친 내용은 이 브라우저에만 저장됩니다 (학생 모드에는 problems.json 의 문제가 보입니다)</span>
               <button className={toolBtn} onClick={() => setDialog("generate")}>
                 <Wand2 size={16} /> 자동 생성
               </button>
@@ -261,7 +265,7 @@ export default function App() {
           )}
 
           {loadError && <div className="rounded-md bg-red-50 dark:bg-red-950/40 p-4 text-red-700 dark:text-red-300">{loadError}</div>}
-          {!problems && !loadError && (
+          {!shown && !loadError && (
             <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400">
               <Loader2 size={18} className="animate-spin" /> 문제를 불러오는 중…
             </div>

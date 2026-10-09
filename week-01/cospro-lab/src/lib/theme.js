@@ -32,6 +32,7 @@ export function useTheme() {
       listeners.add(fn);
       return () => listeners.delete(fn);
     },
+    () => theme,
     () => theme
   );
 }
