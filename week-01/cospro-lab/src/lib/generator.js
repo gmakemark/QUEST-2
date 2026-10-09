@@ -18,6 +18,7 @@ export const TOPICS = [
   { key: "list", label: "리스트" },
   { key: "string", label: "문자열" },
   { key: "dict", label: "딕셔너리 · 정렬" },
+  { key: "builtin", label: "내장함수" },
 ];
 
 export const TYPES = [
@@ -365,6 +366,69 @@ const TEMPLATES_2 = [
         bug: ["numbers[k - 1]", "numbers[k]"],
         tests,
         ref: (nums, k) => [...nums].sort((x, y) => y - x)[k - 1],
+      };
+    },
+  },
+  {
+    grade: 2,
+    topic: "builtin",
+    make(r) {
+      const one = () => r.list(r.int(5, 8), 1, 50);
+      const tests = [[one()], [one()], [one()]];
+      return {
+        title: "평균 이상인 수 세기",
+        desc: "정수가 담긴 리스트 `numbers` 에서 평균 이상인 수의 개수를 return 하려고 합니다. (내장함수 `sum`, `len` 을 써 보세요)",
+        params: ["numbers"],
+        paramDesc: ["`numbers` : 정수가 담긴 리스트 (길이 1 이상 100 이하)"],
+        init: "0",
+        body: "def solution(numbers):\n    avg = sum(numbers) / len(numbers)\n    answer = 0\n    for x in numbers:\n        if x >= avg:\n            answer += 1\n    return answer",
+        blank: ["avg = sum(numbers) / len(numbers)", "avg = ____ / ____"],
+        bug: ["answer += 1", "answer += x"],
+        tests,
+        ref: (nums) => {
+          const avg = nums.reduce((s, x) => s + x, 0) / nums.length;
+          return nums.filter((x) => x >= avg).length;
+        },
+      };
+    },
+  },
+  {
+    grade: 2,
+    topic: "builtin",
+    make(r) {
+      const one = () => [r.distinct(r.pick([5, 7, 9]), 1, 99)];
+      const tests = [one(), one(), one()];
+      return {
+        title: "가운데 값 찾기",
+        desc: "서로 다른 정수가 홀수 개 담긴 리스트 `numbers` 를 크기 순으로 정렬했을 때, 가운데에 오는 수를 return 하려고 합니다. (내장함수 `sorted` 를 써 보세요)",
+        params: ["numbers"],
+        paramDesc: ["`numbers` : 서로 다른 정수가 홀수 개 담긴 리스트 (길이 1 이상 99 이하)"],
+        init: "0",
+        body: "def solution(numbers):\n    numbers = sorted(numbers)\n    answer = numbers[len(numbers) // 2]\n    return answer",
+        blank: ["numbers = sorted(numbers)", "numbers = ____(numbers)"],
+        bug: ["numbers[len(numbers) // 2]", "numbers[len(numbers) // 2 + 1]"],
+        tests,
+        ref: (nums) => [...nums].sort((a, b) => a - b)[Math.floor(nums.length / 2)],
+      };
+    },
+  },
+  {
+    grade: 2,
+    topic: "builtin",
+    make(r) {
+      const one = () => [r.shuffle(WORDS).slice(0, r.int(3, 5))];
+      const tests = [one(), one(), one()];
+      return {
+        title: "가장 긴 단어의 길이",
+        desc: "영어 단어가 담긴 리스트 `words` 에서 가장 긴 단어의 글자 수를 return 하려고 합니다. (내장함수 `max`, `len` 을 써 보세요)",
+        params: ["words"],
+        paramDesc: ["`words` : 알파벳 소문자 단어가 담긴 리스트 (길이 1 이상 100 이하)"],
+        init: "0",
+        body: "def solution(words):\n    answer = 0\n    for w in words:\n        answer = max(answer, len(w))\n    return answer",
+        blank: ["answer = max(answer, len(w))", "answer = ____(answer, len(w))"],
+        bug: ["answer = max(answer, len(w))", "answer = min(answer, len(w))"],
+        tests,
+        ref: (words) => Math.max(...words.map((w) => w.length)),
       };
     },
   },

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Download, KeyRound, Loader2, Lock, LockOpen, Menu, Moon, RefreshCw, Sun, Upload, Wand2 } from "lucide-react";
+import { Download, KeyRound, Loader2, Lock, LockOpen, Menu, Moon, PanelLeftClose, PanelLeftOpen, RefreshCw, RotateCcw, Shuffle, Sun, Upload, Wand2 } from "lucide-react";
 import Sidebar from "./components/Sidebar";
 import ProblemCell from "./components/ProblemCell";
 import ProblemEditor from "./components/ProblemEditor";
@@ -8,13 +8,18 @@ import SettingsDialog from "./components/SettingsDialog";
 import GenerateDialog from "./components/GenerateDialog";
 import { preload, subscribeStatus } from "./lib/pyRunner";
 import { toggleTheme, useTheme } from "./lib/theme";
+import { SET_SIZE, isValidSet, loadSets, pickSet, saveSets } from "./lib/practiceSet";
 import {
   clearSavedProblems,
   fetchDefaultProblems,
   loadProblems,
+  codeKey,
   newId,
   saveProblems,
+  readLS,
+  removeLS,
   validateProblems,
+  writeLS,
 } from "./lib/storage";
 
 export default function App() {
@@ -24,9 +29,12 @@ export default function App() {
   const [dialog, setDialog] = useState(null); // 'login' | 'settings' | 'generate' | null
   const [verdicts, setVerdicts] = useState({});
   const [activeId, setActiveId] = useState(null);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false); // 좁은 화면(휴대폰): 목차를 꺼내 보기
+  const [sidebarHidden, setSidebarHidden] = useState(() => readLS("cospro.sidebarHidden", "") === "1"); // 넓은 화면: 목차 접기
   const [pyStatus, setPyStatus] = useState("idle");
   const [gradeFilter, setGradeFilter] = useState("all"); // "all" | 1 | 2 | 3
+  const [sets, setSets] = useState(loadSets); // 학생 모드: 급수 탭마다 지금 푸는 문제 id 목록
+  const [round, setRound] = useState(0); // [다시 풀기] 때 문항 화면을 새로 그리려고
   const theme = useTheme();
   const importRef = useRef(null);
 
@@ -48,10 +56,57 @@ export default function App() {
     );
     document.querySelectorAll("[data-pid]").forEach((el) => observer.observe(el));
     return () => observer.disconnect();
-  }, [problems, isAdmin, gradeFilter]);
+  }, [problems, isAdmin, gradeFilter, sets]);
 
-  // 목차에서 고른 급수의 문제만 보여 준다.
-  const visible = problems && (gradeFilter === "all" ? problems : problems.filter((p) => p.grade === gradeFilter));
+  // 목차에서 고른 급수의 문제들
+  const pool = problems && (gradeFilter === "all" ? problems : problems.filter((p) => p.grade === gradeFilter));
+  // 관리자는 전부, 학생은 그중 고른 SET_SIZE 개만 본다.
+  const setIds = sets[gradeFilter];
+  const setReady = !!pool && isValidSet(setIds, pool);
+  const visible = !pool ? null : isAdmin ? pool : setReady ? setIds.map((id) => pool.find((p) => p.id === id)) : [];
+
+  // 학생 모드인데 세트가 없거나 문제 목록이 바뀌어 맞지 않으면 새로 고른다.
+  useEffect(() => {
+    if (pool && pool.length && !isAdmin && !setReady) chooseSet(pickSet(pool, setIds || []));
+  }, [pool, isAdmin, setReady]);
+
+  // 세트를 바꾸고, 그 문제들의 지난 풀이와 채점 표시를 지운다.
+  function chooseSet(ids) {
+    ids.forEach((id) => removeLS(codeKey(id)));
+    setVerdicts({});
+    setRound((n) => n + 1);
+    setSets((old) => {
+      const next = { ...old, [gradeFilter]: ids };
+      saveSets(next);
+      return next;
+    });
+  }
+
+  // [다시 풀기] 같은 문제를 처음부터
+  function retrySet() {
+    if (!confirm("지금 문제를 처음부터 다시 풀까요? 작성한 코드와 채점 결과가 지워집니다.")) return;
+    chooseSet(setIds);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  // [새로 풀기] 다른 문제로 새로 고르기
+  function newSet() {
+    if (!confirm(`새로운 ${Math.min(SET_SIZE, pool.length)}문제를 고를까요? 지금 작성한 코드와 채점 결과가 지워집니다.`)) return;
+    chooseSet(pickSet(pool, setIds));
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  // 목차 버튼: 넓은 화면에서는 접기/펴기, 좁은 화면에서는 꺼내기/넣기
+  function toggleSidebar() {
+    if (window.matchMedia("(min-width: 768px)").matches) {
+      setSidebarHidden((v) => {
+        writeLS("cospro.sidebarHidden", v ? "" : "1");
+        return !v;
+      });
+    } else {
+      setSidebarOpen((v) => !v);
+    }
+  }
 
   // ── 관리자: 문제 추가/수정/삭제/이동 ──
   function commit(next) {
@@ -128,8 +183,14 @@ export default function App() {
     <div className="min-h-screen">
       {/* ── 상단 바 ── */}
       <header className="fixed inset-x-0 top-0 z-30 flex h-14 items-center gap-3 border-b bg-white dark:bg-slate-900 px-3 md:px-4">
-        <button className="rounded p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 md:hidden" onClick={() => setSidebarOpen((v) => !v)} aria-label="목차">
-          <Menu size={20} />
+        <button
+          className="rounded p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800"
+          onClick={toggleSidebar}
+          aria-label="목차 접기/펴기"
+          title={sidebarHidden ? "목차 펴기" : "목차 접기"}
+        >
+          <Menu size={20} className="md:hidden" />
+          {sidebarHidden ? <PanelLeftOpen size={20} className="hidden md:block" /> : <PanelLeftClose size={20} className="hidden md:block" />}
         </button>
         <h1 className="truncate font-bold text-slate-800 dark:text-slate-100">
           <span className="text-blue-600 dark:text-blue-400">COS PRO</span> 파이썬 실습
@@ -159,9 +220,9 @@ export default function App() {
 
       {/* ── 좌측 사이드바 ── */}
       <aside
-        className={`fixed bottom-0 left-0 top-14 z-20 w-64 border-r bg-white dark:bg-slate-900 transition-transform md:translate-x-0 ${
+        className={`fixed bottom-0 left-0 top-14 z-20 w-64 border-r bg-white dark:bg-slate-900 transition-transform ${
           sidebarOpen ? "translate-x-0 shadow-lg" : "-translate-x-full"
-        }`}
+        } ${sidebarHidden ? "md:-translate-x-full" : "md:translate-x-0 md:shadow-none"}`}
       >
         {problems && (
           <Sidebar
@@ -179,7 +240,7 @@ export default function App() {
       </aside>
 
       {/* ── 메인: 문항이 위에서 아래로 쌓임 ── */}
-      <main className="px-4 pb-24 pt-20 md:ml-64">
+      <main className={`px-4 pb-24 pt-20 transition-[margin] ${sidebarHidden ? "md:ml-0" : "md:ml-64"}`}>
         <div className="mx-auto max-w-4xl space-y-6">
           {isAdmin && (
             <div className="flex flex-wrap items-center gap-2 rounded-lg border border-amber-300 dark:border-amber-700 bg-amber-50 dark:bg-amber-950/40 p-3">
@@ -210,9 +271,28 @@ export default function App() {
             </div>
           )}
 
-          {visible?.length === 0 && (
+          {!isAdmin && pool?.length > 0 && (
+            <div className="flex flex-wrap items-center gap-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-3">
+              <span className="mr-auto text-sm text-slate-600 dark:text-slate-300">
+                {gradeFilter === "all" ? "전체" : `${gradeFilter}급`} {pool.length}문제 중 <b>{visible.length}문제</b>
+                <span className="ml-2 text-slate-500 dark:text-slate-400">
+                  · 맞힌 문제 {visible.filter((p) => verdicts[p.id] === "pass").length} / {visible.length}
+                </span>
+              </span>
+              <button className={toolBtn} onClick={retrySet} title="같은 문제를 처음부터 다시 풉니다">
+                <RotateCcw size={16} /> 다시 풀기
+              </button>
+              {pool.length > SET_SIZE && (
+                <button className={toolBtn} onClick={newSet} title="다른 문제를 무작위로 새로 고릅니다">
+                  <Shuffle size={16} /> 새로 풀기
+                </button>
+              )}
+            </div>
+          )}
+
+          {pool?.length === 0 && (
             <div className="rounded-lg border border-dashed border-slate-300 dark:border-slate-600 p-8 text-center text-sm text-slate-500 dark:text-slate-400">
-              {gradeFilter}급 문제가 아직 없습니다.{isAdmin && " 왼쪽 아래 [문제 추가] 나 위의 [자동 생성] 으로 만들어 보세요."}
+              {gradeFilter === "all" ? "아직 문제가 없습니다." : `${gradeFilter}급 문제가 아직 없습니다.`}{isAdmin && " 왼쪽 아래 [문제 추가] 나 위의 [자동 생성] 으로 만들어 보세요."}
             </div>
           )}
 
@@ -235,7 +315,7 @@ export default function App() {
                 />
               ) : (
                 <ProblemCell
-                  key={p.id + p.starterCode}
+                  key={`${p.id}-${round}-${p.starterCode}`}
                   problem={p}
                   onVerdict={(id, v) => setVerdicts((old) => ({ ...old, [id]: v }))}
                 />

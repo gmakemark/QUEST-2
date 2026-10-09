@@ -16,6 +16,7 @@
 
 const WORDS = ["apple", "banana", "peach", "lemon", "grape", "melon", "cherry", "orange", "kiwi", "mango", "yellow", "green", "purple", "silver"];
 const nums = (line) => line.split(" ").map(Number);
+const gcd = (a, b) => (b ? gcd(b, a % b) : a);
 
 export const TEMPLATES_3 = [
   {
@@ -283,6 +284,254 @@ export const TEMPLATES_3 = [
         body: `n = int(input())\n\nif n % ${k} == 0:\n    print("YES")\nelse:\n    print("NO")`,
         blank: [`if n % ${k} == 0:`, "if ⬜:"],
         given: "n = int(input())\n",
+      };
+    },
+  },
+  // ── 내장함수 (sum · len · abs · max · min · sorted · str · 문자열 메서드 · % 서식) ──
+  {
+    grade: 3,
+    topic: "builtin",
+    make(r) {
+      const one = () => [r.list(r.int(3, 6), 50, 100).join(" ")];
+      return {
+        title: "성적 총점과 과목 수",
+        desc: "과목별 성적을 공백으로 구분해 입력받아, **총점**과 **과목 수**를 공백으로 구분하여 출력하려고 합니다. (내장함수 `sum`, `len`)",
+        inputs: ["scores"],
+        tests: [one(), one(), one()],
+        ref: ([line]) => `${nums(line).reduce((s, x) => s + x, 0)} ${nums(line).length}`,
+        body: "scores = list(map(int, input().split()))\n\nprint(sum(scores), len(scores))",
+        blank: ["print(sum(scores), len(scores))", "print(⬜, ⬜)"],
+        given: "scores = list(map(int, input().split()))\n",
+      };
+    },
+  },
+  {
+    grade: 3,
+    topic: "builtin",
+    make(r) {
+      const nz = () => r.int(1, 20) * r.pick([-1, 1]);
+      const one = () => [String(nz()), String(nz())];
+      const x = r.int(1, 20);
+      return {
+        title: "절댓값이 더 큰 수",
+        desc: '두 정수 a 와 b 를 입력받아 절댓값을 비교합니다. **절댓값이 더 큰 원래 수**를 출력하고, 절댓값이 같으면 `same` 을 출력하려고 합니다. (내장함수 `abs`)',
+        inputs: ["a", "b"],
+        tests: [one(), one(), [String(-x), String(x)], one()],
+        ref: ([a, b]) => (Math.abs(a) > Math.abs(b) ? a : Math.abs(a) < Math.abs(b) ? b : "same"),
+        body: 'a = int(input())\nb = int(input())\n\nabs_a = abs(a)\nabs_b = abs(b)\n\nif abs_a > abs_b:\n    print(a)\nelif abs_a < abs_b:\n    print(b)\nelse:\n    print("same")',
+        blank: ["    print(a)\nelif abs_a < abs_b:\n    print(b)", "    print(⬜)\nelif abs_a < abs_b:\n    print(⬜)"],
+        given: "a = int(input())\nb = int(input())\n",
+      };
+    },
+  },
+  {
+    grade: 3,
+    topic: "builtin",
+    make(r) {
+      const d = r.int(1, 2);
+      const one = () => [String(r.int(2, 15)), String(r.int(2, 15))];
+      return {
+        title: "삼각형과 사각형의 넓이",
+        desc: `밑변 base 와 높이 height 를 입력받아, **삼각형의 넓이는 소수점 아래 ${d}자리까지**, **사각형의 넓이는 정수**로 공백으로 구분하여 한 줄에 출력하려고 합니다. (\`%\` 서식 문자)`,
+        inputs: ["base", "height"],
+        tests: [one(), one(), one()],
+        ref: ([b, h]) => `${((b * h) / 2).toFixed(d)} ${b * h}`,
+        body: `base = int(input())\nheight = int(input())\n\ntriangle = base * height / 2\nrectangle = base * height\n\nprint("%.${d}f %d" % (triangle, rectangle))`,
+        blank: [`"%.${d}f %d"`, '"⬜"'],
+        given: "base = int(input())\nheight = int(input())\n",
+      };
+    },
+  },
+  {
+    grade: 3,
+    topic: "builtin",
+    make(r) {
+      const big = r.int(0, 1) === 1;
+      const fn = big ? "max" : "min";
+      const row = () => r.list(r.int(3, 6), 120, 170).join(" ");
+      const one = () => [row(), row()];
+      return {
+        title: `각 반에서 키가 가장 ${big ? "큰" : "작은"} 학생`,
+        desc: `두 반(green 반, yellow 반) 학생들의 키를 한 줄씩 입력받아, 각 반에서 **키가 가장 ${big ? "큰" : "작은"}** 학생의 키를 공백으로 구분하여 출력하려고 합니다. (내장함수 \`${fn}\`)`,
+        inputs: ["green", "yellow"],
+        tests: [one(), one(), one()],
+        ref: ([g, y]) => `${Math[fn](...nums(g))} ${Math[fn](...nums(y))}`,
+        body: `green = list(map(int, input().split()))\nyellow = list(map(int, input().split()))\n\nprint(${fn}(green), ${fn}(yellow))`,
+        blank: [`print(${fn}(green), ${fn}(yellow))`, "print(⬜(green), ⬜(yellow))"],
+        given: "green = list(map(int, input().split()))\nyellow = list(map(int, input().split()))\n",
+      };
+    },
+  },
+  {
+    grade: 3,
+    topic: "builtin",
+    make(r) {
+      const lower = r.int(0, 1) === 1;
+      const one = () => [r.word(r.int(5, 9), "PyThOnCoDeAIsk")];
+      return {
+        title: lower ? "소문자로 바꾸기" : "대문자로 바꾸기",
+        desc: `영문 대소문자가 섞인 문자열을 입력받아, 모든 글자를 **${lower ? "소문자" : "대문자"}**로 바꾸어 출력하려고 합니다. (문자열 메서드)`,
+        inputs: ["a"],
+        tests: [one(), one(), one()],
+        ref: ([a]) => (lower ? a.toLowerCase() : a.toUpperCase()),
+        body: `a = input()\n\nprint(a.${lower ? "lower" : "upper"}())`,
+        blank: [`print(a.${lower ? "lower" : "upper"}())`, "print(a.⬜())"],
+        given: "a = input()\n",
+      };
+    },
+  },
+  {
+    grade: 3,
+    topic: "builtin",
+    make(r) {
+      const L = r.pick(["k", "m", "s", "t"]);
+      const U = L.toUpperCase();
+      const one = () => [r.word(r.int(5, 9), `${L}${U}aeioury`)];
+      return {
+        title: `'${L}' 와 '${U}' 개수 세기`,
+        desc: `영문 문자열 name 을 입력받아, 알파벳 \`${L}\` 와 \`${U}\` 가 **모두 합쳐 몇 번** 나오는지 출력하려고 합니다. (문자열 메서드 \`count\`)`,
+        inputs: ["name"],
+        tests: [one(), one(), one()],
+        ref: ([s]) => String([...s].filter((c) => c === L || c === U).length),
+        body: `name = input()\n\nresult = name.count('${U}') + name.count('${L}')\nprint(result)`,
+        blank: [`result = name.count('${U}') + name.count('${L}')`, "result = ⬜ + ⬜"],
+        given: "name = input()\n",
+      };
+    },
+  },
+  {
+    grade: 3,
+    topic: "builtin",
+    make(r) {
+      const one = () => r.shuffle(WORDS).slice(0, 2);
+      return {
+        title: "더 긴 단어의 길이",
+        desc: "영어 단어 두 개를 입력받아, 두 단어 중 **더 긴 단어의 글자 수**를 출력하려고 합니다. (내장함수 `len`, `max`)",
+        inputs: ["s1", "s2"],
+        tests: [one(), one(), one()],
+        ref: ([a, b]) => String(Math.max(a.length, b.length)),
+        body: "s1 = input()\ns2 = input()\n\nprint(max(len(s1), len(s2)))",
+        blank: ["print(max(len(s1), len(s2)))", "print(max(⬜, ⬜))"],
+        given: "s1 = input()\ns2 = input()\n",
+      };
+    },
+  },
+  {
+    grade: 3,
+    topic: "builtin",
+    make(r) {
+      const desc = r.int(0, 1) === 1;
+      const sortLine = desc ? "nums = sorted(nums, reverse=True)" : "nums = sorted(nums)";
+      const one = () => [r.list(r.int(4, 7), 1, 99).join(" ")];
+      return {
+        title: desc ? "큰 수부터 정렬하기" : "작은 수부터 정렬하기",
+        desc: `여러 개의 숫자를 공백으로 구분해 입력받아, **${desc ? "큰" : "작은"} 수부터 차례로** 공백으로 구분하여 출력하려고 합니다. (내장함수 \`sorted\`)`,
+        inputs: ["nums"],
+        tests: [one(), one(), one()],
+        ref: ([line]) => nums(line).sort((a, b) => (desc ? b - a : a - b)).join(" "),
+        body: `nums = list(map(int, input().split()))\n\n${sortLine}\nfor x in nums:\n    print(x, end=" ")`,
+        blank: [sortLine, "nums = ⬜"],
+        given: "nums = list(map(int, input().split()))\n",
+      };
+    },
+  },
+  {
+    grade: 3,
+    topic: "builtin",
+    make(r) {
+      const one = () => [String(r.int(1, 9999999))];
+      return {
+        title: "자릿수 세기",
+        desc: "자연수 n 을 입력받아, n 이 **몇 자리 수**인지 출력하려고 합니다. (내장함수 `str`, `len`)",
+        inputs: ["n"],
+        tests: [one(), one(), one()],
+        ref: ([n]) => String(n.length),
+        body: "n = int(input())\n\nprint(len(str(n)))",
+        blank: ["print(len(str(n)))", "print(len(⬜))"],
+        given: "n = int(input())\n",
+      };
+    },
+  },
+
+  // ── 최근 기출 형식에서 가져온 틀 ──
+  {
+    grade: 3,
+    topic: "if",
+    make(r) {
+      const one = () => {
+        const a = r.int(2, 6);
+        const b = r.pick([2, 3, 4, 5, 6, 7, 8, 9].filter((x) => x !== a));
+        const lcm = (a * b) / gcd(a, b);
+        const c = r.int(0, 1) ? lcm * r.int(1, 4) : r.int(10, 60);
+        return [String(a), String(b), String(c)];
+      };
+      return {
+        title: "공배수 판별",
+        desc: "세 정수 a, b, c 를 입력받아, c 가 **a 와 b 모두의 배수(공배수)**이면 `True`, 아니면 `False` 를 출력하려고 합니다.",
+        inputs: ["a", "b", "c"],
+        tests: [["2", "3", "12"], ["4", "5", "14"], one(), one()],
+        ref: ([a, b, c]) => (c % a === 0 && c % b === 0 ? "True" : "False"),
+        body: 'a = int(input())\nb = int(input())\nc = int(input())\n\nif c % a == 0 and c % b == 0:\n    print("True")\nelse:\n    print("False")',
+        blank: ["c % a == 0 and c % b == 0", "⬜"],
+        given: "a = int(input())\nb = int(input())\nc = int(input())\n",
+      };
+    },
+  },
+  {
+    grade: 3,
+    topic: "list",
+    make(r) {
+      const one = () => [r.list(r.int(4, 8), 1, 30).join(" ")];
+      return {
+        title: "짝수 개수 × 홀수 개수",
+        desc: "여러 개의 정수를 공백으로 구분해 입력받아, **짝수의 개수와 홀수의 개수를 곱한 값**을 출력하려고 합니다.",
+        inputs: ["arr"],
+        tests: [["1 2 3 4 5"], one(), one()],
+        ref: ([line]) => {
+          const a = nums(line);
+          const odd = a.filter((x) => x % 2 !== 0).length;
+          return String(odd * (a.length - odd));
+        },
+        body: "arr = list(map(int, input().split()))\n\nodd_count = 0\neven_count = 0\n\nfor num in arr:\n    if num % 2 != 0:\n        odd_count += 1\n    else:\n        even_count += 1\n\nprint(odd_count * even_count)",
+        blank: ["        odd_count += 1", "        ⬜"],
+        given: "arr = list(map(int, input().split()))\n\nodd_count = 0\neven_count = 0\n",
+      };
+    },
+  },
+  {
+    grade: 3,
+    topic: "list",
+    make(r) {
+      const one = () => {
+        const arr = r.shuffle([0, -r.int(1, 9), r.int(1, 9), ...r.list(r.int(2, 4), -9, 9)]);
+        return [arr.join(" "), String(r.int(1, arr.length))];
+      };
+      return {
+        title: "n 번째 수의 부호",
+        desc: "정수 리스트 arr 와 1 부터 세는 순서 n 을 입력받아, arr 의 **n 번째 수**가 음수이면 `-1`, 양수이면 `1`, 0 이면 `0` 을 출력하려고 합니다.",
+        inputs: ["arr", "n"],
+        tests: [["10 -5 0 20", "2"], one(), one(), one()],
+        ref: ([line, n]) => String(Math.sign(nums(line)[n - 1]) || 0),
+        body: "arr = list(map(int, input().split()))\nn = int(input())\n\ntarget = arr[n - 1]\n\nif target < 0:\n    print(-1)\nelif target > 0:\n    print(1)\nelse:\n    print(0)",
+        blank: ["target = arr[n - 1]", "target = ⬜"],
+        given: "arr = list(map(int, input().split()))\nn = int(input())\n",
+      };
+    },
+  },
+  {
+    grade: 3,
+    topic: "string",
+    make(r) {
+      const one = () => [r.pick([..."JQK"]) + r.pick([..."JQK"])];
+      return {
+        title: "카드 게임 승자",
+        desc: '두 사람 A, B 가 카드를 한 장씩 냅니다. 카드의 순위는 `"JQK"` 순서(J < Q < K)입니다. A 와 B 의 카드가 붙어서(예: `QJ` → A 는 Q, B 는 J) 입력될 때, **B 의 카드가 더 높으면 `B`**, 그렇지 않으면 `A` 를 출력하려고 합니다.',
+        inputs: ["cards"],
+        tests: [["JK"], ["QQ"], one(), one()],
+        ref: ([c]) => ("JQK".indexOf(c[1]) > "JQK".indexOf(c[0]) ? "B" : "A"),
+        body: "cards = input().strip()\n\npriority = \"JQK\"\nwinner = 'A'\n\nfor i in range(len(priority)):\n    if priority[i] == cards[0]:\n        for k in range(i + 1, len(priority)):\n            if priority[k] == cards[1]:\n                winner = 'B'\n\nprint(winner)",
+        blank: ["range(i + 1, len(priority))", "range(⬜, len(priority))"],
+        given: 'cards = input().strip()\n\npriority = "JQK"\n',
       };
     },
   },
