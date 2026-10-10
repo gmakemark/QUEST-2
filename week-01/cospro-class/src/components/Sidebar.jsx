@@ -1,4 +1,5 @@
 import { CheckCircle2, Circle, Lock, XCircle } from "lucide-react";
+import { subtitles } from "./StepView";
 
 // 왼쪽 목차: STEP1~3, 지금 보고 있는 STEP 아래에 주제 목록
 // 잠긴 STEP 은 자물쇠와 함께 누를 수 없게 보인다.
@@ -35,11 +36,28 @@ export default function Sidebar({ steps, current, isOpen, activeId, verdicts, on
                     <button
                       onClick={() => go(t.id)}
                       className={`w-full truncate rounded px-2 py-1 text-left text-sm ${
-                        activeId === t.id ? "bg-accent-100 dark:bg-accent-900/50 font-medium text-accent-800 dark:text-accent-200" : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+                        activeId === t.id || activeId?.startsWith(`${t.id}--`) ?"bg-accent-100 dark:bg-accent-900/50 font-medium text-accent-800 dark:text-accent-200" : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
                       }`}
                     >
                       {i + 1}. {t.title}
                     </button>
+                    {/* 밑줄 소제목(### …)을 하위 항목으로 */}
+                    {subtitles(t).length > 0 && (
+                      <ul className="ml-3">
+                        {subtitles(t).map((s) => (
+                          <li key={s.id}>
+                            <button
+                              onClick={() => go(s.id)}
+                              className={`w-full truncate rounded px-2 py-0.5 text-left text-xs ${
+                                activeId === s.id ? "font-medium text-accent-700 dark:text-accent-300" : "text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
+                              }`}
+                            >
+                              · {s.title}
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
                     {/* 실전 문제는 문제마다 정답/오답 표시 */}
                     {t.blocks.some((b) => b.type === "problem") && (
                       <ul className="ml-3">

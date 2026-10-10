@@ -113,7 +113,10 @@ export default function StepView({ step, onVerdict, onEdit }) {
                 <CellsAfter anchor={group.key} store={store} />
               </Fragment>
             ) : (
-              <div key={gi} className="space-y-5 rounded-xl border border-slate-200/80 dark:border-slate-700/70 bg-white dark:bg-slate-900 p-5">
+              <div
+                key={gi}
+                {...(group.sub && { id: group.sub.id, "data-anchor": group.sub.id })}
+                className="scroll-mt-20 space-y-5 rounded-xl border border-slate-200/80 dark:border-slate-700/70 bg-white dark:bg-slate-900 p-5">
                 {group.items.map((item) => (
                   <Fragment key={item.id}>
                     {renderItem(item)}
@@ -165,8 +168,17 @@ function groupBySubtitle(topic) {
     if (!current) open();
     current.items.push({ block: b, key, id: key, last: true });
   });
+  // "### 소제목" 으로 시작하는 묶음에는 목차에서 찾아갈 수 있도록 id 와 이름을 붙인다
+  groups.forEach((g, gi) => {
+    const first = g.items?.[0];
+    if (first?.block.type === "md" && first.text.startsWith("### "))
+      g.sub = { id: `${topic.id}--${gi}`, title: first.text.split("\n")[0].slice(4).replace(/`|\*\*/g, "").trim() };
+  });
   return groups;
 }
+
+// 목차에 보일 소제목 목록 (주제 아래 하위 항목)
+export const subtitles = (topic) => groupBySubtitle(topic).filter((g) => g.sub).map((g) => g.sub);
 
 export const blockKey = (topic, i) => `${topic.id}-${i}`;
 

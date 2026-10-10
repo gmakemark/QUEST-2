@@ -108,7 +108,8 @@ export default function App() {
 
   // 관리자일 때: 정답 창이 따라올 수 있도록 지금 보는 STEP·주제를 알린다
   useEffect(() => {
-    if (isAdmin) postPosition(stepN, activeId);
+    // 소제목(주제id--번호)을 보고 있으면 정답 창은 그 주제로
+    if (isAdmin) postPosition(stepN, activeId?.split("--")[0]);
   }, [isAdmin, stepN, activeId]);
 
   function toggleSidebar() {
