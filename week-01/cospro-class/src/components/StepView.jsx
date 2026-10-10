@@ -1,39 +1,72 @@
-import { Fragment } from "react";
-import { Lock } from "lucide-react";
+import { Fragment, useState } from "react";
+import { Lock, Pencil } from "lucide-react";
 import Markdown from "./Markdown";
 import CodeRunner from "./CodeRunner";
 import ProblemCell from "./ProblemCell";
+import EditDialog from "./EditDialog";
 import { CellsAfter, useUserCells } from "./UserCells";
 
 // STEP 하나: 머리말(목표) → 주제(1. 2. 3. …)마다 흰 박스들
 // 흰 박스 하나 = 밑줄 있는 소제목(### …) 하나. 박스 안에 소제목 · 설명 · 연습 · 실습이 차례로 들어가고,
 // 연습·실습은 따로 테두리 없이 흐린 번호로만 구분한다. 시험 형식 문제(STEP3)는 문제마다 따로 카드.
 // 블록마다 아래에 [+ 코드] [+ 텍스트] 줄이 있어서 수강생이 자기 칸을 끼워 넣을 수 있다.
-export default function StepView({ step, onVerdict }) {
+// 관리자 모드(onEdit 이 있을 때)에서는 연습·실습·코드 칸 위에 [수정] 버튼이 있다. 고친 내용은 모든 수강생 화면에 적용된다.
+// 코드 칸의 key 에 내용을 넣어서, 관리자가 고친 내용이 들어오면 그 칸만 새로 그린다.
+export default function StepView({ step, onVerdict, onEdit }) {
   const store = useUserCells(step.n);
   const numbers = numberBlocks(step);
+  const [editing, setEditing] = useState(null); // { key, block, title }
+
+  function editBar(key, b, title) {
+    if (!onEdit) return null;
+    return (
+      <div className="flex items-center gap-2">
+        {b.edited && <span className="text-xs text-peach-600 dark:text-peach-400">수정됨</span>}
+        <button
+          onClick={() => setEditing({ key, block: b, title })}
+          className="inline-flex items-center gap-1 rounded-md border border-peach-300 dark:border-peach-700 px-2 py-0.5 text-xs text-peach-700 dark:text-peach-300 hover:bg-peach-50 dark:hover:bg-peach-950/40"
+          title="이 칸의 문제·코드를 고칩니다. 모든 수강생 화면에 적용됩니다."
+        >
+          <Pencil size={12} /> 수정
+        </button>
+      </div>
+    );
+  }
 
   function renderItem(item) {
     const { block: b, key, text } = item;
     if (b.type === "md") return <Markdown>{text}</Markdown>;
-    if (b.type === "code") return <CodeRunner id={key} code={b.code} />;
+    if (b.type === "code") {
+      return (
+        <div className="space-y-2">
+          {onEdit && <div className="flex justify-end">{editBar(key, b, "코드 칸")}</div>}
+          <CodeRunner key={b.code} id={key} code={b.code} />
+        </div>
+      );
+    }
     if (b.type === "task") {
       return (
         <div className="space-y-2">
-          <Label>연습 {numbers[key]}</Label>
-          <CodeRunner id={key} code={b.starter} answer={b.answer} />
+          <div className="flex items-center justify-between">
+            <Label>연습 {numbers[key]}</Label>
+            {editBar(key, b, `연습 ${numbers[key]}`)}
+          </div>
+          <CodeRunner key={b.starter + b.answer} id={key} code={b.starter} answer={b.answer} />
         </div>
       );
     }
     if (b.type === "exercise") {
       return (
         <div className="space-y-2">
-          <Label>실습 {numbers[key]}</Label>
+          <div className="flex items-center justify-between">
+            <Label>실습 {numbers[key]}</Label>
+            {editBar(key, b, `실습 ${numbers[key]}`)}
+          </div>
           <div className="font-semibold text-slate-800 dark:text-slate-100">{b.title}</div>
           <div className="font-semibold [&_.prose]:text-slate-800 dark:[&_.prose]:text-slate-100">
             <Markdown>{b.prompt}</Markdown>
           </div>
-          <CodeRunner id={key} code={b.starter} answer={b.answer} />
+          <CodeRunner key={b.starter + b.answer} id={key} code={b.starter} answer={b.answer} />
         </div>
       );
     }
@@ -93,6 +126,10 @@ export default function StepView({ step, onVerdict }) {
           )}
         </section>
       ))}
+
+      {editing && (
+        <EditDialog title={editing.title} block={editing.block} onSave={(value) => onEdit(editing.key, value)} onClose={() => setEditing(null)} />
+      )}
     </div>
   );
 }

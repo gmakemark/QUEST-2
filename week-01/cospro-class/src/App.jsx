@@ -11,7 +11,8 @@ import { fetchSiteStatus, setStepOpen } from "./lib/siteStatus";
 import { getSessionPassword } from "./lib/auth";
 import { flushSave, getAccount, logout, promoteToAdmin, reloadWork, restoreLogin, subscribeAccount } from "./lib/account";
 import { readLS, writeLS } from "./lib/storage";
-import { openAnswerWindow, postPosition, setAdminSession } from "./lib/sync";
+import { openAnswerWindow, postEdits, postPosition, setAdminSession } from "./lib/sync";
+import { applyEdits, saveEdit } from "./lib/edits";
 import step1 from "./content/step1";
 import step2 from "./content/step2";
 import step3 from "./content/step3";
@@ -22,7 +23,7 @@ export default function App() {
   const [stepN, setStepN] = useState(() => Number(readLS("class.step", "1")) || 1);
   const [isAdmin, setIsAdmin] = useState(false);
   const [dialog, setDialog] = useState(null); // 'login' | 'settings' | 'account' | null
-  const [site, setSite] = useState({ loaded: false, server: false, steps: { 1: true, 2: false, 3: false } });
+  const [site, setSite] = useState({ loaded: false, server: false, steps: { 1: true, 2: false, 3: false }, edits: {} });
   const [verdicts, setVerdicts] = useState({});
   const [activeId, setActiveId] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false); // 좁은 화면: 목차 꺼내기
@@ -67,7 +68,9 @@ export default function App() {
 
   // 관리자가 공개한 STEP 만 열린다 (관리자는 미리 볼 수 있음)
   const isOpen = (n) => isAdmin || (site.loaded && site.steps[n]);
-  const step = STEPS.find((s) => s.n === stepN) || step1;
+  // 관리자가 [수정] 으로 고친 칸을 수업 내용 위에 덮는다
+  const steps = STEPS.map((s) => applyEdits(s, site.edits));
+  const step = steps.find((s) => s.n === stepN) || steps[0];
   const locked = !isOpen(step.n);
 
   function selectStep(n) {
@@ -141,6 +144,13 @@ export default function App() {
     }
   }
 
+  // 관리자: 수업 칸 하나 고치기 / 원래대로 (value = null). 모든 수강생 화면에 적용된다.
+  async function editBlock(key, value) {
+    const edits = await saveEdit(key, value, { server: site.server, password: getSessionPassword() });
+    setSite((s) => ({ ...s, edits }));
+    postEdits(edits); // 열려 있는 정답 창도 바로 바꾼다
+  }
+
   function toggleMode() {
     if (isAdmin) {
       setIsAdmin(false);
@@ -202,7 +212,7 @@ export default function App() {
         } ${sidebarHidden ? "md:-translate-x-full" : "md:translate-x-0 md:shadow-none"}`}
       >
         <Sidebar
-          steps={STEPS}
+          steps={steps}
           current={step.n}
           isOpen={isOpen}
           activeId={activeId}
@@ -256,7 +266,12 @@ export default function App() {
           ) : !workReady ? (
             <p className="text-sm text-slate-500 dark:text-slate-400">저장한 작업을 불러오는 중…</p>
           ) : (
-            <StepView key={`${step.n}-${account.user?.id || ""}-${workRev}`} step={step} onVerdict={(id, v) => setVerdicts((old) => ({ ...old, [id]: v }))} />
+            <StepView
+              key={`${step.n}-${account.user?.id || ""}-${workRev}`}
+              step={step}
+              onVerdict={(id, v) => setVerdicts((old) => ({ ...old, [id]: v }))}
+              onEdit={isAdmin ? editBlock : undefined}
+            />
           )}
         </div>
       </main>

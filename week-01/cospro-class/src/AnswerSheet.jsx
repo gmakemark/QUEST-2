@@ -2,7 +2,9 @@ import { useEffect, useState } from "react";
 import { KeyRound, Moon, Sun } from "lucide-react";
 import { blankAnswers } from "./components/BlankCode";
 import { blockKey, numberBlocks } from "./components/StepView";
-import { hasAdminSession, onPosition } from "./lib/sync";
+import { hasAdminSession, onEdits, onPosition } from "./lib/sync";
+import { fetchSiteStatus } from "./lib/siteStatus";
+import { applyEdits } from "./lib/edits";
 import { toggleTheme, useTheme } from "./lib/theme";
 import step1 from "./content/step1";
 import step2 from "./content/step2";
@@ -17,11 +19,24 @@ export default function AnswerSheet() {
   const [stepN, setStepN] = useState(() => Number(params.get("step")) || 1);
   const [follow, setFollow] = useState(true);
   const [anchor, setAnchor] = useState(null);
+  const [edits, setEdits] = useState({}); // 관리자가 고친 칸
   const theme = useTheme();
   const allowed = hasAdminSession();
 
   useEffect(() => {
     document.title = "정답 창 · COS PRO 3급 대비반";
+  }, []);
+
+  // 고친 칸: 처음과 창으로 돌아올 때 서버에서 받고, 수업 화면에서 고치면 바로 받는다
+  useEffect(() => {
+    const refresh = () => fetchSiteStatus().then((st) => setEdits(st.edits));
+    refresh();
+    window.addEventListener("focus", refresh);
+    const off = onEdits(setEdits);
+    return () => {
+      window.removeEventListener("focus", refresh);
+      off();
+    };
   }, []);
 
   useEffect(
@@ -53,7 +68,7 @@ export default function AnswerSheet() {
     );
   }
 
-  const step = STEPS.find((s) => s.n === stepN) || step1;
+  const step = applyEdits(STEPS.find((s) => s.n === stepN) || step1, edits);
   const numbers = numberBlocks(step);
 
   return (

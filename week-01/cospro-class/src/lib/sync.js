@@ -15,7 +15,20 @@ export function postPosition(step, anchor) {
 export function onPosition(fn) {
   const ch = getChannel();
   if (!ch) return () => {};
-  const handler = (e) => fn(e.data);
+  const handler = (e) => !e.data.edits && fn(e.data);
+  ch.addEventListener("message", handler);
+  return () => ch.removeEventListener("message", handler);
+}
+
+// 관리자가 수업 칸을 고치면 정답 창에도 바로 알린다
+export function postEdits(edits) {
+  getChannel()?.postMessage({ edits });
+}
+
+export function onEdits(fn) {
+  const ch = getChannel();
+  if (!ch) return () => {};
+  const handler = (e) => e.data.edits && fn(e.data.edits);
   ch.addEventListener("message", handler);
   return () => ch.removeEventListener("message", handler);
 }
