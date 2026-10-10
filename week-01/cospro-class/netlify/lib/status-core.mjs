@@ -4,6 +4,7 @@
 //   GET  /api/status                               → { steps: { "2": false, "3": false } }
 //   POST /api/status { password, check: true }      → 비밀번호 확인만  { ok: true }
 //   POST /api/status { password, step: 2, open }    → STEP 하나 공개/비공개  { steps }
+//        비공개로 바꿀 때는 onClose() 로 수강생 계정과 작업을 지운다  { steps, reset: { removed, kept } }
 //
 // STEP1 은 언제나 공개라서 저장하지 않는다.
 // 관리자 비밀번호는 Netlify 환경 변수 ADMIN_PASSWORD 에만 둔다. (공개 저장소라 파일에 적지 않음)
@@ -33,7 +34,7 @@ export async function readSteps(store) {
   return Object.fromEntries(LOCKABLE.map((s) => [s, typeof saved[s] === "boolean" ? saved[s] : DEFAULT_STEPS[s]]));
 }
 
-export async function handleStatus(req, { store, adminPassword, failDelayMs = 1000 }) {
+export async function handleStatus(req, { store, adminPassword, onClose, failDelayMs = 1000 }) {
   if (req.method === "GET") return json({ steps: await readSteps(store) });
   if (req.method !== "POST") return json({ error: "지원하지 않는 요청입니다." }, 405);
 
@@ -58,5 +59,6 @@ export async function handleStatus(req, { store, adminPassword, failDelayMs = 10
 
   const steps = { ...(await readSteps(store)), [step]: body.open };
   await store.setJSON(KEY, { ...steps, changedAt: new Date().toISOString() });
-  return json({ steps });
+  const reset = !body.open && onClose ? await onClose() : undefined;
+  return json({ steps, reset });
 }

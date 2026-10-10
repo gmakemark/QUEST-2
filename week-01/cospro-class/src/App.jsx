@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
-import { Eye, EyeOff, KeyRound, Lock, LockOpen, Menu, Monitor, Moon, PanelLeftClose, PanelLeftOpen, Sun } from "lucide-react";
+import { CircleUser, Eye, EyeOff, KeyRound, Lock, LockOpen, LogIn, Menu, Monitor, Moon, PanelLeftClose, PanelLeftOpen, Sun } from "lucide-react";
 import Sidebar from "./components/Sidebar";
 import StepView, { LockedStep } from "./components/StepView";
 import LoginDialog from "./components/LoginDialog";
 import SettingsDialog from "./components/SettingsDialog";
+import AccountDialog from "./components/AccountDialog";
 import { preload, subscribeStatus } from "./lib/pyRunner";
 import { toggleTheme, useTheme } from "./lib/theme";
 import { fetchSiteStatus, setStepOpen } from "./lib/siteStatus";
 import { getSessionPassword } from "./lib/auth";
+import { flushSave, getAccount, logout, promoteToAdmin, reloadWork, restoreLogin, subscribeAccount } from "./lib/account";
 import { readLS, writeLS } from "./lib/storage";
 import { openAnswerWindow, postPosition, setAdminSession } from "./lib/sync";
 import step1 from "./content/step1";
@@ -19,14 +21,26 @@ const STEPS = [step1, step2, step3];
 export default function App() {
   const [stepN, setStepN] = useState(() => Number(readLS("class.step", "1")) || 1);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [dialog, setDialog] = useState(null); // 'login' | 'settings' | null
+  const [dialog, setDialog] = useState(null); // 'login' | 'settings' | 'account' | null
   const [site, setSite] = useState({ loaded: false, server: false, steps: { 2: false, 3: false } });
   const [verdicts, setVerdicts] = useState({});
   const [activeId, setActiveId] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false); // 좁은 화면: 목차 꺼내기
   const [sidebarHidden, setSidebarHidden] = useState(() => readLS("class.sidebarHidden", "") === "1"); // 넓은 화면: 목차 접기
   const [pyStatus, setPyStatus] = useState("idle");
+  const [account, setAccount] = useState(getAccount);
+  const [workReady, setWorkReady] = useState(false); // 서버에 저장된 작업을 다 불러왔는지
+  const [workRev, setWorkRev] = useState(0); // 서버의 작업을 다시 받아 오면 늘려서 화면을 새로 그린다
   const theme = useTheme();
+
+  useEffect(() => subscribeAccount(setAccount), []);
+
+  // 배포 사이트면 남겨 둔 로그인으로 작업을 불러온 뒤에 본문을 그린다
+  useEffect(() => {
+    if (!site.loaded || workReady) return;
+    if (site.server) restoreLogin().finally(() => setWorkReady(true));
+    else setWorkReady(true);
+  }, [site.loaded, site.server, workReady]);
 
   useEffect(() => {
     preload(); // 페이지가 열리면 바로 파이썬을 미리 불러온다
@@ -73,6 +87,14 @@ export default function App() {
     return () => observer.disconnect();
   }, [stepN, locked]);
 
+  // 로그인한 계정으로 관리자 모드에 들어오면(순서는 상관없음) 관리자 계정으로 표시한다
+  const accountId = account.user?.id;
+  const accountAdmin = account.user?.admin;
+  useEffect(() => {
+    if (isAdmin && site.server && accountId && !accountAdmin)
+      promoteToAdmin(getSessionPassword()).catch((err) => alert("관리자 계정으로 표시하지 못했습니다: " + err.message));
+  }, [isAdmin, site.server, accountId, accountAdmin]);
+
   // 관리자일 때: 정답 창이 따라올 수 있도록 지금 보는 STEP·주제를 알린다
   useEffect(() => {
     if (isAdmin) postPosition(stepN, activeId);
@@ -92,10 +114,22 @@ export default function App() {
   // 관리자: STEP2·3 공개/비공개 (배포 사이트에서만)
   async function toggleStep(n) {
     const next = !site.steps[n];
-    if (!confirm(next ? `STEP${n} 공개?` : `STEP${n} 비공개로 전환? 수강생 화면에서 잠김.`)) return;
+    const closeMsg = [
+      `STEP${n} 비공개로 전환? 수강생 화면에서 잠김.`,
+      "",
+      "수업 정리도 함께 합니다(되돌릴 수 없음):",
+      "· 수강생 계정: 아이디·비밀번호, +코드·+텍스트 칸, 고친 코드 모두 삭제",
+      "· 관리자 계정: 아이디·비밀번호와 +코드·+텍스트 칸은 남기고, 고친 코드만 삭제",
+    ].join("\n");
+    if (!confirm(next ? `STEP${n} 공개?` : closeMsg)) return;
     try {
+      if (!next) await flushSave();
       const steps = await setStepOpen(n, next, getSessionPassword());
       setSite((s) => ({ ...s, steps }));
+      if (!next) {
+        await reloadWork();
+        setWorkRev((r) => r + 1);
+      }
     } catch (err) {
       alert("바꾸지 못했습니다: " + err.message);
     }
@@ -132,6 +166,17 @@ export default function App() {
           >
             {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
           </button>
+          {site.server && workReady && (
+            <button
+              onClick={() => (account.user ? confirm(`${account.user.id} 로그아웃?`) && logout().then(() => setWorkRev((r) => r + 1)) : setDialog("account"))}
+              className="inline-flex items-center gap-1.5 rounded-md border border-slate-300 dark:border-slate-600 px-3 py-1.5 text-sm hover:bg-slate-50 dark:hover:bg-slate-800"
+              title={account.user ? "눌러서 로그아웃" : "로그인하면 작업이 서버에 저장됩니다"}
+            >
+              {account.user ? <CircleUser size={16} /> : <LogIn size={16} />}
+              <span className="hidden sm:inline">{account.user ? account.user.id : "로그인"}</span>
+              {account.user && <SaveStatus save={account.save} />}
+            </button>
+          )}
           <button
             onClick={toggleMode}
             className={`inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium ${
@@ -164,6 +209,12 @@ export default function App() {
       {/* ── 본문 ── */}
       <main className={`px-4 pb-24 pt-20 transition-[margin] ${sidebarHidden ? "md:ml-0" : "md:ml-72"}`}>
         <div className="mx-auto max-w-4xl space-y-6">
+          {account.notice && (
+            <p className="rounded-lg border border-peach-300 dark:border-peach-700 bg-peach-50 dark:bg-peach-950/40 px-3 py-2 text-sm text-peach-800 dark:text-peach-200">{account.notice}</p>
+          )}
+          {site.server && workReady && !account.user && !account.notice && (
+            <p className="text-sm text-slate-500 dark:text-slate-400">지금은 이 브라우저에만 저장됩니다. 다른 컴퓨터에서도 이어서 보려면 [로그인] 하세요.</p>
+          )}
           {isAdmin && (
             <div className="flex flex-wrap items-center gap-2 rounded-lg border border-peach-300 dark:border-peach-700 bg-peach-50 dark:bg-peach-950/40 p-3">
               <span className="mr-auto text-sm font-medium text-peach-800 dark:text-peach-200">관리자 모드 · 모든 STEP 미리 보기 가능</span>
@@ -196,8 +247,10 @@ export default function App() {
 
           {locked ? (
             site.loaded ? <LockedStep n={step.n} /> : <p className="text-sm text-slate-500 dark:text-slate-400">공개 상태를 확인하는 중…</p>
+          ) : !workReady ? (
+            <p className="text-sm text-slate-500 dark:text-slate-400">저장한 작업을 불러오는 중…</p>
           ) : (
-            <StepView key={step.n} step={step} onVerdict={(id, v) => setVerdicts((old) => ({ ...old, [id]: v }))} />
+            <StepView key={`${step.n}-${account.user?.id || ""}-${workRev}`} step={step} onVerdict={(id, v) => setVerdicts((old) => ({ ...old, [id]: v }))} />
           )}
         </div>
       </main>
@@ -213,9 +266,20 @@ export default function App() {
           }}
         />
       )}
+      {dialog === "account" && <AccountDialog onClose={() => setDialog(null)} />}
       {dialog === "settings" && <SettingsDialog serverMode={site.server} onClose={() => setDialog(null)} />}
     </div>
   );
+}
+
+function SaveStatus({ save }) {
+  const map = {
+    saved: ["text-mint-600 dark:text-mint-400", "저장됨"],
+    saving: ["text-slate-400", "저장 중…"],
+    error: ["text-red-600 dark:text-red-400", "저장 실패 · 다시 시도 중"],
+  };
+  const [cls, text] = map[save] || map.saved;
+  return <span className={`text-xs ${cls}`}>{text}</span>;
 }
 
 function PyStatus({ status }) {
