@@ -54,7 +54,7 @@ export default {
           words = input().split()
           print(words)
         `, { sample: "사과 배 감" }),
-        task(`한 줄에 이름과 나이를 입력받아 두 변수에 나눠 담고 출력하기`, py`
+        task(`한 줄에 이름과 나이를 입력받아 두 변수에 나눠 담고 출력하기 (민지 15 입력 → 민지 15)`, py`
           name, age = input().split()
           print(name, age)
         `, { sample: "민지 15" }),
@@ -162,7 +162,7 @@ export default {
 
           문자열에 쓰면 **모든 글자가** 조건에 맞아야 \`True\` 이다. (\`"Ab".isupper()\` 는 \`False\`) 그래서 보통 한 글자씩 꺼내 검사한다.
         `,
-        task(`"PyThon3" 의 각 글자가 대문자인지 한 줄에 하나씩 출력하기 (isupper)`, py`
+        task(`"PyThon3" 의 각 글자와, 그 글자가 대문자인지(True/False)를 한 줄에 하나씩 출력하기 (isupper, 첫 줄: P True)`, py`
           for ch in "PyThon3":
               print(ch, ch.isupper())
         `),
@@ -401,7 +401,7 @@ export default {
           for i in range(n):
               print("*" * (n - i))
         `, { sample: "4" }),
-        task(`n 을 입력받아 오른쪽 정렬 별 삼각형 출력하기`, py`
+        task(`n 을 입력받아 별 앞을 공백으로 채운 오른쪽 정렬 별 삼각형 출력하기 (1 개부터 n 개까지)`, py`
           n = int(input())
           for i in range(1, n + 1):
               print(" " * (n - i) + "*" * i)
@@ -410,7 +410,7 @@ export default {
           ### 한 줄에 패턴 이어 붙이기
           모의시험에 나온 모양이다. 하이픈은 0 개부터 늘고 별은 n 개부터 줄면서 **한 줄로** 이어 출력한다. (n = 5 → \`*****-****--***---**----*\`)
         `,
-        task(`n 을 입력받아 하이픈과 별 교차 패턴을 한 줄로 출력하기`, py`
+        task(`n 을 입력받아 하이픈은 0 개부터 늘고 별은 n 개부터 줄어드는 패턴을 한 줄로 출력하기 (3 → ***-**--*)`, py`
           n = int(input())
           for i in range(n):
               print("-" * i + "*" * (n - i), end="")

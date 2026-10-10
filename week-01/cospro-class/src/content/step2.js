@@ -238,7 +238,7 @@ export default {
           for i in range(len(fruits)):
               print(i, fruits[i])
         `, { given: py`fruits = ["사과", "배", "감"]` }),
-        task(`arr 의 짝수 인덱스(0, 2, 4 …) 원소만 출력하기`, py`
+        task(`arr 의 짝수 인덱스(0, 2, 4 …) 원소만 한 줄에 하나씩 출력하기`, py`
           for i in range(0, len(arr), 2):
               print(arr[i])
         `, { given: py`arr = [10, 20, 30, 40, 50]` }),
@@ -268,6 +268,27 @@ export default {
           print("끝")
         `),
         md`
+          ### 반복문 안의 반복문
+          반복문 안에 반복문을 또 쓸 수 있다. 바깥 반복이 **한 번** 돌 때마다 안쪽 반복은 **처음부터 끝까지** 돈다.
+          \`i\` 가 1 일 때 \`j\` 가 1, 2, 3 을 모두 돌고, 그다음 \`i\` 가 2 가 되어 다시 \`j\` 가 1, 2, 3 을 돈다.
+          안쪽 반복은 바깥 반복보다 **한 칸 더** 들여 쓴다. 3급 기출의 "카드 게임 승자", "한 글자씩 늘려 출력" 이 이 모양이다.
+        `,
+        task(`i 는 1 부터 2 까지, 그 안에서 j 는 1 부터 3 까지 반복하며 i 와 j 를 한 줄에 하나씩 출력하기 (결과: 1 1 / 1 2 / 1 3 / 2 1 / 2 2 / 2 3)`, py`
+          for i in range(1, 3):
+              for j in range(1, 4):
+                  print(i, j)
+        `),
+        task(`s 를 앞에서부터 한 글자씩 늘린 부분 문자열을 공백으로 띄어 한 줄에 출력하기 (슬라이싱 s[:i + 1] 사용, 결과: P Py Pyt Pyth)`, py`
+          for i in range(len(s)):
+              print(s[:i + 1], end=" ")
+        `, { given: py`s = "Pyth"` }),
+        task(`위 결과를 이중 반복문으로 만들기: 바깥 i 마다 안쪽 j 로 s[0] 부터 s[i] 까지 한 글자씩 이어 출력하고, 안쪽이 끝나면 공백 출력하기 (결과: P Py Pyt Pyth)`, py`
+          for i in range(len(s)):
+              for j in range(i + 1):
+                  print(s[j], end="")
+              print(end=" ")
+        `, { given: py`s = "Pyth"` }),
+        md`
           ### 반복하면서 개수 세기
           **변수를 0 으로 만들어 두고, 조건에 맞을 때마다 1 씩 더하는** 패턴이다. 3급 문제 대부분이 이 모양이다.
         `,
@@ -285,6 +306,16 @@ export default {
                   count += 1
           print(count)
         `, { given: py`nums = [35, 72, 50, 91, 18, 66]` }),
+        task(`nums 의 홀수 개수와 짝수 개수를 한 번의 반복으로 함께 세어 한 줄에 출력하기 (결과: 4 2)`, py`
+          odd = 0
+          even = 0
+          for n in nums:
+              if n % 2 == 1:
+                  odd += 1
+              else:
+                  even += 1
+          print(odd, even)
+        `, { given: py`nums = [35, 72, 51, 91, 18, 67]` }),
         ex({
           title: "k 부터 3 씩 n 개",
           prompt: md`
@@ -347,6 +378,43 @@ export default {
           `,
           sample: "python",
         }),
+        ex({
+          title: "뒤에서부터 한 글자씩 늘려 출력",
+          prompt: md`
+            단어를 입력받아 **뒤에서부터** 한 글자씩 늘어나는 부분 문자열을 공백으로 띄어 한 줄에 출력하기.
+            (Pixel → \`l el xel ixel Pixel\`)
+          `,
+          answer: py`
+            s = input()
+            for i in range(len(s)):
+                print(s[len(s) - 1 - i:], end=" ")
+          `,
+          sample: "Pixel",
+        }),
+        ex({
+          title: "카드 게임 승자",
+          prompt: md`
+            카드의 순위가 문자열 \`priority = "JQKA"\` 에 낮은 것부터 들어 있다. (J < Q < K < A)
+            A 와 B 가 뽑은 카드가 두 글자 문자열로 입력된다. (첫 글자가 A 의 카드, 둘째 글자가 B 의 카드, 같은 카드는 없음)
+            **이중 반복문**으로 A 의 카드 위치를 찾고, 그보다 뒤(더 높은 순위)에 B 의 카드가 있으면 \`B\`, 아니면 \`A\` 출력하기. (\`index()\` 없이)
+            (QA → \`B\`, KJ → \`A\`)
+          `,
+          starter: py`
+            priority = "JQKA"
+          `,
+          answer: py`
+            priority = "JQKA"
+            cards = input()
+            winner = "A"
+            for i in range(len(priority)):
+                if priority[i] == cards[0]:
+                    for k in range(i + 1, len(priority)):
+                        if priority[k] == cards[1]:
+                            winner = "B"
+            print(winner)
+          `,
+          sample: "QA",
+        }),
       ],
     },
     // ─────────────────────────────── 4
@@ -361,7 +429,7 @@ export default {
           ### 합계와 평균
           합을 담을 변수를 **0** 으로 시작하고, 반복하며 더한다. 평균은 합 ÷ 개수이다.
         `,
-        task(`scores 의 합계 출력하기`, py`
+        task(`scores 의 합계를 반복문으로 구해 출력하기 (sum() 없이)`, py`
           total = 0
           for s in scores:
               total += s
@@ -378,14 +446,14 @@ export default {
           **첫 값을 기준으로 두고**, 더 큰 값(최솟값이면 더 작은 값)을 만나면 기준을 바꾼다.
           기준을 \`0\` 으로 두면 안 된다. 음수만 있는 리스트에서는 0 보다 큰 값이 없어서 답이 0 으로 나온다. (기출 "한 줄 고치기" 에 나오는 실수)
         `,
-        task(`nums 의 가장 큰 값 출력하기`, py`
+        task(`nums 의 가장 큰 값을 반복문으로 찾아 출력하기 (max() 없이)`, py`
           best = nums[0]
           for x in nums:
               if x > best:
                   best = x
           print(best)
         `, { given: py`nums = [12, 45, 7, 33]` }),
-        task(`nums 의 가장 작은 값 출력하기`, py`
+        task(`nums 의 가장 작은 값을 반복문으로 찾아 출력하기 (min() 없이)`, py`
           low = nums[0]
           for x in nums:
               if x < low:
@@ -411,12 +479,20 @@ export default {
           ### 절댓값
           음수이면 \`-1\` 을 곱해 양수로 바꾼다. (0 과 양수는 그대로)
         `,
-        task(`정수를 입력받아 절댓값 출력하기 (-25, 7 을 넣어 확인)`, py`
+        task(`정수를 입력받아 abs() 없이 if 로 절댓값 출력하기 (-25, 7 을 넣어 확인)`, py`
           n = int(input())
           if n < 0:
               n = n * -1
           print(n)
         `, { sample: "-25" }),
+        task(`두 정수를 한 줄에 하나씩 입력받아 abs() 없이 if 로 두 수 차이의 절댓값 출력하기 (큰 수 - 작은 수, 3 과 10 → 7)`, py`
+          a = int(input())
+          b = int(input())
+          if a > b:
+              print(a - b)
+          else:
+              print(b - a)
+        `, { sample: "3\n10" }),
         md`
           ### 배수와 공배수
           **n 이 k 의 배수** ⇔ \`n % k == 0\`
@@ -447,11 +523,11 @@ export default {
 
           번호는 숫자 → 대문자 → 소문자 순서라서, 대문자가 소문자보다 작다. (\`'Z' < 'a'\` 는 \`True\`)
         `,
-        task(`"aZ5?" 의 각 글자가 대문자인지 한 줄에 하나씩 출력하기`, py`
+        task(`"aZ5?" 의 각 글자와, 그 글자가 대문자인지(True/False)를 비교 연산자로 한 줄에 하나씩 출력하기 (첫 줄: a False)`, py`
           for ch in "aZ5?":
               print(ch, 'A' <= ch <= 'Z')
         `),
-        task(`글자 하나를 입력받아 소문자이면 "소문자", 아니면 "아님" 출력하기`, py`
+        task(`글자 하나를 입력받아 비교 연산자로 소문자이면 "소문자", 아니면 "아님" 출력하기`, py`
           ch = input()
           if 'a' <= ch <= 'z':
               print("소문자")
@@ -638,14 +714,14 @@ export default {
           \`break\` 를 만나면 반복을 **바로 끝내고** 반복문 다음 줄로 간다.
           \`while True:\` 는 조건이 늘 참이라 끝없이 반복하므로, 안에서 원하는 때에 \`break\` 로 끝낸다.
         `,
-        task(`nums 를 차례로 출력하다가 음수를 만나면 "멈춤" 을 출력하고 끝내기`, py`
+        task(`nums 를 한 줄에 하나씩 차례로 출력하다가 음수를 만나면 "멈춤" 을 출력하고 끝내기`, py`
           for n in nums:
               if n < 0:
                   print("멈춤")
                   break
               print(n)
         `, { given: py`nums = [3, 8, -1, 5]` }),
-        task(`while True 와 break 로 n 을 1 부터 늘려 가며 출력하다가 n 이 5 가 되면 끝내기`, py`
+        task(`while True 와 break 로 n 을 1 부터 늘려 가며 한 줄에 출력하다가 n 이 5 가 되면 끝내기 (결과: 1 2 3 4 5)`, py`
           n = 1
           while True:
               print(n, end=" ")
@@ -657,7 +733,7 @@ export default {
           ### continue
           \`continue\` 를 만나면 아래 코드를 건너뛰고 **다음 차례**로 간다.
         `,
-        task(`1 부터 10 까지 출력하되 3 의 배수는 건너뛰기`, py`
+        task(`1 부터 10 까지 한 줄에 출력하되 3 의 배수는 건너뛰기 (결과: 1 2 4 5 7 8 10)`, py`
           for i in range(1, 11):
               if i % 3 == 0:
                   continue
