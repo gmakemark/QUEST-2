@@ -8,7 +8,7 @@
 const WORK_PREFIXES = ["class.code.", "class.stdin.", "class.blanks.", "class.cells."];
 const isWork = (key) => WORK_PREFIXES.some((p) => key.startsWith(p));
 
-let remote = null; // 로그인했을 때: { data: {이름: 값}, onChange() }
+let remote = null; // 로그인했을 때: { data: {이름: 값}, onChange(이름) }
 
 /** 로그인하면 계정의 작업을, 로그아웃하면 null 을 넣는다. */
 export function setRemoteStore(data, onChange) {
@@ -29,7 +29,7 @@ export function writeLS(key, value) {
   if (remote && isWork(key)) {
     if (remote.data[key] === value) return true;
     remote.data[key] = value;
-    remote.onChange();
+    remote.onChange(key);
     return true;
   }
   try {
@@ -44,7 +44,7 @@ export function removeLS(key) {
   if (remote && isWork(key)) {
     if (!(key in remote.data)) return;
     delete remote.data[key];
-    remote.onChange();
+    remote.onChange(key);
     return;
   }
   try {

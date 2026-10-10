@@ -4,7 +4,9 @@
 //   POST /api/class { action: "signup", id, pw }   → 가입하고 바로 로그인  { token, id, admin, data }
 //   POST /api/class { action: "login", id, pw }    → 로그인  { token, id, admin, data }
 //   GET  /api/class           (Authorization: Bearer 토큰) → 내 작업 불러오기  { id, admin, data }
-//   PUT  /api/class { data }  (Authorization: Bearer 토큰) → 내 작업 저장  { ok: true }
+//   PUT  /api/class { set, del } (Authorization: Bearer 토큰) → 바뀐 것만 저장  { ok: true }
+//        set: { 이름: 값 } 은 넣거나 바꾸고, del: [이름] 은 지운다. (통째로 덮어쓰지 않아서,
+//        오래 열어 둔 화면이 관리자가 정리한 STEP 의 작업을 되살리지 않는다)
 //   POST /api/class { action: "promote", password } (토큰) → 관리자 비밀번호가 맞으면 이 계정을 "관리자 계정"으로 표시
 //
 // 저장소 안의 이름
@@ -76,12 +78,13 @@ export async function handleClass(req, { store, adminPassword, failDelayMs = 100
   if (req.method === "PUT") {
     const me = await readToken(req, store, secret);
     if (!me) return expired();
-    const data = body?.data;
-    if (!data || typeof data !== "object" || Array.isArray(data)) return json({ error: "data 가 필요합니다." }, 400);
-    const clean = {};
-    for (const [k, v] of Object.entries(data)) if (k.startsWith("class.") && typeof v === "string") clean[k] = v;
-    if (JSON.stringify(clean).length > MAX_DATA_BYTES) return json({ error: "저장할 내용이 너무 큽니다(1MB 넘음)." }, 413);
-    await store.setJSON(dataKey(me.id), clean);
+    const set = body?.set && typeof body.set === "object" && !Array.isArray(body.set) ? body.set : {};
+    const del = Array.isArray(body?.del) ? body.del : [];
+    const data = (await store.get(dataKey(me.id), { type: "json" })) || {};
+    for (const k of del) delete data[k];
+    for (const [k, v] of Object.entries(set)) if (k.startsWith("class.") && typeof v === "string") data[k] = v;
+    if (JSON.stringify(data).length > MAX_DATA_BYTES) return json({ error: "저장할 내용이 너무 큽니다(1MB 넘음)." }, 413);
+    await store.setJSON(dataKey(me.id), data);
     return json({ ok: true });
   }
 
@@ -121,42 +124,57 @@ export async function handleClass(req, { store, adminPassword, failDelayMs = 100
   return json({ error: "알 수 없는 action 입니다." }, 400);
 }
 
-// 관리자가 STEP 을 비공개로 바꿀 때 부른다.
-//  - 수강생 계정: 아이디·비밀번호와 저장한 작업을 모두 지운다.
-//  - 관리자 계정(관리자 모드로 들어간 적 있는 계정): 아이디·비밀번호와 +코드/+텍스트 칸은 남기고, 고친 코드·빈칸 답은 지운다.
-export async function resetClass(store) {
+// 관리자가 STEP 하나를 비공개로 바꿀 때 부른다. (allClosed: STEP1~3 이 모두 비공개가 되었는지)
+//  - 수강생 계정: 그 STEP 의 +코드/+텍스트 칸과 고친 코드·빈칸 답을 지운다.
+//  - 관리자 계정(관리자 모드로 들어간 적 있는 계정): 그 STEP 의 +코드/+텍스트 칸은 남기고, 고친 코드·빈칸 답만 지운다.
+//  - STEP 이 모두 비공개가 되면 수강생 계정(아이디·비밀번호)과 남은 작업도 모두 지운다. 관리자 계정은 남는다.
+export async function resetStep(store, step, allClosed = false) {
   const { blobs } = await store.list({ prefix: "users/" });
   let removed = 0;
-  let kept = 0;
+  let cleaned = 0;
   for (const { key } of blobs) {
     const id = key.slice("users/".length);
     const user = await store.get(key, { type: "json" });
-    if (!user?.admin) {
+    if (!user?.admin && allClosed) {
       await store.delete(key);
       await store.delete(dataKey(id));
       removed++;
       continue;
     }
-    const data = (await store.get(dataKey(id), { type: "json" })) || {};
-    await store.setJSON(dataKey(id), keepOwnCells(data));
-    kept++;
+    const data = await store.get(dataKey(id), { type: "json" });
+    if (!data) continue;
+    await store.setJSON(dataKey(id), clearStep(data, String(step), !!user?.admin));
+    cleaned++;
   }
-  return { removed, kept };
+  return { removed, cleaned };
 }
 
-// 저장한 작업에서 +코드/+텍스트 칸(칸 목록과 +코드 칸 안의 코드)만 남긴다
-export function keepOwnCells(data) {
-  const out = {};
-  const cellIds = new Set();
+// 저장 이름이 어느 STEP 것인지: 칸 목록은 이름에, 칸 안의 코드는 칸 목록에, 수업 블록은 id 앞부분(s1-, s2-, s3-, 실전 문제 c3-)에 있다
+function stepOfKeys(data) {
+  const owner = {};
   for (const [k, v] of Object.entries(data)) {
-    if (!k.startsWith("class.cells.")) continue;
-    out[k] = v;
+    const m = k.match(/^class\.cells\.step(\d+)$/);
+    if (!m) continue;
+    owner[k] = m[1];
     try {
-      for (const c of JSON.parse(v)) if (c?.id) cellIds.add(c.id);
+      for (const c of JSON.parse(v)) if (c?.id) for (const p of ["code", "stdin", "blanks"]) owner[`class.${p}.${c.id}`] = m[1];
     } catch {}
   }
-  for (const id of cellIds) {
-    for (const k of [`class.code.${id}`, `class.stdin.${id}`]) if (k in data) out[k] = data[k];
+  const stepOf = (k) => {
+    if (owner[k]) return owner[k];
+    const m = k.match(/^class\.(?:code|stdin|blanks)\.(?:s(\d+)|c(3))-/);
+    return m ? m[1] || m[2] : null;
+  };
+  const isOwnCell = (k) => !!owner[k];
+  return { stepOf, isOwnCell };
+}
+
+// 한 STEP 의 작업을 지운다. keepCells 면 +코드/+텍스트 칸(칸 목록과 +코드 칸 안의 코드)은 남긴다.
+export function clearStep(data, step, keepCells) {
+  const { stepOf, isOwnCell } = stepOfKeys(data);
+  const out = {};
+  for (const [k, v] of Object.entries(data)) {
+    if (stepOf(k) !== step || (keepCells && isOwnCell(k))) out[k] = v;
   }
   return out;
 }

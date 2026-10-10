@@ -1,19 +1,18 @@
 // STEP 공개/비공개 상태를 읽고 바꾸는 서버 쪽 핵심 로직
 // (Netlify 함수 netlify/functions/status.mjs 가 이것을 쓴다. 저장소(store)를 바꿔 끼울 수 있어서 따로 시험할 수 있다.)
 //
-//   GET  /api/status                               → { steps: { "2": false, "3": false } }
+//   GET  /api/status                               → { steps: { "1": true, "2": false, "3": false } }
 //   POST /api/status { password, check: true }      → 비밀번호 확인만  { ok: true }
 //   POST /api/status { password, step: 2, open }    → STEP 하나 공개/비공개  { steps }
-//        비공개로 바꿀 때는 onClose() 로 수강생 계정과 작업을 지운다  { steps, reset: { removed, kept } }
+//        비공개로 바꿀 때는 onClose(step, 모두비공개?) 로 그 STEP 의 작업을 정리한다  { steps, reset: { removed, cleaned } }
 //
-// STEP1 은 언제나 공개라서 저장하지 않는다.
 // 관리자 비밀번호는 Netlify 환경 변수 ADMIN_PASSWORD 에만 둔다. (공개 저장소라 파일에 적지 않음)
 
 import { timingSafeEqual } from "node:crypto";
 
 const KEY = "steps";
-export const LOCKABLE = ["2", "3"];
-const DEFAULT_STEPS = { 2: false, 3: false }; // 처음 배포했을 때는 STEP1 만 공개
+export const LOCKABLE = ["1", "2", "3"];
+const DEFAULT_STEPS = { 1: true, 2: false, 3: false }; // 처음 배포했을 때는 STEP1 만 공개
 
 const json = (body, status = 200) =>
   new Response(JSON.stringify(body), {
@@ -54,11 +53,12 @@ export async function handleStatus(req, { store, adminPassword, onClose, failDel
   if (body.check) return json({ ok: true });
 
   const step = String(body.step);
-  if (!LOCKABLE.includes(step)) return json({ error: "step 은 2 또는 3 이어야 합니다." }, 400);
+  if (!LOCKABLE.includes(step)) return json({ error: "step 은 1, 2, 3 중 하나여야 합니다." }, 400);
   if (typeof body.open !== "boolean") return json({ error: "open 값(true/false)이 필요합니다." }, 400);
 
   const steps = { ...(await readSteps(store)), [step]: body.open };
   await store.setJSON(KEY, { ...steps, changedAt: new Date().toISOString() });
-  const reset = !body.open && onClose ? await onClose() : undefined;
+  const allClosed = LOCKABLE.every((s) => !steps[s]);
+  const reset = !body.open && onClose ? await onClose(step, allClosed) : undefined;
   return json({ steps, reset });
 }

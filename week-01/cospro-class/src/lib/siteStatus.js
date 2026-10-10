@@ -3,16 +3,16 @@
 
 const URL = "/api/status";
 
-/** { server: 서버 함수가 있는지, steps: { "2": 공개?, "3": 공개? } } */
+/** { server: 서버 함수가 있는지, steps: { "1": 공개?, "2": 공개?, "3": 공개? } } */
 export async function fetchSiteStatus() {
   try {
     const res = await fetch(URL, { cache: "no-store" });
     // 서버 함수가 없으면 개발 서버가 HTML 을 돌려준다
     if (!res.ok || !(res.headers.get("content-type") || "").includes("application/json")) throw new Error("no server");
     const data = await res.json();
-    return { server: true, steps: { 2: !!data.steps?.["2"], 3: !!data.steps?.["3"] } };
+    return { server: true, steps: toSteps(data.steps) };
   } catch {
-    return { server: false, steps: { 2: true, 3: true } };
+    return { server: false, steps: { 1: true, 2: true, 3: true } };
   }
 }
 
@@ -38,5 +38,10 @@ export async function checkServerPassword(password) {
 export async function setStepOpen(step, open, password) {
   const { status, data } = await post({ password, step, open });
   if (status !== 200) throw new Error(data.error || `서버 오류 (${status})`);
-  return { 2: !!data.steps["2"], 3: !!data.steps["3"] };
+  return toSteps(data.steps);
+}
+
+// STEP1 은 예전 서버(값 없음)에서는 공개로 본다
+function toSteps(steps = {}) {
+  return { 1: steps["1"] !== false, 2: !!steps["2"], 3: !!steps["3"] };
 }

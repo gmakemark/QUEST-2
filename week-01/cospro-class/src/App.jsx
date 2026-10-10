@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CircleUser, Eye, EyeOff, KeyRound, Lock, LockOpen, LogIn, Menu, Monitor, Moon, PanelLeftClose, PanelLeftOpen, Sun } from "lucide-react";
 import Sidebar from "./components/Sidebar";
 import StepView, { LockedStep } from "./components/StepView";
@@ -22,7 +22,7 @@ export default function App() {
   const [stepN, setStepN] = useState(() => Number(readLS("class.step", "1")) || 1);
   const [isAdmin, setIsAdmin] = useState(false);
   const [dialog, setDialog] = useState(null); // 'login' | 'settings' | 'account' | null
-  const [site, setSite] = useState({ loaded: false, server: false, steps: { 2: false, 3: false } });
+  const [site, setSite] = useState({ loaded: false, server: false, steps: { 1: true, 2: false, 3: false } });
   const [verdicts, setVerdicts] = useState({});
   const [activeId, setActiveId] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false); // 좁은 화면: 목차 꺼내기
@@ -42,6 +42,14 @@ export default function App() {
     else setWorkReady(true);
   }, [site.loaded, site.server, workReady]);
 
+  // 열려 있던 STEP 이 비공개로 바뀌면(관리자가 정리함) 서버에서 작업을 다시 받아 온다
+  const prevSteps = useRef(site.steps);
+  useEffect(() => {
+    const closed = [1, 2, 3].some((n) => prevSteps.current[n] && !site.steps[n]);
+    prevSteps.current = site.steps;
+    if (closed && workReady && getAccount().user) reloadWork().then(() => setWorkRev((r) => r + 1));
+  }, [site.steps, workReady]);
+
   useEffect(() => {
     preload(); // 페이지가 열리면 바로 파이썬을 미리 불러온다
     // STEP 공개 상태: 처음 한 번, 그 뒤 2분마다, 그리고 창으로 돌아올 때 다시 확인
@@ -57,8 +65,8 @@ export default function App() {
     };
   }, []);
 
-  // STEP1 은 늘 공개, STEP2·3 은 관리자가 공개해야 열린다 (관리자는 미리 볼 수 있음)
-  const isOpen = (n) => n === 1 || isAdmin || (site.loaded && site.steps[n]);
+  // 관리자가 공개한 STEP 만 열린다 (관리자는 미리 볼 수 있음)
+  const isOpen = (n) => isAdmin || (site.loaded && site.steps[n]);
   const step = STEPS.find((s) => s.n === stepN) || step1;
   const locked = !isOpen(step.n);
 
@@ -111,25 +119,23 @@ export default function App() {
     }
   }
 
-  // 관리자: STEP2·3 공개/비공개 (배포 사이트에서만)
+  // 관리자: STEP1~3 공개/비공개 (배포 사이트에서만)
   async function toggleStep(n) {
     const next = !site.steps[n];
+    const lastOpen = [1, 2, 3].every((s) => s === n || !site.steps[s]);
     const closeMsg = [
       `STEP${n} 비공개로 전환? 수강생 화면에서 잠김.`,
       "",
-      "수업 정리도 함께 합니다(되돌릴 수 없음):",
-      "· 수강생 계정: 아이디·비밀번호, +코드·+텍스트 칸, 고친 코드 모두 삭제",
-      "· 관리자 계정: 아이디·비밀번호와 +코드·+텍스트 칸은 남기고, 고친 코드만 삭제",
+      `STEP${n} 정리도 함께 합니다(되돌릴 수 없음):`,
+      "· 수강생: +코드·+텍스트 칸과 고친 코드 삭제",
+      "· 관리자 계정: +코드·+텍스트 칸은 남기고 고친 코드만 삭제",
+      ...(lastOpen ? ["", "STEP 이 모두 비공개가 되므로 수강생 아이디·비밀번호도 모두 삭제합니다(관리자 계정은 남음)."] : []),
     ].join("\n");
     if (!confirm(next ? `STEP${n} 공개?` : closeMsg)) return;
     try {
       if (!next) await flushSave();
       const steps = await setStepOpen(n, next, getSessionPassword());
-      setSite((s) => ({ ...s, steps }));
-      if (!next) {
-        await reloadWork();
-        setWorkRev((r) => r + 1);
-      }
+      setSite((s) => ({ ...s, steps })); // 비공개로 바뀌면 위의 effect 가 정리된 작업을 다시 받아 온다
     } catch (err) {
       alert("바꾸지 못했습니다: " + err.message);
     }
@@ -219,7 +225,7 @@ export default function App() {
             <div className="flex flex-wrap items-center gap-2 rounded-lg border border-peach-300 dark:border-peach-700 bg-peach-50 dark:bg-peach-950/40 p-3">
               <span className="mr-auto text-sm font-medium text-peach-800 dark:text-peach-200">관리자 모드 · 모든 STEP 미리 보기 가능</span>
               {site.server ? (
-                [2, 3].map((n) => (
+                [1, 2, 3].map((n) => (
                   <button
                     key={n}
                     onClick={() => toggleStep(n)}

@@ -1,7 +1,8 @@
 // 계정 로그인과 작업 저장 (배포 사이트의 서버 함수 /api/class 와 주고받는다)
-//  - 로그인하면 서버에 저장된 작업을 받아 storage.js 에 넣고, 그 뒤 바뀔 때마다 1초 모아서 서버에 저장한다.
+//  - 로그인하면 서버에 저장된 작업을 받아 storage.js 에 넣고, 그 뒤 바뀐 것만 1초 모아서 서버에 저장한다.
+//    (통째로 보내지 않아서, 관리자가 STEP 을 정리한 뒤에도 오래 열어 둔 화면이 지운 작업을 되살리지 않는다)
 //  - 로그인 토큰만 이 브라우저에 남겨 두어, 다음에 열 때 자동으로 로그인한다.
-//  - 관리자가 STEP 을 비공개로 바꾸면 수강생 계정이 지워지므로, 다음 저장·불러오기에서 로그아웃된다.
+//  - 관리자가 STEP 을 모두 비공개로 바꾸면 수강생 계정이 지워지므로, 다음 저장·불러오기에서 로그아웃된다.
 
 import { setRemoteStore } from "./storage";
 
@@ -12,6 +13,7 @@ const SAVE_DELAY = 1000;
 let state = { user: null, save: "saved", notice: "" }; // user: { id, admin } | null,  save: saved | saving | error
 let token = "";
 let data = null;
+let dirty = new Set(); // 아직 서버에 보내지 않은 이름
 let timer = null;
 const listeners = new Set();
 
@@ -61,6 +63,7 @@ function signedIn(t, res) {
   token = t;
   writeToken(t);
   data = { ...res.data };
+  dirty = new Set();
   setRemoteStore(data, scheduleSave);
   setState({ user: { id: res.id, admin: !!res.admin }, save: "saved", notice: "" });
 }
@@ -70,6 +73,7 @@ function signedOut(notice = "") {
   timer = null;
   token = "";
   data = null;
+  dirty = new Set();
   writeToken("");
   setRemoteStore(null);
   setState({ user: null, save: "saved", notice });
@@ -108,8 +112,7 @@ export async function promoteToAdmin(password) {
 // 서버에서 다시 받아 오기 (STEP 을 비공개로 바꿔 서버의 작업이 정리된 뒤)
 export async function reloadWork() {
   if (!token) return;
-  clearTimeout(timer);
-  timer = null;
+  await flushSave();
   try {
     signedIn(token, await call("GET"));
   } catch (err) {
@@ -117,7 +120,8 @@ export async function reloadWork() {
   }
 }
 
-function scheduleSave() {
+function scheduleSave(key) {
+  dirty.add(key);
   setState({ save: "saving" });
   clearTimeout(timer);
   timer = setTimeout(() => flushSave(), SAVE_DELAY);
@@ -127,12 +131,18 @@ export async function flushSave({ keepalive = false } = {}) {
   if (!timer || !data) return;
   clearTimeout(timer);
   timer = null;
+  const keys = [...dirty];
+  dirty = new Set();
+  const set = {};
+  const del = [];
+  for (const k of keys) k in data ? (set[k] = data[k]) : del.push(k);
   try {
-    await call("PUT", { data }, { keepalive });
+    await call("PUT", { set, del }, { keepalive });
     if (!timer) setState({ save: "saved" });
   } catch (err) {
     if (err.status === 401) signedOut("로그인이 끝났습니다(관리자가 수업을 정리함). 다시 가입해 주세요.");
     else {
+      keys.forEach((k) => dirty.add(k)); // 보내지 못한 것은 다음에 다시
       setState({ save: "error" });
       timer = setTimeout(() => flushSave(), 5000); // 잠시 뒤 다시 시도
     }
